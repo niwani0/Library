@@ -1,0 +1,23 @@
+# Local skill workspace and evals
+evals/
+*-workspace/
+iteration-*/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Personal session data (memory, transcripts)
+memory/
+*.jsonl
+
+# Claude Code state
+.claude/
+
+# Temp / output artifacts
+*.tmp
+*.log
+output/
+artifacts/
