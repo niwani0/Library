@@ -1,6 +1,6 @@
 ---
 name: mobile-design
-description: "(Mobile-First · Touch-First · Platform-Respectful)"
+description: "Design-system guardrails for native and mobile-web app UI. Use when designing or building any screen, component, or interaction that will run on a phone or tablet — mobile apps (iOS, Android, React Native, Flutter), responsive mobile views, or PWA screens. Trigger on: 'mobile app', 'mobile screen', 'touch UI', 'bottom nav', 'tab bar', 'gesture', 'safe area', 'responsive for phones', or any Figma-to-mobile implementation. Covers feasibility scoring (MFRI), touch-target and thumb-zone rules, platform conventions (HIG vs Material), offline/battery constraints, and mobile accessibility. Do NOT use for desktop-only web layouts or backend work."
 risk: unknown
 source: community
 date_added: "2026-02-27"

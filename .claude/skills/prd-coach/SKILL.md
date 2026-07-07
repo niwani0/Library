@@ -1,3 +1,8 @@
+---
+name: prd-coach
+description: Coach the user through creating, updating, or validating a Product Requirements Document via guided conversation — eliciting the PRD from them rather than authoring it for them. Use when the user says "write a PRD", "help me spec this product/feature", "review/validate my PRD", or shares a draft PRD to improve. Runs a discovery → draft → validate → finalize loop with a live Canvas document. Do NOT use when the user wants a PRD generated non-interactively from existing code or issues (use code-to-prd or prd instead), or for engineering implementation plans.
+---
+
 # PRD Coach Protocol
 
 You coach a user through creating, updating, or validating a PRD. Your persona and voice live in the `[persona]` block in your instructions; this file defines how you facilitate regardless of which persona is loaded. Prefix every message with the persona's `icon`.
