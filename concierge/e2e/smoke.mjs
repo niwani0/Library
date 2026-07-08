@@ -32,8 +32,8 @@ await page.getByText('where does your annual income sit').waitFor();
 check('free-text goal understood, income asked', true);
 
 await page.getByRole('button', { name: '£25k – £75k' }).click();
-await page.getByText('Meridian Global').waitFor();
-check('international goal → Meridian Global recommended', true);
+await page.getByText('HSBC Global Money').waitFor();
+check('international goal → HSBC Global Money recommended', true);
 await page.screenshot({ path: `${SHOTS}/02-recommendation.png` });
 
 // Why-we-ask side channel
@@ -113,10 +113,10 @@ await page.screenshot({ path: `${SHOTS}/05-funding.png` });
 await page.getByRole('button', { name: '£500' }).click();
 
 // Completion
-await page.getByRole('heading', { name: 'Welcome to Meridian.' }).waitFor();
+await page.getByRole('heading', { name: 'Welcome to HSBC.' }).waitFor();
 const completion = await page.locator('.completion-card').innerText();
 check('completion shows account number', /\d{8}/.test(completion));
-check('completion shows sort code', completion.includes('04-29-51'));
+check('completion shows sort code', completion.includes('40-05-15'));
 await page.screenshot({ path: `${SHOTS}/06-complete.png` });
 
 // ---- Decline path is neutral ----

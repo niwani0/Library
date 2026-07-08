@@ -1,29 +1,32 @@
 /* ---------------------------------------------------------------------------
-   Meridian — Private Client Onboarding
+   Evie — HSBC Premier Onboarding (concept)
    Design tokens first; every component value below references them.
+   One primary principle: glassmorphism on a deep crimson canvas.
 --------------------------------------------------------------------------- */
 
 :root {
   /* Colour */
-  --color-ink: #0e1a2b;
-  --color-ink-soft: #1b2a40;
-  --color-on-ink: #f5f1e8;
-  --color-on-ink-muted: #b9c2d0;
-  --color-paper: #faf7f2;
-  --color-card: #ffffff;
-  --color-text: #1f2937;
-  --color-text-muted: #5f6774;
-  --color-gold: #b08d4f;
-  --color-gold-deep: #7a5d2e;
-  --color-gold-wash: rgba(176, 141, 79, 0.12);
-  --color-hairline: #e7e0d3;
-  --color-hairline-strong: #d5ccba;
-  --color-error: #b4232a;
-  --color-success: #1e6b4f;
+  --color-ink: #ffffff;
+  --color-ink-soft: rgba(255, 255, 255, 0.85);
+  --color-on-ink: #ffffff;
+  --color-on-ink-muted: rgba(255, 255, 255, 0.62);
+  --color-paper: #2b0509;
+  --color-card: rgba(20, 6, 8, 0.5);
+  --color-input: rgba(0, 0, 0, 0.3);
+  --color-text: #f7f4f3;
+  --color-text-muted: rgba(255, 255, 255, 0.64);
+  --color-red: #db0011;
+  --color-red-deep: #a3000d;
+  --color-red-soft: #ff9aa1;
+  --color-red-wash: rgba(219, 0, 17, 0.18);
+  --color-hairline: rgba(255, 255, 255, 0.14);
+  --color-hairline-strong: rgba(255, 255, 255, 0.3);
+  --color-error: #ffb3b8;
+  --color-success: #23c4a4;
 
   /* Type */
-  --font-display: 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Palatino,
-    Georgia, serif;
+  --font-display: 'Helvetica Neue', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Helvetica, Arial, sans-serif;
   --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
     Helvetica, Arial, sans-serif;
   --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
@@ -33,11 +36,12 @@
   --text-md: 1.0625rem;
   --text-lg: 1.375rem;
   --text-xl: 1.75rem;
+  --weight-light: 300;
   --weight-regular: 400;
   --weight-medium: 500;
   --weight-semibold: 600;
   --tracking-wide: 0.08em;
-  --tracking-wordmark: 0.32em;
+  --tracking-wordmark: 0.18em;
 
   /* Space */
   --space-1: 0.25rem;
@@ -49,11 +53,12 @@
   --space-7: 3rem;
 
   /* Shape, depth, motion */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --shadow-card: 0 1px 2px rgba(14, 26, 43, 0.05), 0 10px 30px rgba(14, 26, 43, 0.06);
-  --shadow-lifted: 0 2px 4px rgba(14, 26, 43, 0.08), 0 16px 40px rgba(14, 26, 43, 0.1);
-  --focus-ring: 0 0 0 3px rgba(176, 141, 79, 0.35);
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --blur-card: blur(14px);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.25), 0 12px 32px rgba(0, 0, 0, 0.28);
+  --shadow-lifted: 0 2px 4px rgba(0, 0, 0, 0.3), 0 18px 46px rgba(0, 0, 0, 0.38);
+  --focus-ring: 0 0 0 3px rgba(255, 255, 255, 0.35);
   --duration-fast: 150ms;
   --duration-gentle: 320ms;
   --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
@@ -61,7 +66,7 @@
   /* Layers */
   --z-chrome: 10;
 
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 /* --- Base ---------------------------------------------------------------- */
@@ -84,8 +89,7 @@ body {
   color: var(--color-text);
   background-color: var(--color-paper);
   background-image:
-    radial-gradient(1100px 560px at 88% -8%, var(--color-gold-wash), transparent 62%),
-    radial-gradient(900px 520px at -12% 24%, rgba(14, 26, 43, 0.045), transparent 58%);
+    radial-gradient(120% 85% at 50% 28%, #8c121b 0%, #5a0b11 48%, #2b0509 100%);
   background-attachment: fixed;
 }
 
@@ -107,7 +111,7 @@ button {
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-gold-deep);
+  outline: 2px solid rgba(255, 255, 255, 0.75);
   outline-offset: 2px;
   border-radius: 2px;
 }
@@ -136,6 +140,10 @@ button {
   position: sticky;
   top: 0;
   z-index: var(--z-chrome);
+  background: rgba(30, 5, 8, 0.55);
+  -webkit-backdrop-filter: var(--blur-card);
+  backdrop-filter: var(--blur-card);
+  border-bottom: 1px solid var(--color-hairline);
 }
 
 .conversation {
@@ -149,9 +157,7 @@ button {
 /* --- Masthead ------------------------------------------------------------ */
 
 .masthead {
-  background: linear-gradient(160deg, var(--color-ink) 0%, var(--color-ink-soft) 100%);
   color: var(--color-on-ink);
-  border-bottom: 1px solid rgba(176, 141, 79, 0.45);
 }
 
 .masthead-inner {
@@ -164,18 +170,28 @@ button {
   gap: var(--space-4);
 }
 
+.masthead-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.hex-mark {
+  width: 40px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
 .wordmark {
   font-family: var(--font-display);
-  font-size: var(--text-lg);
-  font-weight: var(--weight-regular);
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
   letter-spacing: var(--tracking-wordmark);
   line-height: 1.1;
-  /* The trailing tracking space would otherwise unbalance the wordmark. */
-  margin-right: calc(-1 * var(--tracking-wordmark));
 }
 
 .masthead-subtitle {
-  margin-top: var(--space-1);
+  margin-top: 2px;
   font-size: var(--text-xs);
   letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
@@ -186,10 +202,10 @@ button {
   flex-shrink: 0;
   min-height: 44px;
   padding: var(--space-2) var(--space-4);
-  background: transparent;
+  background: rgba(255, 255, 255, 0.08);
   color: var(--color-on-ink);
-  border: 1px solid rgba(245, 241, 232, 0.35);
-  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-hairline-strong);
+  border-radius: 999px;
   font-size: var(--text-sm);
   cursor: pointer;
   transition: border-color var(--duration-fast) var(--ease-out),
@@ -197,16 +213,14 @@ button {
 }
 
 .btn-quiet:hover {
-  border-color: var(--color-gold);
-  background-color: rgba(176, 141, 79, 0.16);
+  border-color: rgba(255, 255, 255, 0.6);
+  background-color: rgba(255, 255, 255, 0.16);
 }
 
 /* --- Journey progress ---------------------------------------------------- */
 
 .journey {
-  background-color: var(--color-paper);
-  border-bottom: 1px solid var(--color-hairline);
-  box-shadow: 0 1px 0 rgba(14, 26, 43, 0.02);
+  border-top: 1px solid var(--color-hairline);
 }
 
 .journey ol {
@@ -233,7 +247,7 @@ button {
   right: 50%;
   width: 100%;
   height: 1px;
-  background: var(--color-hairline-strong);
+  background: var(--color-hairline);
 }
 
 .journey-step:first-child::before {
@@ -242,7 +256,7 @@ button {
 
 .journey-step.is-done::before,
 .journey-step.is-current::before {
-  background: var(--color-gold);
+  background: var(--color-red);
 }
 
 .journey-dot {
@@ -251,18 +265,18 @@ button {
   width: 11px;
   height: 11px;
   border-radius: 50%;
-  background: var(--color-paper);
+  background: transparent;
   border: 1px solid var(--color-hairline-strong);
 }
 
 .journey-step.is-done .journey-dot {
-  background: var(--color-gold);
-  border-color: var(--color-gold);
+  background: var(--color-red);
+  border-color: var(--color-red);
 }
 
 .journey-step.is-current .journey-dot {
-  background: var(--color-ink);
-  border-color: var(--color-ink);
+  background: var(--color-on-ink);
+  border-color: var(--color-on-ink);
   box-shadow: var(--focus-ring);
 }
 
@@ -270,12 +284,12 @@ button {
   font-size: var(--text-xs);
   letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
-  color: var(--color-text-muted);
+  color: var(--color-on-ink-muted);
   text-align: center;
 }
 
 .journey-step.is-current .journey-label {
-  color: var(--color-ink);
+  color: var(--color-on-ink);
   font-weight: var(--weight-semibold);
 }
 
@@ -308,12 +322,15 @@ button {
   align-self: flex-start;
   max-width: 88%;
   background: var(--color-card);
+  -webkit-backdrop-filter: var(--blur-card);
+  backdrop-filter: var(--blur-card);
   border: 1px solid var(--color-hairline);
   border-radius: var(--radius-md);
-  border-top-left-radius: 2px;
+  border-top-left-radius: 4px;
   box-shadow: var(--shadow-card);
   padding: var(--space-4) var(--space-5);
   font-family: var(--font-display);
+  font-weight: var(--weight-light);
   font-size: var(--text-md);
   line-height: 1.6;
   color: var(--color-ink);
@@ -322,10 +339,13 @@ button {
 .bubble-customer {
   align-self: flex-end;
   max-width: 82%;
-  background: var(--color-ink);
+  background: rgba(255, 255, 255, 0.16);
+  -webkit-backdrop-filter: var(--blur-card);
+  backdrop-filter: var(--blur-card);
+  border: 1px solid var(--color-hairline);
   color: var(--color-on-ink);
   border-radius: var(--radius-md);
-  border-bottom-right-radius: 2px;
+  border-bottom-right-radius: 4px;
   padding: var(--space-3) var(--space-4);
   font-size: var(--text-base);
 }
@@ -340,7 +360,7 @@ button {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--color-gold);
+  background: var(--color-on-ink);
   animation: dot-pulse 1.2s ease-in-out infinite;
 }
 
@@ -395,28 +415,65 @@ button {
   list-style: none;
   padding: 0;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: var(--space-2);
 }
 
 .chip {
-  min-height: 44px;
-  padding: var(--space-2) var(--space-4);
-  background: var(--color-card);
-  border: 1px solid var(--color-hairline-strong);
-  border-radius: 999px;
+  width: 100%;
+  min-height: 48px;
+  padding: var(--space-3) var(--space-4) var(--space-3) var(--space-6);
+  position: relative;
+  text-align: left;
+  background: rgba(0, 0, 0, 0.32);
+  -webkit-backdrop-filter: var(--blur-card);
+  backdrop-filter: var(--blur-card);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-sm);
   font-size: var(--text-base);
-  color: var(--color-ink);
+  color: var(--color-on-ink);
   cursor: pointer;
   transition: border-color var(--duration-fast) var(--ease-out),
-    box-shadow var(--duration-fast) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-out),
     transform var(--duration-fast) var(--ease-out);
 }
 
+.chip::before {
+  content: '';
+  position: absolute;
+  left: var(--space-4);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-on-ink);
+}
+
 .chip:hover {
-  border-color: var(--color-ink);
-  box-shadow: var(--shadow-card);
+  border-color: var(--color-hairline-strong);
+  background: rgba(0, 0, 0, 0.48);
   transform: translateY(-1px);
+}
+
+/* Deposit amounts sit side by side, without the option bullet. */
+.chip-row.amount-row {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.amount-row li {
+  flex: 1;
+  min-width: 6rem;
+}
+
+.amount-row .chip {
+  text-align: center;
+  padding-left: var(--space-4);
+}
+
+.amount-row .chip::before {
+  display: none;
 }
 
 /* --- Free text ----------------------------------------------------------- */
@@ -424,6 +481,7 @@ button {
 .free-text {
   display: flex;
   gap: var(--space-2);
+  align-items: center;
 }
 
 .free-text input {
@@ -431,20 +489,52 @@ button {
   min-width: 0;
 }
 
+.free-text-primary input,
+.free-text-secondary input {
+  border-radius: 999px;
+  padding-left: var(--space-4);
+}
+
 .free-text-secondary input {
   min-height: 40px;
   font-size: var(--text-sm);
-  background: transparent;
+  background: rgba(0, 0, 0, 0.18);
 }
 
 .free-text-secondary input::placeholder {
   color: var(--color-text-muted);
 }
 
+.send-btn {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 0;
+  background: var(--color-on-ink);
+  color: #16060a;
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+  transition: opacity var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
+}
+
+.send-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.send-btn:not(:disabled):active {
+  transform: scale(0.96);
+}
+
 /* --- Cards --------------------------------------------------------------- */
 
 .prompt-card {
   background: var(--color-card);
+  -webkit-backdrop-filter: var(--blur-card);
+  backdrop-filter: var(--blur-card);
   border: 1px solid var(--color-hairline);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-card);
@@ -457,7 +547,7 @@ button {
 .card-title {
   font-family: var(--font-display);
   font-size: var(--text-lg);
-  font-weight: var(--weight-regular);
+  font-weight: var(--weight-light);
   color: var(--color-ink);
 }
 
@@ -471,7 +561,7 @@ button {
   font-size: var(--text-xs);
   letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
-  color: var(--color-gold-deep);
+  color: var(--color-red-soft);
   font-weight: var(--weight-semibold);
 }
 
@@ -482,7 +572,7 @@ select,
 textarea {
   font: inherit;
   color: var(--color-text);
-  background: var(--color-card);
+  background: var(--color-input);
   border: 1px solid var(--color-hairline-strong);
   border-radius: var(--radius-sm);
   padding: var(--space-2) var(--space-3);
@@ -499,7 +589,7 @@ input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
   outline: none;
-  border-color: var(--color-gold-deep);
+  border-color: rgba(255, 255, 255, 0.7);
   box-shadow: var(--focus-ring);
 }
 
@@ -512,13 +602,13 @@ textarea:focus-visible {
 .field label,
 fieldset legend {
   font-size: var(--text-sm);
-  font-weight: var(--weight-semibold);
-  color: var(--color-ink);
+  font-weight: var(--weight-medium);
+  color: var(--color-ink-soft);
 }
 
 .field-note {
   font-size: var(--text-xs);
-  color: var(--color-gold-deep);
+  color: var(--color-red-soft);
 }
 
 .field-grid {
@@ -561,7 +651,7 @@ fieldset {
   min-height: 0;
   margin-top: 3px;
   flex-shrink: 0;
-  accent-color: var(--color-gold-deep);
+  accent-color: var(--color-red);
 }
 
 .checkbox-option .option-title {
@@ -588,14 +678,14 @@ fieldset {
   min-height: 44px;
   cursor: pointer;
   font-size: var(--text-sm);
-  color: var(--color-gold-deep);
+  color: var(--color-red-soft);
   list-style-position: inside;
 }
 
 .why-we-ask p {
   font-size: var(--text-sm);
   color: var(--color-text-muted);
-  border-left: 2px solid var(--color-gold);
+  border-left: 2px solid var(--color-red);
   padding-left: var(--space-3);
   margin-top: var(--space-1);
 }
@@ -605,7 +695,7 @@ fieldset {
 .btn {
   min-height: 46px;
   padding: var(--space-2) var(--space-5);
-  border-radius: var(--radius-sm);
+  border-radius: 999px;
   border: 1px solid transparent;
   font-weight: var(--weight-semibold);
   font-size: var(--text-base);
@@ -625,32 +715,32 @@ fieldset {
 }
 
 .btn-primary {
-  background: var(--color-ink);
-  color: var(--color-on-ink);
+  background: var(--color-red);
+  color: #ffffff;
 }
 
 .btn-primary:not(:disabled):hover {
-  background: var(--color-ink-soft);
+  background: var(--color-red-deep);
 }
 
+/* The single highest-emphasis moment: opening the account. */
 .btn-gold {
-  background: var(--color-gold);
-  color: var(--color-ink);
-  border-color: var(--color-gold-deep);
+  background: #ffffff;
+  color: #16060a;
 }
 
 .btn-gold:not(:disabled):hover {
-  background: #bd9a5c;
+  background: rgba(255, 255, 255, 0.88);
 }
 
 .btn-outline {
   background: transparent;
-  color: var(--color-ink);
+  color: var(--color-on-ink);
   border-color: var(--color-hairline-strong);
 }
 
 .btn-outline:not(:disabled):hover {
-  border-color: var(--color-ink);
+  border-color: rgba(255, 255, 255, 0.65);
 }
 
 .btn-compact {
@@ -662,13 +752,13 @@ fieldset {
 /* --- Recommendation ------------------------------------------------------ */
 
 .reco-card {
-  border-top: 3px solid var(--color-gold);
+  border-top: 3px solid var(--color-red);
 }
 
 .reco-name {
   font-family: var(--font-display);
   font-size: var(--text-xl);
-  font-weight: var(--weight-regular);
+  font-weight: var(--weight-light);
   color: var(--color-ink);
   line-height: 1.2;
 }
@@ -682,7 +772,7 @@ fieldset {
   font-size: var(--text-sm);
   font-weight: var(--weight-semibold);
   color: var(--color-ink);
-  border: 1px solid var(--color-hairline);
+  border: 1px solid var(--color-hairline-strong);
   border-radius: 999px;
   padding: var(--space-1) var(--space-3);
   align-self: flex-start;
@@ -693,7 +783,7 @@ fieldset {
   font-weight: var(--weight-semibold);
   letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
-  color: var(--color-ink);
+  color: var(--color-ink-soft);
 }
 
 .reco-list {
@@ -717,7 +807,7 @@ fieldset {
   top: 0.62em;
   width: 7px;
   height: 1px;
-  background: var(--color-gold);
+  background: var(--color-red);
 }
 
 .reco-stretch {
@@ -730,7 +820,7 @@ fieldset {
 /* --- Document card ------------------------------------------------------- */
 
 .document-card {
-  border-top: 3px solid var(--color-ink);
+  border-top: 3px solid var(--color-hairline-strong);
 }
 
 .document-number input {
@@ -754,8 +844,8 @@ fieldset {
 
 .review-section-head h3 {
   font-size: var(--text-xs);
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
   color: var(--color-text-muted);
 }
@@ -804,9 +894,9 @@ fieldset {
 /* --- Completion ---------------------------------------------------------- */
 
 .completion-card {
-  border-top: 3px solid var(--color-gold);
+  border-top: 3px solid var(--color-red);
   background:
-    linear-gradient(180deg, rgba(176, 141, 79, 0.07), transparent 34%),
+    linear-gradient(180deg, var(--color-red-wash), transparent 34%),
     var(--color-card);
   box-shadow: var(--shadow-lifted);
 }
@@ -818,6 +908,7 @@ fieldset {
   border: 1px solid var(--color-hairline);
   border-radius: var(--radius-sm);
   padding: var(--space-4);
+  background: rgba(0, 0, 0, 0.22);
 }
 
 .account-facts dt {
@@ -892,7 +983,8 @@ fieldset {
   }
 
   .chip:hover,
-  .btn:not(:disabled):active {
+  .btn:not(:disabled):active,
+  .send-btn:not(:disabled):active {
     transform: none;
   }
 }

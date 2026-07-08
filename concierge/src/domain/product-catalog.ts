@@ -10,7 +10,7 @@ export const INCOME_BAND_ORDER: IncomeBand[] = [
 export const PRODUCTS: Product[] = [
   {
     id: 'essential',
-    name: 'Meridian Essential',
+    name: 'HSBC Advance',
     tagline: 'Everyday banking with no monthly fee',
     monthlyFee: 0,
     bestFor: ['everyday-banking', 'saving'],
@@ -22,7 +22,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'global',
-    name: 'Meridian Global',
+    name: 'HSBC Global Money',
     tagline: 'Multi-currency banking for international lives',
     monthlyFee: 8,
     bestFor: ['international', 'moving-country'],
@@ -34,7 +34,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'premier',
-    name: 'Meridian Premier',
+    name: 'HSBC Premier',
     tagline: 'A dedicated relationship manager and wealth access',
     monthlyFee: 0,
     minimumIncomeBand: '75k-150k',

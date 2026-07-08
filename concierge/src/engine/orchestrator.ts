@@ -41,7 +41,7 @@ export interface Concierge {
   readonly decision: ComplianceDecision | undefined;
 }
 
-const SORT_CODE = '04-29-51';
+const SORT_CODE = '40-05-15';
 const SUGGESTED_DEPOSITS = [100, 500, 2000];
 
 export function createConcierge(deps: ConciergeDeps = {}): Concierge {

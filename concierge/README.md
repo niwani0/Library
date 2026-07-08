@@ -105,4 +105,5 @@ pnpm build && pnpm preview --port 4173 &
 node e2e/smoke.mjs   # requires playwright + a chromium install
 ```
 
-`Meridian` is a fictional bank created for this demonstration.
+The experience is styled as an HSBC Premier concept ("Evie") for
+demonstration purposes; it is not an HSBC product.

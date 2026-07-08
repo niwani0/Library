@@ -32,8 +32,8 @@ export function FreeTextInput({ placeholder, variant, onSubmitText }: FreeTextIn
         autoComplete="off"
         onChange={(event) => setText(event.target.value)}
       />
-      <button type="submit" className="btn btn-outline btn-compact" disabled={!text.trim()}>
-        Send
+      <button type="submit" className="send-btn" disabled={!text.trim()} aria-label="Send">
+        <span aria-hidden="true">↑</span>
       </button>
     </form>
   );

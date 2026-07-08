@@ -276,8 +276,8 @@ export function App() {
         <div ref={endOfConversationRef} />
       </main>
       <footer className="legal-strip">
-        Eligible deposits protected up to £85,000 by the FSCS · Meridian is a fictional
-        bank created for a product demonstration.
+        Eligible deposits protected up to £85,000 by the FSCS · This is a concept
+        demonstration and not an HSBC product.
       </footer>
     </div>
   );

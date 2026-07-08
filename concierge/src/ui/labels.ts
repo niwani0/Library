@@ -56,11 +56,11 @@ export const CONSENT_LABELS: Record<ConsentId, { title: string; description: str
   'data-processing': {
     title: 'Data processing for identity checks',
     description:
-      'I agree to Meridian processing my details to verify my identity, as the law requires.',
+      'I agree to HSBC processing my details to verify my identity, as the law requires.',
   },
   'credit-check': {
     title: 'Credit check',
-    description: 'I agree to Meridian running a credit check where one is needed.',
+    description: 'I agree to HSBC running a credit check where one is needed.',
   },
   marketing: {
     title: 'Marketing',
