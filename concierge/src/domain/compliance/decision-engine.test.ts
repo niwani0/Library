@@ -53,6 +53,48 @@ describe('assessCompliance', () => {
     expect(decision.outcome).toBe('decline');
   });
 
+  it('declines a sanctions match despite extra internal whitespace', () => {
+    const profile = profileFixture({
+      identity: identityFixture({ fullName: 'Victor  Sanction' }),
+    });
+
+    const decision = assessCompliance(profile);
+
+    expect(decision.outcome).toBe('decline');
+  });
+
+  it('declines a sanctions match hidden behind a title', () => {
+    const profile = profileFixture({
+      identity: identityFixture({ fullName: 'Mr. Victor Sanction' }),
+    });
+
+    const decision = assessCompliance(profile);
+
+    expect(decision.outcome).toBe('decline');
+  });
+
+  it('declines a sanctioned-country national entered as a demonym', () => {
+    const profile = profileFixture({
+      identity: identityFixture({ nationality: 'Iranian' }),
+    });
+
+    const decision = assessCompliance(profile);
+
+    expect(decision.outcome).toBe('decline');
+  });
+
+  it('treats an elevated-risk demonym as elevated jurisdiction risk', () => {
+    const profile = profileFixture({
+      identity: identityFixture({ nationality: 'Panamanian' }),
+    });
+
+    const decision = assessCompliance(profile);
+
+    expect(decision.factors.map((factor) => factor.code)).toContain(
+      'elevated-jurisdiction',
+    );
+  });
+
   it('declines residents of prohibited jurisdictions', () => {
     const profile = profileFixture({
       identity: identityFixture({ countryOfResidence: 'North Korea' }),

@@ -16,6 +16,7 @@ import { WhyWeAsk } from '../WhyWeAsk';
 interface FinancialFormProps {
   whyWeAsk: string;
   prefilledIncomeBand?: IncomeBand;
+  initialFinancial?: FinancialProfile;
   onSubmitFinancial: (financial: FinancialProfile) => void;
 }
 
@@ -26,13 +27,22 @@ const SOURCES_OF_FUNDS = Object.keys(SOURCE_OF_FUNDS_LABELS) as SourceOfFunds[];
 export function FinancialForm({
   whyWeAsk,
   prefilledIncomeBand,
+  initialFinancial,
   onSubmitFinancial,
 }: FinancialFormProps) {
-  const [employmentStatus, setEmploymentStatus] = useState<EmploymentStatus>('employed');
-  const [occupation, setOccupation] = useState('');
-  const [incomeBand, setIncomeBand] = useState<IncomeBand>(prefilledIncomeBand ?? '25k-75k');
-  const [sourceOfFunds, setSourceOfFunds] = useState<SourceOfFunds>('salary');
-  const [monthlyInflow, setMonthlyInflow] = useState('');
+  const [employmentStatus, setEmploymentStatus] = useState<EmploymentStatus>(
+    initialFinancial?.employmentStatus ?? 'employed',
+  );
+  const [occupation, setOccupation] = useState(initialFinancial?.occupation ?? '');
+  const [incomeBand, setIncomeBand] = useState<IncomeBand>(
+    initialFinancial?.annualIncomeBand ?? prefilledIncomeBand ?? '25k-75k',
+  );
+  const [sourceOfFunds, setSourceOfFunds] = useState<SourceOfFunds>(
+    initialFinancial?.sourceOfFunds ?? 'salary',
+  );
+  const [monthlyInflow, setMonthlyInflow] = useState(
+    initialFinancial ? String(initialFinancial.expectedMonthlyInflow) : '',
+  );
 
   const inflowAmount = Number(monthlyInflow);
   const isComplete =

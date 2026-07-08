@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { ConsentId, Identity, IdentityDocument } from '../domain/types';
 import type { FinancialProfile, TaxResidency } from '../domain/types';
 import { createConcierge, formatCurrency, type Concierge } from '../engine/orchestrator';
-import type { ConciergeTurn, CustomerAction } from '../engine/types';
+import type { ConciergeTurn, CustomerAction, EditableSection } from '../engine/types';
 import { FreeTextInput } from './FreeTextInput';
 import { Header } from './Header';
 import { JourneyProgress } from './JourneyProgress';
@@ -35,11 +35,14 @@ export function App() {
   const [entries, setEntries] = useState<TranscriptEntry[]>([]);
   const [activeTurn, setActiveTurn] = useState<ConciergeTurn | null>(null);
   const [isTyping, setIsTyping] = useState(false);
-  const [productName, setProductName] = useState<string | undefined>(undefined);
 
   const nextIdRef = useRef(0);
   const timeoutsRef = useRef<number[]>([]);
   const endOfConversationRef = useRef<HTMLDivElement | null>(null);
+  // Mirror of isTyping plus a queue, so anything the customer says while the
+  // concierge is mid-sentence is answered next, never silently dropped.
+  const isRevealingRef = useRef(false);
+  const pendingRef = useRef<Array<{ action: CustomerAction; echo: string | null }>>([]);
 
   // Each effect run begins a fresh session and the cleanup aborts it, so
   // StrictMode's dev-only remount restarts cleanly instead of stranding the
@@ -47,7 +50,8 @@ export function App() {
   useEffect(() => {
     engineRef.current = createConcierge();
     setEntries([]);
-    setProductName(undefined);
+    pendingRef.current = [];
+    isRevealingRef.current = false;
     revealTurn(engineRef.current.start());
     return () => {
       timeoutsRef.current.forEach((id) => window.clearTimeout(id));
@@ -67,31 +71,40 @@ export function App() {
   }
 
   function revealTurn(turn: ConciergeTurn): void {
-    if (turn.prompt.kind === 'recommendation') {
-      setProductName(turn.prompt.recommendation.product.name);
-    }
     setActiveTurn(turn);
     setIsTyping(true);
+    isRevealingRef.current = true;
     turn.messages.forEach((text, index) => {
       const isLast = index === turn.messages.length - 1;
       const timeoutId = window.setTimeout(() => {
         appendEntry('concierge', text);
         if (isLast) {
-          setIsTyping(false);
+          isRevealingRef.current = false;
+          const queued = pendingRef.current.shift();
+          if (queued) {
+            deliver(queued.action, queued.echo);
+          } else {
+            setIsTyping(false);
+          }
         }
       }, REVEAL_INTERVAL_MS * (index + 1));
       timeoutsRef.current.push(timeoutId);
     });
   }
 
-  function sendAction(action: CustomerAction, echo: string | null): void {
-    if (isTyping) {
-      return;
-    }
+  function deliver(action: CustomerAction, echo: string | null): void {
     if (echo) {
       appendEntry('customer', echo);
     }
     revealTurn(engineRef.current.handle(action));
+  }
+
+  function sendAction(action: CustomerAction, echo: string | null): void {
+    if (isRevealingRef.current) {
+      pendingRef.current.push({ action, echo });
+      return;
+    }
+    deliver(action, echo);
   }
 
   function handleFreeText(text: string): void {
@@ -126,6 +139,16 @@ export function App() {
     sendAction({ kind: 'deposit', amount }, `First deposit: ${formatCurrency(amount)}`);
   }
 
+  function handleEditSection(section: EditableSection): void {
+    const sectionLabels: Record<EditableSection, string> = {
+      identity: 'my personal details',
+      document: 'my document',
+      financial: 'my finances',
+      tax: 'my tax residency',
+    };
+    sendAction({ kind: 'edit-section', section }, `I need to change ${sectionLabels[section]}`);
+  }
+
   function renderPrompt(turn: ConciergeTurn) {
     const prompt = turn.prompt;
     switch (prompt.kind) {
@@ -153,25 +176,45 @@ export function App() {
           />
         );
       case 'identity-form':
-        return <IdentityForm whyWeAsk={prompt.whyWeAsk} onSubmitIdentity={handleIdentity} />;
+        return (
+          <IdentityForm
+            whyWeAsk={prompt.whyWeAsk}
+            initialIdentity={engineRef.current.profile.identity}
+            onSubmitIdentity={handleIdentity}
+          />
+        );
       case 'document-form':
-        return <DocumentForm whyWeAsk={prompt.whyWeAsk} onSubmitDocument={handleDocument} />;
+        return (
+          <DocumentForm
+            whyWeAsk={prompt.whyWeAsk}
+            initialDocument={engineRef.current.profile.document}
+            onSubmitDocument={handleDocument}
+          />
+        );
       case 'financial-form':
         return (
           <FinancialForm
             whyWeAsk={prompt.whyWeAsk}
             prefilledIncomeBand={engineRef.current.profile.incomeBand}
+            initialFinancial={engineRef.current.profile.financial}
             onSubmitFinancial={handleFinancial}
           />
         );
       case 'tax-form':
-        return <TaxForm whyWeAsk={prompt.whyWeAsk} onSubmitTax={handleTax} />;
+        return (
+          <TaxForm
+            whyWeAsk={prompt.whyWeAsk}
+            initialTax={engineRef.current.profile.taxResidency}
+            onSubmitTax={handleTax}
+          />
+        );
       case 'review':
         return (
           <ReviewCard
             profile={engineRef.current.profile}
-            productName={productName}
+            productName={engineRef.current.recommendation?.product.name}
             onConfirm={() => sendAction({ kind: 'confirm-review' }, 'Everything is correct')}
+            onEdit={handleEditSection}
           />
         );
       case 'consent':
@@ -207,7 +250,9 @@ export function App() {
     <div className="app">
       <div className="chrome-top">
         <Header onRequestHuman={handleRequestHuman} />
-        {activeTurn && <JourneyProgress stage={activeTurn.stage} />}
+        {activeTurn && activeTurn.stage !== 'declined' && activeTurn.stage !== 'referred' && (
+          <JourneyProgress stage={activeTurn.stage} />
+        )}
       </div>
       <main className="conversation">
         <ol className="transcript" aria-live="polite">

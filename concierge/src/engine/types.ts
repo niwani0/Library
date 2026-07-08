@@ -52,9 +52,12 @@ export interface ConciergeTurn {
   stage: Stage;
 }
 
+export type EditableSection = 'identity' | 'document' | 'financial' | 'tax';
+
 export type CustomerAction =
   | { kind: 'text'; text: string }
   | { kind: 'choice'; value: string }
+  | { kind: 'edit-section'; section: EditableSection }
   | { kind: 'identity'; identity: Identity }
   | { kind: 'document'; document: IdentityDocument }
   | { kind: 'financial'; financial: FinancialProfile }

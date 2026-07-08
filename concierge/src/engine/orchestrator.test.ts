@@ -181,11 +181,144 @@ describe('createConcierge journey', () => {
     expect(reply.stage).toBe('consent');
   });
 
-  it('never asks for the income band twice', () => {
+  it('stores the discovery income band for later pre-fill', () => {
     const engine = concierge();
     runTo(engine, HAPPY_PATH_TO_CONSENT.slice(0, 2));
 
     expect(engine.profile.incomeBand).toBe('25k-75k');
+  });
+
+  it('re-recommends when the customer names a different goal at the recommendation', () => {
+    const engine = concierge();
+    runTo(engine, HAPPY_PATH_TO_CONSENT.slice(0, 2));
+
+    const reply = engine.handle({
+      kind: 'text',
+      text: 'Actually I mostly need to send money abroad',
+    });
+
+    expect(reply.prompt).toMatchObject({
+      kind: 'recommendation',
+      recommendation: { product: { id: 'global' } },
+    });
+  });
+
+  it('swaps to an eligible product when the declared income no longer qualifies', () => {
+    const engine = concierge();
+    runTo(engine, [
+      { kind: 'choice', value: 'wealth-growth' },
+      { kind: 'choice', value: '75k-150k' },
+      { kind: 'choice', value: 'accept' },
+      HAPPY_PATH_TO_CONSENT[3] as CustomerAction,
+      HAPPY_PATH_TO_CONSENT[4] as CustomerAction,
+    ]);
+
+    engine.handle({
+      kind: 'financial',
+      financial: {
+        employmentStatus: 'employed',
+        occupation: 'Architect',
+        annualIncomeBand: 'under-25k',
+        sourceOfFunds: 'salary',
+        expectedMonthlyInflow: 1500,
+      },
+    });
+
+    expect(engine.recommendation?.product.id).toBe('essential');
+  });
+
+  it('tells the customer when their account has been adjusted', () => {
+    const engine = concierge();
+    runTo(engine, [
+      { kind: 'choice', value: 'wealth-growth' },
+      { kind: 'choice', value: '75k-150k' },
+      { kind: 'choice', value: 'accept' },
+      HAPPY_PATH_TO_CONSENT[3] as CustomerAction,
+      HAPPY_PATH_TO_CONSENT[4] as CustomerAction,
+    ]);
+
+    const reply = engine.handle({
+      kind: 'financial',
+      financial: {
+        employmentStatus: 'employed',
+        occupation: 'Architect',
+        annualIncomeBand: 'under-25k',
+        sourceOfFunds: 'salary',
+        expectedMonthlyInflow: 1500,
+      },
+    });
+
+    expect(reply.messages[0]).toContain('better fit');
+  });
+});
+
+describe('createConcierge review edits', () => {
+  it('reopens the requested section from the review', () => {
+    const engine = concierge();
+    runTo(engine, HAPPY_PATH_TO_CONSENT.slice(0, -1));
+
+    const reply = engine.handle({ kind: 'edit-section', section: 'identity' });
+
+    expect(reply.prompt.kind).toBe('identity-form');
+  });
+
+  it('returns straight to the review after an edit, not through every stage', () => {
+    const engine = concierge();
+    runTo(engine, HAPPY_PATH_TO_CONSENT.slice(0, -1));
+    engine.handle({ kind: 'edit-section', section: 'identity' });
+
+    const identityAction = HAPPY_PATH_TO_CONSENT[3] as Extract<
+      CustomerAction,
+      { kind: 'identity' }
+    >;
+    const reply = engine.handle({
+      kind: 'identity',
+      identity: { ...identityAction.identity, residentialAddress: '4 New Wharf Road, London, E1 6AN' },
+    });
+
+    expect(reply.stage).toBe('review');
+  });
+
+  it('keeps the corrected details after a review edit', () => {
+    const engine = concierge();
+    runTo(engine, HAPPY_PATH_TO_CONSENT.slice(0, -1));
+    engine.handle({ kind: 'edit-section', section: 'identity' });
+
+    const identityAction = HAPPY_PATH_TO_CONSENT[3] as Extract<
+      CustomerAction,
+      { kind: 'identity' }
+    >;
+    engine.handle({
+      kind: 'identity',
+      identity: { ...identityAction.identity, residentialAddress: '4 New Wharf Road, London, E1 6AN' },
+    });
+
+    expect(engine.profile.identity?.residentialAddress).toBe(
+      '4 New Wharf Road, London, E1 6AN',
+    );
+  });
+
+  it('resumes the normal flow when a mid-journey capture was not a review edit', () => {
+    const engine = concierge();
+
+    const reply = runTo(engine, HAPPY_PATH_TO_CONSENT.slice(0, 4));
+
+    expect(reply.stage).toBe('document');
+  });
+
+  it('records only consents that were actually offered', () => {
+    const engine = concierge();
+    runTo(engine, HAPPY_PATH_TO_CONSENT);
+
+    engine.handle({
+      kind: 'consent',
+      granted: ['terms', 'data-processing', 'credit-check', 'terms'],
+    });
+
+    expect(engine.profile.consents.map((consent) => consent.id)).toEqual([
+      'terms',
+      'data-processing',
+    ]);
   });
 });
 

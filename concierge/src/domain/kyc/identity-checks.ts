@@ -1,4 +1,5 @@
 import type { Identity } from '../types';
+import { localDateParts, parseDateOnly, yearsBetween } from './date-only';
 
 export interface IdentityCheckResult {
   accepted: boolean;
@@ -16,7 +17,8 @@ export function checkIdentity(identity: Identity, today: Date): IdentityCheckRes
     issues.push('Please give your full legal name as it appears on your ID');
   }
 
-  const age = yearsBetween(new Date(identity.dateOfBirth), today);
+  const dateOfBirth = parseDateOnly(identity.dateOfBirth);
+  const age = dateOfBirth ? yearsBetween(dateOfBirth, localDateParts(today)) : Number.NaN;
   if (Number.isNaN(age)) {
     issues.push('Date of birth is not a valid date');
   } else if (age < MINIMUM_AGE_YEARS) {
@@ -42,15 +44,4 @@ export function checkIdentity(identity: Identity, today: Date): IdentityCheckRes
   }
 
   return { accepted: issues.length === 0, issues };
-}
-
-function yearsBetween(from: Date, to: Date): number {
-  if (Number.isNaN(from.getTime())) {
-    return Number.NaN;
-  }
-  const years = to.getFullYear() - from.getFullYear();
-  const hadBirthdayThisYear =
-    to.getMonth() > from.getMonth() ||
-    (to.getMonth() === from.getMonth() && to.getDate() >= from.getDate());
-  return hadBirthdayThisYear ? years : years - 1;
 }

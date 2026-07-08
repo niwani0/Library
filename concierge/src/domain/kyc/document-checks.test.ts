@@ -3,7 +3,8 @@ import { describe, expect, it } from 'vitest';
 import type { IdentityDocument } from '../types';
 import { checkDocument } from './document-checks';
 
-const TODAY = new Date('2026-07-07T12:00:00Z');
+// Local noon, so the calendar date is 7 July in every timezone the suite runs in.
+const TODAY = new Date(2026, 6, 7, 12);
 
 function documentFixture(overrides: Partial<IdentityDocument> = {}): IdentityDocument {
   return {

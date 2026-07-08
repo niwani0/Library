@@ -5,15 +5,20 @@ import { WhyWeAsk } from '../WhyWeAsk';
 
 interface TaxFormProps {
   whyWeAsk: string;
+  initialTax?: TaxResidency;
   onSubmitTax: (taxResidency: TaxResidency) => void;
 }
 
 const MAX_COUNTRIES = 3;
 const COUNTRY_LABELS = ['Country of tax residency', 'Second country', 'Third country'];
 
-export function TaxForm({ whyWeAsk, onSubmitTax }: TaxFormProps) {
-  const [countries, setCountries] = useState<string[]>(['']);
-  const [usPersonAnswer, setUsPersonAnswer] = useState<'yes' | 'no' | null>(null);
+export function TaxForm({ whyWeAsk, initialTax, onSubmitTax }: TaxFormProps) {
+  const [countries, setCountries] = useState<string[]>(
+    initialTax && initialTax.countries.length > 0 ? initialTax.countries : [''],
+  );
+  const [usPersonAnswer, setUsPersonAnswer] = useState<'yes' | 'no' | null>(
+    initialTax ? (initialTax.usPerson ? 'yes' : 'no') : null,
+  );
 
   const filledCountries = countries.map((c) => c.trim()).filter((c) => c !== '');
   const isComplete = filledCountries.length > 0 && usPersonAnswer !== null;

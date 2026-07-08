@@ -5,6 +5,7 @@ import { WhyWeAsk } from '../WhyWeAsk';
 
 interface IdentityFormProps {
   whyWeAsk: string;
+  initialIdentity?: Identity;
   onSubmitIdentity: (identity: Identity) => void;
 }
 
@@ -18,8 +19,8 @@ const EMPTY_IDENTITY: Identity = {
   phone: '',
 };
 
-export function IdentityForm({ whyWeAsk, onSubmitIdentity }: IdentityFormProps) {
-  const [identity, setIdentity] = useState<Identity>(EMPTY_IDENTITY);
+export function IdentityForm({ whyWeAsk, initialIdentity, onSubmitIdentity }: IdentityFormProps) {
+  const [identity, setIdentity] = useState<Identity>(initialIdentity ?? EMPTY_IDENTITY);
 
   const isComplete = Object.values(identity).every((value) => value.trim() !== '');
 

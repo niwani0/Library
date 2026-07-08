@@ -1,4 +1,5 @@
 import type { IdentityDocument } from '../types';
+import { compareDateParts, localDateParts, parseDateOnly } from './date-only';
 
 export interface DocumentCheckResult {
   accepted: boolean;
@@ -17,10 +18,10 @@ export function checkDocument(
     issues.push('Document number should be 6–12 letters and digits');
   }
 
-  const expiry = new Date(document.expiryDate);
-  if (Number.isNaN(expiry.getTime())) {
+  const expiry = parseDateOnly(document.expiryDate);
+  if (!expiry) {
     issues.push('Expiry date is not a valid date');
-  } else if (expiry <= today) {
+  } else if (compareDateParts(expiry, localDateParts(today)) <= 0) {
     issues.push('This document has expired — we need one that is still valid');
   }
 

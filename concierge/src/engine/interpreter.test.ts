@@ -12,7 +12,13 @@ describe('interpret goals', () => {
   });
 
   it('detects a relocation before a generic international need', () => {
-    expect(interpret("I'm moving to the UK next month").goal).toBe('moving-country');
+    expect(interpret("I'm relocating abroad and travel constantly").goal).toBe(
+      'moving-country',
+    );
+  });
+
+  it('detects a move phrased in the past tense', () => {
+    expect(interpret("I've just moved to the UK for work").goal).toBe('moving-country');
   });
 
   it('detects a wealth goal from investing language', () => {

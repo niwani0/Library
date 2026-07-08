@@ -40,6 +40,10 @@ export const SCRIPT = {
     'International agreements require banks to record tax residency for every new client. It has no effect on eligibility for this account.',
   reviewIntro:
     'Here is everything you have told me. Worth a quick look before we make it official — you can change anything.',
+  editIntro: 'Of course. Update it below, and we will pick up where we left off.',
+  backToReview: 'Updated — here is everything once more.',
+  productAdjusted: (name: string) =>
+    `One adjustment: with your updated income, ${name} is the better fit, so I have moved you to it.`,
   consentIntro:
     'Last step before I open the account: the agreements. The first two are required; marketing is entirely your choice.',
   consentMissing:

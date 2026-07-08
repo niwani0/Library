@@ -2,13 +2,14 @@ import { createAuditTrail, type AuditTrail } from '../domain/audit/audit-trail';
 import { assessCompliance } from '../domain/compliance/decision-engine';
 import { checkDocument } from '../domain/kyc/document-checks';
 import { checkIdentity } from '../domain/kyc/identity-checks';
-import { INCOME_BAND_ORDER } from '../domain/product-catalog';
+import { INCOME_BAND_ORDER, meetsIncomeRequirement } from '../domain/product-catalog';
 import { recommendProduct } from '../domain/recommendation/recommender';
 import type {
   ComplianceDecision,
   ConsentId,
   CustomerGoal,
   CustomerProfile,
+  FinancialProfile,
   Identity,
   IdentityDocument,
   IncomeBand,
@@ -35,6 +36,7 @@ export interface Concierge {
   handle(action: CustomerAction): ConciergeTurn;
   readonly profile: CustomerProfile;
   readonly audit: AuditTrail;
+  readonly recommendation: Recommendation | undefined;
   /** Populated after the compliance gate has run. Never shown to declined customers. */
   readonly decision: ComplianceDecision | undefined;
 }
@@ -52,6 +54,7 @@ export function createConcierge(deps: ConciergeDeps = {}): Concierge {
   let recommendation: Recommendation | undefined;
   let decision: ComplianceDecision | undefined;
   let accountNumber: string | undefined;
+  let isReturningToReview = false;
 
   function start(): ConciergeTurn {
     audit.record('journey-started', 'Customer opened the concierge');
@@ -80,6 +83,20 @@ export function createConcierge(deps: ConciergeDeps = {}): Concierge {
     }
     if (stage === 'discovery' && interpretation.goal) {
       return captureGoal(interpretation.goal, text);
+    }
+    // "Say so if a different account suits you better" has to be a real exit,
+    // not a pleasantry — a new goal here re-runs the recommendation.
+    if (stage === 'recommendation' && interpretation.goal && profile.incomeBand) {
+      if (interpretation.goal !== profile.goal) {
+        profile.goal = interpretation.goal;
+        recommendation = recommendProduct(interpretation.goal, profile.incomeBand);
+        audit.record('goal-revised', interpretation.goal);
+        audit.record('recommendation-made', recommendation.product.name);
+        return turn(
+          [SCRIPT.goalAcknowledgement[interpretation.goal]],
+          { kind: 'recommendation', recommendation },
+        );
+      }
     }
     return turn([SCRIPT.fallback], currentPrompt());
   }
@@ -115,18 +132,14 @@ export function createConcierge(deps: ConciergeDeps = {}): Concierge {
         break;
       case 'financial':
         if (action.kind === 'financial') {
-          profile.financial = action.financial;
-          audit.record('financial-captured', `Source of funds: ${action.financial.sourceOfFunds}`);
-          stage = 'tax';
-          return turn([SCRIPT.taxIntro], currentPrompt());
+          return captureFinancial(action.financial);
         }
         break;
       case 'tax':
         if (action.kind === 'tax') {
           profile.taxResidency = action.taxResidency;
           audit.record('tax-residency-captured', action.taxResidency.countries.join(', '));
-          stage = 'review';
-          return turn([SCRIPT.reviewIntro], currentPrompt());
+          return proceedAfterCapture('review', SCRIPT.reviewIntro);
         }
         break;
       case 'review':
@@ -134,6 +147,12 @@ export function createConcierge(deps: ConciergeDeps = {}): Concierge {
           audit.record('review-confirmed', 'Customer confirmed their details');
           stage = 'consent';
           return turn([SCRIPT.consentIntro], currentPrompt());
+        }
+        if (action.kind === 'edit-section') {
+          audit.record('review-edit-requested', action.section);
+          isReturningToReview = true;
+          stage = action.section;
+          return turn([SCRIPT.editIntro], currentPrompt());
         }
         break;
       case 'consent':
@@ -193,8 +212,7 @@ export function createConcierge(deps: ConciergeDeps = {}): Concierge {
     }
     profile.identity = identity;
     audit.record('identity-captured', identity.fullName);
-    stage = 'document';
-    return turn([SCRIPT.documentIntro], currentPrompt());
+    return proceedAfterCapture('document', SCRIPT.documentIntro);
   }
 
   function captureDocument(document: IdentityDocument): ConciergeTurn {
@@ -204,18 +222,57 @@ export function createConcierge(deps: ConciergeDeps = {}): Concierge {
     }
     profile.document = document;
     audit.record('document-accepted', `${document.type} (${document.issuingCountry})`);
-    stage = 'financial';
-    return turn([SCRIPT.financialIntro], currentPrompt());
+    return proceedAfterCapture('financial', SCRIPT.financialIntro);
+  }
+
+  function captureFinancial(financial: FinancialProfile): ConciergeTurn {
+    profile.financial = financial;
+    audit.record('financial-captured', `Source of funds: ${financial.sourceOfFunds}`);
+    const adjustments = reconcileProductEligibility(financial.annualIncomeBand);
+    const next = proceedAfterCapture('tax', SCRIPT.taxIntro);
+    return { ...next, messages: [...adjustments, ...next.messages] };
+  }
+
+  /**
+   * The declared income can lawfully change after the recommendation was
+   * accepted; the customer must never end up holding a product they no
+   * longer qualify for.
+   */
+  function reconcileProductEligibility(band: IncomeBand): string[] {
+    if (!recommendation || !profile.goal) {
+      return [];
+    }
+    if (meetsIncomeRequirement(band, recommendation.product.minimumIncomeBand)) {
+      return [];
+    }
+    recommendation = recommendProduct(profile.goal, band);
+    audit.record('recommendation-adjusted', recommendation.product.name);
+    return [SCRIPT.productAdjusted(recommendation.product.name)];
+  }
+
+  /** Returns to the review play-back when the capture was a review edit. */
+  function proceedAfterCapture(nextStage: Stage, intro: string): ConciergeTurn {
+    if (isReturningToReview) {
+      isReturningToReview = false;
+      stage = 'review';
+      return turn([SCRIPT.backToReview], currentPrompt());
+    }
+    stage = nextStage;
+    return turn([intro], currentPrompt());
   }
 
   function captureConsents(granted: ConsentId[]): ConciergeTurn {
-    const missingRequired = REQUIRED_CONSENTS.filter((id) => !granted.includes(id));
+    // Only consents that were actually offered can be recorded — the audit
+    // trail must never claim an agreement the customer was not shown.
+    const offered: ConsentId[] = [...REQUIRED_CONSENTS, 'marketing'];
+    const accepted = offered.filter((id) => granted.includes(id));
+    const missingRequired = REQUIRED_CONSENTS.filter((id) => !accepted.includes(id));
     if (missingRequired.length > 0) {
       return turn([SCRIPT.consentMissing], currentPrompt());
     }
     const grantedAt = clock().toISOString();
-    profile.consents = granted.map((id) => ({ id, grantedAt }));
-    audit.record('consents-granted', granted.join(', '));
+    profile.consents = accepted.map((id) => ({ id, grantedAt }));
+    audit.record('consents-granted', accepted.join(', '));
     return runComplianceGate();
   }
 
@@ -327,6 +384,9 @@ export function createConcierge(deps: ConciergeDeps = {}): Concierge {
     handle,
     profile,
     audit,
+    get recommendation() {
+      return recommendation;
+    },
     get decision() {
       return decision;
     },

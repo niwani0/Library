@@ -6,16 +6,19 @@ import { WhyWeAsk } from '../WhyWeAsk';
 
 interface DocumentFormProps {
   whyWeAsk: string;
+  initialDocument?: IdentityDocument;
   onSubmitDocument: (document: IdentityDocument) => void;
 }
 
 const DOCUMENT_TYPES: DocumentType[] = ['passport', 'driving-licence', 'national-id'];
 
-export function DocumentForm({ whyWeAsk, onSubmitDocument }: DocumentFormProps) {
-  const [documentType, setDocumentType] = useState<DocumentType>('passport');
-  const [documentNumber, setDocumentNumber] = useState('');
-  const [expiryDate, setExpiryDate] = useState('');
-  const [issuingCountry, setIssuingCountry] = useState('');
+export function DocumentForm({ whyWeAsk, initialDocument, onSubmitDocument }: DocumentFormProps) {
+  const [documentType, setDocumentType] = useState<DocumentType>(
+    initialDocument?.type ?? 'passport',
+  );
+  const [documentNumber, setDocumentNumber] = useState(initialDocument?.documentNumber ?? '');
+  const [expiryDate, setExpiryDate] = useState(initialDocument?.expiryDate ?? '');
+  const [issuingCountry, setIssuingCountry] = useState(initialDocument?.issuingCountry ?? '');
 
   const isComplete =
     documentNumber.trim() !== '' && expiryDate !== '' && issuingCountry.trim() !== '';

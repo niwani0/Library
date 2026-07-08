@@ -740,6 +740,26 @@ fieldset {
 
 /* --- Review -------------------------------------------------------------- */
 
+.review-section {
+  border-top: 1px solid var(--color-hairline);
+  padding-top: var(--space-3);
+}
+
+.review-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.review-section-head h3 {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
 .review-list {
   display: flex;
   flex-direction: column;

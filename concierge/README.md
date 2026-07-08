@@ -78,9 +78,31 @@ veto.
 - The demo watchlist lets reviewers exercise these paths on demand: apply as
   `Victor Sanction` (decline) or `Petra Epstein-Pep` (refer).
 
+## Changing your mind is a first-class path
+
+- Naming a different goal at the recommendation re-runs it — "say so if a
+  different account suits you better" is a real exit, not a pleasantry.
+- Every section of the review play-back has a Change button that reopens
+  the form pre-filled and returns straight to the review afterwards.
+- If an income correction leaves the customer ineligible for the accepted
+  product, the concierge switches them to one that fits and says so.
+- Anything typed while the concierge is mid-sentence is queued and answered
+  next — never silently dropped.
+
 ## Testing
 
 Unit tests pin behaviour, not implementation: full-journey tests through the
-state machine, decision-engine tests for every outcome, and a tone-guard
-test that lints the complete concierge voice. `Meridian` is a fictional bank
-created for this demonstration.
+state machine, decision-engine tests for every outcome (including screening
+evasion attempts — demonyms, whitespace, titles), and a tone-guard test that
+lints the complete concierge voice. Date logic is calendar-based and the
+suite passes under UTC, UTC−5, and UTC+14 alike.
+
+A Playwright smoke suite (`e2e/smoke.mjs`) drives the built app through the
+happy path, a review edit, the neutral decline path, and a 380px viewport:
+
+```bash
+pnpm build && pnpm preview --port 4173 &
+node e2e/smoke.mjs   # requires playwright + a chromium install
+```
+
+`Meridian` is a fictional bank created for this demonstration.
