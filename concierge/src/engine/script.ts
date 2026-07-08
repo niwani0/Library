@@ -7,7 +7,7 @@ import type { CustomerGoal } from '../domain/types';
  */
 export const SCRIPT = {
   welcome: [
-    'Good afternoon — I am Evie, and I look after new clients at HSBC.',
+    'Good afternoon — I am Clara, and I look after new clients at HSBC.',
     'Opening an account takes about ten minutes, and you can pause any time. To point you in the right direction: what brings you to us today?',
   ],
   goalAcknowledgement: {

@@ -7,7 +7,7 @@ export function MessageBubble({ role, text }: MessageBubbleProps) {
   const isConcierge = role === 'concierge';
   return (
     <li className={isConcierge ? 'bubble bubble-concierge' : 'bubble bubble-customer'}>
-      <span className="visually-hidden">{isConcierge ? 'Evie: ' : 'You: '}</span>
+      <span className="visually-hidden">{isConcierge ? 'Clara: ' : 'You: '}</span>
       {text}
     </li>
   );

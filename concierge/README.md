@@ -105,5 +105,5 @@ pnpm build && pnpm preview --port 4173 &
 node e2e/smoke.mjs   # requires playwright + a chromium install
 ```
 
-The experience is styled as an HSBC Premier concept ("Evie") for
+The experience is styled as an HSBC Premier concept ("Clara") for
 demonstration purposes; it is not an HSBC product.

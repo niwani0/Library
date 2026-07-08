@@ -23,7 +23,7 @@ export function Header({ onRequestHuman }: HeaderProps) {
           <HexagonMark />
           <div>
             <h1 className="wordmark">HSBC</h1>
-            <p className="masthead-subtitle">Evie · Premier Onboarding</p>
+            <p className="masthead-subtitle">Clara · Premier Onboarding</p>
           </div>
         </div>
         <button type="button" className="btn-quiet" onClick={onRequestHuman}>
