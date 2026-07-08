@@ -6,6 +6,8 @@ import { WhyWeAsk } from '../WhyWeAsk';
 interface IdentityFormProps {
   whyWeAsk: string;
   initialIdentity?: Identity;
+  /** Offer journeys collect email and phone separately, with prefill options. */
+  shouldHideContact?: boolean;
   onSubmitIdentity: (identity: Identity) => void;
 }
 
@@ -19,10 +21,18 @@ const EMPTY_IDENTITY: Identity = {
   phone: '',
 };
 
-export function IdentityForm({ whyWeAsk, initialIdentity, onSubmitIdentity }: IdentityFormProps) {
+export function IdentityForm({
+  whyWeAsk,
+  initialIdentity,
+  shouldHideContact = false,
+  onSubmitIdentity,
+}: IdentityFormProps) {
   const [identity, setIdentity] = useState<Identity>(initialIdentity ?? EMPTY_IDENTITY);
 
-  const isComplete = Object.values(identity).every((value) => value.trim() !== '');
+  const isComplete = Object.entries(identity).every(
+    ([field, value]) =>
+      (shouldHideContact && (field === 'email' || field === 'phone')) || value.trim() !== '',
+  );
 
   function setField(field: keyof Identity, value: string): void {
     setIdentity((previous) => ({ ...previous, [field]: value }));
@@ -87,26 +97,30 @@ export function IdentityForm({ whyWeAsk, initialIdentity, onSubmitIdentity }: Id
             onChange={(event) => setField('residentialAddress', event.target.value)}
           />
         </div>
-        <div className="field">
-          <label htmlFor="identity-email">Email</label>
-          <input
-            id="identity-email"
-            type="email"
-            autoComplete="email"
-            value={identity.email}
-            onChange={(event) => setField('email', event.target.value)}
-          />
-        </div>
-        <div className="field">
-          <label htmlFor="identity-phone">Phone</label>
-          <input
-            id="identity-phone"
-            type="tel"
-            autoComplete="tel"
-            value={identity.phone}
-            onChange={(event) => setField('phone', event.target.value)}
-          />
-        </div>
+        {!shouldHideContact && (
+          <>
+            <div className="field">
+              <label htmlFor="identity-email">Email</label>
+              <input
+                id="identity-email"
+                type="email"
+                autoComplete="email"
+                value={identity.email}
+                onChange={(event) => setField('email', event.target.value)}
+              />
+            </div>
+            <div className="field">
+              <label htmlFor="identity-phone">Phone</label>
+              <input
+                id="identity-phone"
+                type="tel"
+                autoComplete="tel"
+                value={identity.phone}
+                onChange={(event) => setField('phone', event.target.value)}
+              />
+            </div>
+          </>
+        )}
       </div>
       <WhyWeAsk text={whyWeAsk} />
       <button type="submit" className="btn btn-primary" disabled={!isComplete}>

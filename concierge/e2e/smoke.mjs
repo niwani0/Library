@@ -15,7 +15,7 @@ const page = await browser.newPage({ viewport: { width: 1024, height: 900 } });
 page.setDefaultTimeout(15000);
 
 // ---- Happy path ----
-await page.goto(BASE);
+await page.goto(BASE + '/#/classic');
 // Type a question via keyboard DURING the welcome reveal — it must queue, not vanish
 await page.getByPlaceholder('Tell me in your own words…').fill('why do you need my information?');
 await page.keyboard.press('Enter');
@@ -122,7 +122,7 @@ await page.screenshot({ path: `${SHOTS}/06-complete.png` });
 // ---- Decline path is neutral ----
 const page2 = await browser.newPage({ viewport: { width: 1024, height: 900 } });
 page2.setDefaultTimeout(15000);
-await page2.goto(BASE);
+await page2.goto(BASE + '/#/classic');
 await page2.getByRole('button', { name: 'Day-to-day banking' }).click();
 await page2.getByRole('button', { name: 'Under £25k' }).click();
 await page2.getByRole('button', { name: 'Open this account' }).click();
@@ -157,7 +157,7 @@ await page2.screenshot({ path: `${SHOTS}/07-declined.png` });
 
 // ---- Mobile snapshot ----
 const page3 = await browser.newPage({ viewport: { width: 380, height: 800 } });
-await page3.goto(BASE);
+await page3.goto(BASE + '/#/classic');
 await page3.getByText('what brings you to us today').waitFor();
 await page3.screenshot({ path: `${SHOTS}/08-mobile.png` });
 check('renders at 380px', true);

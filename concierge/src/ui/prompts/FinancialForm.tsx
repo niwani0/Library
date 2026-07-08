@@ -17,6 +17,7 @@ interface FinancialFormProps {
   whyWeAsk: string;
   prefilledIncomeBand?: IncomeBand;
   initialFinancial?: FinancialProfile;
+  currencySymbol?: string;
   onSubmitFinancial: (financial: FinancialProfile) => void;
 }
 
@@ -28,6 +29,7 @@ export function FinancialForm({
   whyWeAsk,
   prefilledIncomeBand,
   initialFinancial,
+  currencySymbol = '£',
   onSubmitFinancial,
 }: FinancialFormProps) {
   const [employmentStatus, setEmploymentStatus] = useState<EmploymentStatus>(
@@ -119,7 +121,7 @@ export function FinancialForm({
           </select>
         </div>
         <div className="field field-full">
-          <label htmlFor="financial-inflow">Expected monthly pay-in (£)</label>
+          <label htmlFor="financial-inflow">Expected monthly pay-in ({currencySymbol})</label>
           <input
             id="financial-inflow"
             type="number"

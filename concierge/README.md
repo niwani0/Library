@@ -78,6 +78,28 @@ veto.
 - The demo watchlist lets reviewers exercise these paths on demand: apply as
   `Victor Sanction` (decline) or `Petra Epstein-Pep` (refer).
 
+## The offer-led funnel (v2)
+
+`#/` search results → `#/offer` landing → `#/appstore` store moment →
+`#/apply` the in-app application with Clara. (`#/classic` keeps the original
+goal-led journey.) The offer flow demonstrates:
+
+- **Objection handling before the ask** — a scripted offer knowledge base
+  (rate, minimum, early withdrawal, SDIC protection, maturity) answers
+  questions at any point in the journey, not just at the start.
+- **Prefill-first data capture** — Singpass retrieves identity and document;
+  device details supply email and phone; the purpose of account and goal come
+  from the offer itself. Manual typing is the fallback, never the default.
+- **Gap-driven questioning** — only what no system already knows is asked,
+  plus two soft personalisation questions (services, market sentiment) framed
+  as value, stored as insights and never gating.
+- **Recovery paths** — a failed ID capture keeps the data and defers
+  verification to the background; email typos get a one-tap correction;
+  leaving mid-journey checkpoints everything and resumes with "welcome back".
+- **A finish that sets up the relationship** — transfer details with the
+  funding deadline, biometrics/notifications/marketing choices, and a tour
+  offer.
+
 ## Changing your mind is a first-class path
 
 - Naming a different goal at the recommendation re-runs it — "say so if a

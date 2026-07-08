@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 
+import type { Offer } from '../domain/offers';
 import type { ConsentId, Identity, IdentityDocument } from '../domain/types';
 import type { FinancialProfile, TaxResidency } from '../domain/types';
 import { createConcierge, formatCurrency, type Concierge } from '../engine/orchestrator';
 import type { ConciergeTurn, CustomerAction, EditableSection } from '../engine/types';
+import { clearSavedJourney, loadSavedJourney, saveJourney } from './journey-storage';
 import { FreeTextInput } from './FreeTextInput';
 import { Header } from './Header';
 import { JourneyProgress } from './JourneyProgress';
@@ -19,6 +21,13 @@ import { IdentityForm } from './prompts/IdentityForm';
 import { RecommendationCard } from './prompts/RecommendationCard';
 import { ReviewCard } from './prompts/ReviewCard';
 import { TaxForm } from './prompts/TaxForm';
+import { ChoiceCards } from './prompts/ChoiceCards';
+import { ContactForm } from './prompts/ContactForm';
+import { IdentityConfirmCard } from './prompts/IdentityConfirmCard';
+import { MultiSelect } from './prompts/MultiSelect';
+import { SetupCard } from './prompts/SetupCard';
+import { StepsConsent } from './prompts/StepsConsent';
+import { TransferCard } from './prompts/TransferCard';
 
 interface TranscriptEntry {
   id: number;
@@ -29,8 +38,14 @@ interface TranscriptEntry {
 /** Delay between revealed concierge messages — long enough to read, short enough to respect. */
 const REVEAL_INTERVAL_MS = 650;
 
-export function App() {
-  const engineRef = useRef<Concierge>(createConcierge());
+const ENDED_STAGES = ['complete', 'declined', 'referred'];
+
+interface AppProps {
+  offer?: Offer;
+}
+
+export function App({ offer }: AppProps) {
+  const engineRef = useRef<Concierge>(createConcierge({ offer }));
 
   const [entries, setEntries] = useState<TranscriptEntry[]>([]);
   const [activeTurn, setActiveTurn] = useState<ConciergeTurn | null>(null);
@@ -48,8 +63,10 @@ export function App() {
   // StrictMode's dev-only remount restarts cleanly instead of stranding the
   // welcome messages in cleared timeouts.
   useEffect(() => {
-    engineRef.current = createConcierge();
-    setEntries([]);
+    const saved = offer ? loadSavedJourney(offer.id) : undefined;
+    engineRef.current = createConcierge({ offer, snapshot: saved?.snapshot });
+    setEntries(saved?.transcript ?? []);
+    nextIdRef.current = saved?.transcript.reduce((max, entry) => Math.max(max, entry.id), 0) ?? 0;
     pendingRef.current = [];
     isRevealingRef.current = false;
     revealTurn(engineRef.current.start());
@@ -58,7 +75,20 @@ export function App() {
       timeoutsRef.current = [];
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [offer]);
+
+  // Every completed turn is checkpointed, so leaving never loses progress;
+  // a finished journey clears the checkpoint instead.
+  useEffect(() => {
+    if (!offer || !activeTurn) {
+      return;
+    }
+    if (ENDED_STAGES.includes(activeTurn.stage)) {
+      clearSavedJourney(offer.id);
+      return;
+    }
+    saveJourney(offer.id, { snapshot: engineRef.current.snapshot(), transcript: entries });
+  }, [offer, activeTurn, entries]);
 
   useEffect(() => {
     endOfConversationRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
@@ -180,6 +210,7 @@ export function App() {
           <IdentityForm
             whyWeAsk={prompt.whyWeAsk}
             initialIdentity={engineRef.current.profile.identity}
+            shouldHideContact={Boolean(offer)}
             onSubmitIdentity={handleIdentity}
           />
         );
@@ -197,6 +228,7 @@ export function App() {
             whyWeAsk={prompt.whyWeAsk}
             prefilledIncomeBand={engineRef.current.profile.incomeBand}
             initialFinancial={engineRef.current.profile.financial}
+            currencySymbol={offer ? 'S$' : '£'}
             onSubmitFinancial={handleFinancial}
           />
         );
@@ -237,6 +269,75 @@ export function App() {
         return (
           <CompletionCard accountNumber={prompt.accountNumber} sortCode={prompt.sortCode} />
         );
+      case 'steps-consent':
+        return (
+          <StepsConsent
+            steps={prompt.steps}
+            required={prompt.required}
+            onAgree={(granted) => sendAction({ kind: 'consent', granted }, 'Agreed — let us begin')}
+          />
+        );
+      case 'choice-cards':
+        return (
+          <ChoiceCards
+            options={prompt.options}
+            onSelect={(option) =>
+              sendAction({ kind: 'choice', value: option.value }, option.title)
+            }
+          />
+        );
+      case 'identity-confirm':
+        return (
+          <IdentityConfirmCard
+            profile={engineRef.current.profile}
+            onConfirm={() => sendAction({ kind: 'choice', value: 'confirm' }, 'All correct')}
+            onEdit={() =>
+              sendAction({ kind: 'choice', value: 'edit' }, 'Something needs a change')
+            }
+          />
+        );
+      case 'contact-form':
+        return (
+          <ContactForm
+            onSubmitContact={(email, phone) =>
+              sendAction({ kind: 'contact', email, phone }, 'Contact details provided')
+            }
+          />
+        );
+      case 'multi-select':
+        return (
+          <MultiSelect
+            options={prompt.options}
+            confirmLabel={prompt.confirmLabel}
+            onConfirm={(values) => {
+              const labels = prompt.options
+                .filter((option) => values.includes(option.value))
+                .map((option) => option.label);
+              sendAction(
+                { kind: 'multi-select', values },
+                labels.length > 0 ? labels.join(', ') : 'None of these for now',
+              );
+            }}
+          />
+        );
+      case 'transfer':
+        return (
+          <TransferCard
+            accountNumber={prompt.accountNumber}
+            rate={prompt.rate}
+            amountMinimum={prompt.amountMinimum}
+            deadline={prompt.deadline}
+            isVerificationPending={prompt.isVerificationPending}
+            onContinue={() => sendAction({ kind: 'choice', value: 'continue' }, 'Finish setting up')}
+          />
+        );
+      case 'setup':
+        return (
+          <SetupCard
+            options={prompt.options}
+            onConfirm={(enabled) => sendAction({ kind: 'setup', enabled }, 'Preferences set')}
+          />
+        );
       case 'ended':
         return <p className="dock-ended">This conversation is complete.</p>;
     }
@@ -276,8 +377,9 @@ export function App() {
         <div ref={endOfConversationRef} />
       </main>
       <footer className="legal-strip">
-        Eligible deposits protected up to £85,000 by the FSCS · This is a concept
-        demonstration and not an HSBC product.
+        {offer
+          ? 'Deposits insured by SDIC up to S$100,000 per depositor · This is a concept demonstration and not an HSBC product.'
+          : 'Eligible deposits protected up to £85,000 by the FSCS · This is a concept demonstration and not an HSBC product.'}
       </footer>
     </div>
   );
