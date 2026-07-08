@@ -75,9 +75,17 @@ export interface IdentityDocument {
   issuingCountry: string;
 }
 
+/** Soft signals volunteered during conversation — personalisation, never gating. */
+export interface CustomerInsights {
+  services?: string[];
+  marketSentiment?: string;
+}
+
 export interface CustomerProfile {
   goal?: CustomerGoal;
   goalContext?: string;
+  offerId?: string;
+  insights?: CustomerInsights;
   /** Captured once in discovery and pre-filled later — never ask twice. */
   incomeBand?: IncomeBand;
   identity?: Identity;

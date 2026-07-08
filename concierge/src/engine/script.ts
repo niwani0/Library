@@ -91,6 +91,120 @@ export const SCRIPT = {
     { label: '£75k – £150k', value: '75k-150k' },
     { label: 'Over £150k', value: 'over-150k' },
   ],
+  offer: {
+    welcome: [
+      'Good afternoon — I am Clara, and I look after new Premier clients at HSBC.',
+      'You are here for the 12-month term deposit at 3.88% p.a. — a good time to lock that in. Ask me anything about it first, or we can get straight into the application.',
+    ],
+    resumed: [
+      'Welcome back — everything you shared is saved.',
+      'We will pick up exactly where you left off.',
+    ],
+    fallback:
+      'I may not have caught that. Ask me anything about the offer, or tap ready when you want to begin.',
+    anythingElse: 'Anything else on your mind, or shall we begin?',
+    stepsIntro:
+      'Three steps: verify who you are, a few quick questions, then your account is open and ready to fund. About five minutes end to end.',
+    idMethodIntro:
+      'First, verifying you. Singpass is fastest — about twenty seconds — or upload your ID and I will read the details from it.',
+    singpassDone:
+      'All retrieved from Singpass, so there is nothing to type. Have a quick look — is everything correct?',
+    uploadIntro:
+      'Take a photo or upload your passport, driving licence, or NRIC. I will pull the details from it so you do not have to type them.',
+    idDeferred:
+      'That document is giving me a little trouble, but everything you entered is safe. We will keep going while I retry the check in the background — nothing for you to redo.',
+    identityIntro: 'Your details, exactly as they appear on your ID.',
+    contactMethodIntro: 'Nearly done with the typing. How would you like to share your email and mobile number?',
+    contactPrefilled: 'Pulled from your device — one less thing to type.',
+    contactManualIntro: 'Your email and mobile number, and I will take it from there.',
+    typoQuestion: (suggested: string) =>
+      `Quick check — did you mean ${suggested}? A typo here would block your verification emails.`,
+    gapIntro:
+      'Nearly everything is already filled in. What is left are the few questions no database can answer for you.',
+    servicesIntro:
+      'Because this offer comes with Premier, it also opens up services some clients find useful later. So I can point you to the right ones — do any of these sound like you?',
+    sentimentIntro:
+      'Out of interest — have you been leaning toward secure yields like this lately, or do you still keep a foot in the markets?',
+    insightThanks: 'Noted — that helps me point you to the right things later on.',
+    accountOpen: [
+      'Your Premier account is open, and your 3.88% rate is locked.',
+      'Transfer your deposit via FAST or PayNow when you are ready — the details and your deadline are below.',
+    ],
+    verificationPendingNote:
+      'One note: I am still finishing your document check in the background, so you may hear from us if we need one more photo.',
+    setupIntro:
+      'Last touches — set up Face ID and choose what we may send you. Each one is optional and can be changed any time.',
+    tourIntro:
+      'That is everything — you are all set. Would you like a quick tour of the app now, or shall I remind you later?',
+    tourNow: 'This way — the tour starts from your home screen.',
+    tourLater: 'Of course. I will check in once your deposit lands — enjoy the rest of your day.',
+    readyChip: { label: "I'm ready to start", value: 'ready' },
+    idMethodCards: [
+      {
+        value: 'singpass',
+        title: 'Retrieve with Singpass',
+        description: 'Your verified details, filled in for you in seconds.',
+        badge: 'Fastest',
+      },
+      {
+        value: 'upload',
+        title: 'Upload my ID',
+        description: 'Passport, driving licence, or NRIC — I will read it for you.',
+      },
+    ],
+    contactMethodCards: [
+      {
+        value: 'platform',
+        title: 'Use my device details',
+        description: 'The email and number already on this phone.',
+        badge: 'No typing',
+      },
+      {
+        value: 'manual',
+        title: 'Type them in',
+        description: 'Enter a different email or number.',
+      },
+    ],
+    serviceOptions: [
+      { label: 'FX and multi-currency', value: 'fx' },
+      { label: 'Priority service line', value: 'priority-service' },
+      { label: 'Dedicated wealth advisory', value: 'wealth-advisory' },
+      { label: 'International banking', value: 'international' },
+      { label: 'None of these for now', value: 'none' },
+    ],
+    sentimentChips: [
+      { label: 'Mostly secure yields for now', value: 'secure-yields' },
+      { label: 'Still active in the markets', value: 'active-markets' },
+      { label: 'A bit of both', value: 'balanced' },
+      { label: "I'd rather not say", value: 'undisclosed' },
+    ],
+    setupOptions: [
+      {
+        id: 'biometrics',
+        title: 'Face ID sign-in',
+        description: 'Sign in with a glance instead of a password.',
+      },
+      {
+        id: 'push',
+        title: 'Account notifications',
+        description: 'Know the moment your deposit lands.',
+      },
+      {
+        id: 'marketing',
+        title: 'Offers and insights',
+        description: 'Occasional rates and ideas — entirely optional.',
+      },
+    ],
+    tourChips: [
+      { label: 'Show me around now', value: 'tour-now' },
+      { label: 'Remind me later', value: 'tour-later' },
+    ],
+    journeySteps: [
+      'Verify who you are — Singpass or a photo of your ID',
+      'A few quick questions — most are already filled in',
+      'Account open — transfer your deposit within 30 days',
+    ],
+  },
 } as const;
 
 /** Flattens every concierge-visible string for the tone-guard test. */

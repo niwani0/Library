@@ -17,6 +17,18 @@ export type Stage =
   | 'discovery'
   | 'discovery-context'
   | 'recommendation'
+  | 'offer-welcome'
+  | 'consent-steps'
+  | 'id-method'
+  | 'identity-confirm'
+  | 'contact-method'
+  | 'contact'
+  | 'contact-typo'
+  | 'services'
+  | 'sentiment'
+  | 'transfer'
+  | 'setup'
+  | 'tour'
   | 'identity'
   | 'document'
   | 'financial'
@@ -33,8 +45,35 @@ export interface Chip {
   value: string;
 }
 
+export interface ChoiceCard {
+  value: string;
+  title: string;
+  description: string;
+  badge?: string;
+}
+
+export interface SetupOption {
+  id: string;
+  title: string;
+  description: string;
+}
+
 export type ConciergePrompt =
   | { kind: 'chips'; options: Chip[]; allowFreeText: boolean }
+  | { kind: 'steps-consent'; steps: string[]; required: ConsentId[] }
+  | { kind: 'choice-cards'; options: ChoiceCard[] }
+  | { kind: 'identity-confirm' }
+  | { kind: 'contact-form' }
+  | { kind: 'multi-select'; options: Chip[]; confirmLabel: string }
+  | {
+      kind: 'transfer';
+      accountNumber: string;
+      rate: string;
+      amountMinimum: string;
+      deadline: string;
+      isVerificationPending: boolean;
+    }
+  | { kind: 'setup'; options: SetupOption[] }
   | { kind: 'identity-form'; whyWeAsk: string }
   | { kind: 'document-form'; whyWeAsk: string }
   | { kind: 'financial-form'; whyWeAsk: string }
@@ -63,6 +102,9 @@ export type CustomerAction =
   | { kind: 'financial'; financial: FinancialProfile }
   | { kind: 'tax'; taxResidency: TaxResidency }
   | { kind: 'consent'; granted: ConsentId[] }
+  | { kind: 'contact'; email: string; phone: string }
+  | { kind: 'multi-select'; values: string[] }
+  | { kind: 'setup'; enabled: string[] }
   | { kind: 'confirm-review' }
   | { kind: 'deposit'; amount: number }
   | { kind: 'skip-funding' }

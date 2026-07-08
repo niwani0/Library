@@ -2,8 +2,15 @@ import { createAuditTrail, type AuditTrail } from '../domain/audit/audit-trail';
 import { assessCompliance } from '../domain/compliance/decision-engine';
 import { checkDocument } from '../domain/kyc/document-checks';
 import { checkIdentity } from '../domain/kyc/identity-checks';
+import { findFaqAnswer, formatSgd, fundingDeadline, type Offer } from '../domain/offers';
 import { INCOME_BAND_ORDER, meetsIncomeRequirement } from '../domain/product-catalog';
 import { recommendProduct } from '../domain/recommendation/recommender';
+import { checkContact, checkIdentityCore } from '../domain/kyc/identity-checks';
+import {
+  fetchPlatformContact,
+  fetchSingpassRecord,
+  suggestEmailCorrection,
+} from './prefill';
 import type {
   ComplianceDecision,
   ConsentId,
@@ -29,14 +36,27 @@ export interface ConciergeDeps {
   clock?: () => Date;
   /** Randomness boundary — injected so tests stay deterministic. */
   accountNumberSource?: () => string;
+  /** Present when the customer arrived from a marketing offer. */
+  offer?: Offer;
+  /** Restores a journey saved mid-way — the customer never re-answers. */
+  snapshot?: ConciergeSnapshot;
+}
+
+export interface ConciergeSnapshot {
+  stage: Stage;
+  profile: CustomerProfile;
+  accountNumber?: string;
+  isVerificationPending: boolean;
 }
 
 export interface Concierge {
   start(): ConciergeTurn;
   handle(action: CustomerAction): ConciergeTurn;
+  snapshot(): ConciergeSnapshot;
   readonly profile: CustomerProfile;
   readonly audit: AuditTrail;
   readonly recommendation: Recommendation | undefined;
+  readonly offer: Offer | undefined;
   /** Populated after the compliance gate has run. Never shown to declined customers. */
   readonly decision: ComplianceDecision | undefined;
 }
@@ -48,17 +68,43 @@ export function createConcierge(deps: ConciergeDeps = {}): Concierge {
   const clock = deps.clock ?? (() => new Date());
   const accountNumberSource = deps.accountNumberSource ?? randomAccountNumber;
 
-  const profile: CustomerProfile = { consents: [] };
+  const offer = deps.offer;
+  const profile: CustomerProfile = deps.snapshot?.profile ?? { consents: [] };
   const audit = createAuditTrail(clock);
-  let stage: Stage = 'discovery';
+  let stage: Stage = deps.snapshot?.stage ?? (offer ? 'offer-welcome' : 'discovery');
   let recommendation: Recommendation | undefined;
   let decision: ComplianceDecision | undefined;
-  let accountNumber: string | undefined;
+  let accountNumber: string | undefined = deps.snapshot?.accountNumber;
   let isReturningToReview = false;
+  let isVerificationPending = deps.snapshot?.isVerificationPending ?? false;
+  /** Contact details held aside while the customer resolves a likely typo. */
+  let heldContact: { email: string; phone: string; suggested: string } | undefined;
 
   function start(): ConciergeTurn {
+    if (deps.snapshot) {
+      audit.record('journey-resumed', `Customer returned at stage ${stage}`);
+      return turn([...SCRIPT.offer.resumed], currentPrompt());
+    }
     audit.record('journey-started', 'Customer opened the concierge');
+    if (offer) {
+      profile.offerId = offer.id;
+      profile.goal = 'saving';
+      profile.goalContext = `Arrived from offer: ${offer.name}`;
+      audit.record('offer-context', offer.name);
+      return turn([...SCRIPT.offer.welcome], offerQaPrompt());
+    }
     return turn([...SCRIPT.welcome], goalPrompt());
+  }
+
+  function snapshot(): ConciergeSnapshot {
+    // The typo interlude is ephemeral — resuming re-asks for contact details.
+    const savedStage = stage === 'contact-typo' ? 'contact' : stage;
+    return {
+      stage: savedStage,
+      profile: JSON.parse(JSON.stringify(profile)) as CustomerProfile,
+      accountNumber,
+      isVerificationPending,
+    };
   }
 
   function handle(action: CustomerAction): ConciergeTurn {
@@ -77,6 +123,21 @@ export function createConcierge(deps: ConciergeDeps = {}): Concierge {
     if (interpretation.wantsHuman) {
       audit.record('handoff-requested', `Customer asked for a person at stage ${stage}`);
       return turn([...SCRIPT.handoff], currentPrompt());
+    }
+    // Offer questions are welcome at any point in the journey (steps 7-9).
+    if (offer) {
+      const faq = findFaqAnswer(offer, text);
+      if (faq) {
+        audit.record('offer-question', faq.id);
+        const followUp = stage === 'offer-welcome' ? [SCRIPT.offer.anythingElse] : [];
+        return turn([faq.answer, ...followUp], currentPrompt());
+      }
+      if (stage === 'offer-welcome') {
+        if (/\b(ready|start|begin|apply|let'?s go|yes)\b/i.test(text)) {
+          return beginApplication();
+        }
+        return turn([SCRIPT.offer.fallback], currentPrompt());
+      }
     }
     if (interpretation.asksWhy) {
       return turn([SCRIPT.whyReassurance], currentPrompt());
@@ -103,6 +164,106 @@ export function createConcierge(deps: ConciergeDeps = {}): Concierge {
 
   function handleStructured(action: CustomerAction): ConciergeTurn {
     switch (stage) {
+      case 'offer-welcome':
+        if (action.kind === 'choice' && action.value === 'ready') {
+          return beginApplication();
+        }
+        if (action.kind === 'choice') {
+          const faq = offer?.faq.find((entry) => entry.id === action.value);
+          if (faq) {
+            audit.record('offer-question', faq.id);
+            return turn([faq.answer, SCRIPT.offer.anythingElse], currentPrompt());
+          }
+        }
+        break;
+      case 'consent-steps':
+        if (action.kind === 'consent') {
+          return captureUpfrontConsents(action.granted);
+        }
+        break;
+      case 'id-method':
+        if (action.kind === 'choice' && action.value === 'singpass') {
+          return applySingpass();
+        }
+        if (action.kind === 'choice' && action.value === 'upload') {
+          stage = 'document';
+          return turn([SCRIPT.offer.uploadIntro], currentPrompt());
+        }
+        break;
+      case 'identity-confirm':
+        if (action.kind === 'choice' && action.value === 'confirm') {
+          audit.record('identity-confirmed', 'Singpass details confirmed by customer');
+          stage = 'contact-method';
+          return turn([SCRIPT.offer.contactMethodIntro], currentPrompt());
+        }
+        if (action.kind === 'choice' && action.value === 'edit') {
+          stage = 'identity';
+          return turn([SCRIPT.offer.identityIntro], currentPrompt());
+        }
+        break;
+      case 'contact-method':
+        if (action.kind === 'choice' && action.value === 'platform') {
+          return applyPlatformContact();
+        }
+        if (action.kind === 'choice' && action.value === 'manual') {
+          stage = 'contact';
+          return turn([SCRIPT.offer.contactManualIntro], currentPrompt());
+        }
+        break;
+      case 'contact':
+        if (action.kind === 'contact') {
+          return captureContact(action.email, action.phone);
+        }
+        break;
+      case 'contact-typo':
+        if (action.kind === 'choice' && heldContact) {
+          const chosenEmail =
+            action.value === 'use-suggested' ? heldContact.suggested : heldContact.email;
+          const phone = heldContact.phone;
+          audit.record('email-typo-resolved', action.value);
+          heldContact = undefined;
+          return applyContact(chosenEmail, phone);
+        }
+        break;
+      case 'services':
+        if (action.kind === 'multi-select') {
+          profile.insights = { ...profile.insights, services: action.values };
+          audit.record('insight-services', action.values.join(', ') || 'none');
+          stage = 'sentiment';
+          return turn(
+            [SCRIPT.offer.insightThanks, SCRIPT.offer.sentimentIntro],
+            currentPrompt(),
+          );
+        }
+        break;
+      case 'sentiment':
+        if (action.kind === 'choice') {
+          profile.insights = { ...profile.insights, marketSentiment: action.value };
+          audit.record('insight-sentiment', action.value);
+          stage = 'tax';
+          return turn([SCRIPT.taxIntro], currentPrompt());
+        }
+        break;
+      case 'transfer':
+        if (action.kind === 'choice' && action.value === 'continue') {
+          stage = 'setup';
+          return turn([SCRIPT.offer.setupIntro], currentPrompt());
+        }
+        break;
+      case 'setup':
+        if (action.kind === 'setup') {
+          return captureSetup(action.enabled);
+        }
+        break;
+      case 'tour':
+        if (action.kind === 'choice') {
+          audit.record('tour-choice', action.value);
+          stage = 'complete';
+          const closing =
+            action.value === 'tour-now' ? SCRIPT.offer.tourNow : SCRIPT.offer.tourLater;
+          return turn([closing], { kind: 'ended' });
+        }
+        break;
       case 'discovery':
         if (action.kind === 'choice' && isGoal(action.value)) {
           return captureGoal(action.value, 'chip selection');
@@ -145,6 +306,9 @@ export function createConcierge(deps: ConciergeDeps = {}): Concierge {
       case 'review':
         if (action.kind === 'confirm-review') {
           audit.record('review-confirmed', 'Customer confirmed their details');
+          if (offer) {
+            return runComplianceGate();
+          }
           stage = 'consent';
           return turn([SCRIPT.consentIntro], currentPrompt());
         }
@@ -178,6 +342,87 @@ export function createConcierge(deps: ConciergeDeps = {}): Concierge {
     return turn([SCRIPT.fallback], currentPrompt());
   }
 
+  function beginApplication(): ConciergeTurn {
+    audit.record('application-started', offer?.name ?? '');
+    stage = 'consent-steps';
+    return turn([SCRIPT.offer.stepsIntro], currentPrompt());
+  }
+
+  function captureUpfrontConsents(granted: ConsentId[]): ConciergeTurn {
+    const accepted = REQUIRED_CONSENTS.filter((id) => granted.includes(id));
+    if (accepted.length < REQUIRED_CONSENTS.length) {
+      return turn([SCRIPT.consentMissing], currentPrompt());
+    }
+    const grantedAt = clock().toISOString();
+    profile.consents = accepted.map((id) => ({ id, grantedAt }));
+    audit.record('consents-granted', accepted.join(', '));
+    stage = 'id-method';
+    return turn([SCRIPT.offer.idMethodIntro], currentPrompt());
+  }
+
+  function applySingpass(): ConciergeTurn {
+    const record = fetchSingpassRecord();
+    profile.identity = { ...record.identity, email: '', phone: '' };
+    profile.document = record.document;
+    audit.record('singpass-retrieved', record.identity.fullName);
+    audit.record('document-accepted', `${record.document.type} via Singpass`);
+    stage = 'identity-confirm';
+    return turn([SCRIPT.offer.singpassDone], currentPrompt());
+  }
+
+  function applyPlatformContact(): ConciergeTurn {
+    const contact = fetchPlatformContact();
+    audit.record('contact-prefilled', 'Device-provided email and phone');
+    return finishContact(contact.email, contact.phone, SCRIPT.offer.contactPrefilled);
+  }
+
+  function captureContact(email: string, phone: string): ConciergeTurn {
+    const suggested = suggestEmailCorrection(email);
+    if (suggested) {
+      heldContact = { email, phone, suggested };
+      stage = 'contact-typo';
+      return turn([SCRIPT.offer.typoQuestion(suggested)], currentPrompt());
+    }
+    return applyContact(email, phone);
+  }
+
+  function applyContact(email: string, phone: string): ConciergeTurn {
+    const result = checkContact(email, phone);
+    if (!result.accepted) {
+      stage = 'contact';
+      return turn([SCRIPT.formIssuesIntro, ...result.issues], currentPrompt());
+    }
+    return finishContact(email, phone, undefined);
+  }
+
+  function finishContact(email: string, phone: string, note: string | undefined): ConciergeTurn {
+    if (!profile.identity) {
+      return turn([SCRIPT.fallback], currentPrompt());
+    }
+    profile.identity = { ...profile.identity, email, phone };
+    audit.record('contact-captured', email);
+    if (isReturningToReview) {
+      isReturningToReview = false;
+      stage = 'review';
+      return turn([SCRIPT.backToReview], currentPrompt());
+    }
+    stage = 'financial';
+    const messages = note ? [note, SCRIPT.offer.gapIntro] : [SCRIPT.offer.gapIntro];
+    return turn(messages, currentPrompt());
+  }
+
+  function captureSetup(enabled: string[]): ConciergeTurn {
+    if (enabled.includes('marketing')) {
+      profile.consents = [
+        ...profile.consents,
+        { id: 'marketing', grantedAt: clock().toISOString() },
+      ];
+    }
+    audit.record('setup-choices', enabled.join(', ') || 'none');
+    stage = 'tour';
+    return turn([SCRIPT.offer.tourIntro], currentPrompt());
+  }
+
   function captureGoal(goal: CustomerGoal, source: string): ConciergeTurn {
     profile.goal = goal;
     profile.goalContext = source;
@@ -206,22 +451,44 @@ export function createConcierge(deps: ConciergeDeps = {}): Concierge {
   }
 
   function captureIdentity(identity: Identity): ConciergeTurn {
-    const result = checkIdentity(identity, clock());
+    // Offer journeys collect contact details separately, so only the core
+    // identity is validated here; classic journeys validate everything.
+    const result = offer
+      ? checkIdentityCore(identity, clock())
+      : checkIdentity(identity, clock());
     if (!result.accepted) {
       return turn([SCRIPT.formIssuesIntro, ...result.issues], currentPrompt());
     }
-    profile.identity = identity;
+    const priorContact = profile.identity;
+    profile.identity = offer
+      ? { ...identity, email: priorContact?.email ?? '', phone: priorContact?.phone ?? '' }
+      : identity;
     audit.record('identity-captured', identity.fullName);
+    if (offer) {
+      return proceedAfterCapture('contact-method', SCRIPT.offer.contactMethodIntro);
+    }
     return proceedAfterCapture('document', SCRIPT.documentIntro);
   }
 
   function captureDocument(document: IdentityDocument): ConciergeTurn {
     const result = checkDocument(document, clock());
     if (!result.accepted) {
+      // Offer journeys never stall on a failed capture: keep what was read,
+      // retry verification in the background, and let the customer continue.
+      if (offer && !isReturningToReview) {
+        isVerificationPending = true;
+        profile.document = document;
+        audit.record('id-verification-deferred', result.issues.join('; '));
+        stage = 'identity';
+        return turn([SCRIPT.offer.idDeferred, SCRIPT.offer.identityIntro], currentPrompt());
+      }
       return turn([SCRIPT.formIssuesIntro, ...result.issues], currentPrompt());
     }
     profile.document = document;
     audit.record('document-accepted', `${document.type} (${document.issuingCountry})`);
+    if (offer) {
+      return proceedAfterCapture('identity', SCRIPT.offer.identityIntro);
+    }
     return proceedAfterCapture('financial', SCRIPT.financialIntro);
   }
 
@@ -229,7 +496,9 @@ export function createConcierge(deps: ConciergeDeps = {}): Concierge {
     profile.financial = financial;
     audit.record('financial-captured', `Source of funds: ${financial.sourceOfFunds}`);
     const adjustments = reconcileProductEligibility(financial.annualIncomeBand);
-    const next = proceedAfterCapture('tax', SCRIPT.taxIntro);
+    const next = offer
+      ? proceedAfterCapture('services', SCRIPT.offer.servicesIntro)
+      : proceedAfterCapture('tax', SCRIPT.taxIntro);
     return { ...next, messages: [...adjustments, ...next.messages] };
   }
 
@@ -301,6 +570,14 @@ export function createConcierge(deps: ConciergeDeps = {}): Concierge {
 
     accountNumber = accountNumberSource();
     audit.record('account-opened', `Account ${accountNumber}`);
+    if (offer) {
+      stage = 'transfer';
+      const messages: string[] = [SCRIPT.processing, ...SCRIPT.offer.accountOpen];
+      if (isVerificationPending) {
+        messages.push(SCRIPT.offer.verificationPendingNote);
+      }
+      return turn(messages, currentPrompt());
+    }
     stage = 'funding';
     return turn([SCRIPT.processing, ...SCRIPT.approvedFunding], currentPrompt());
   }
@@ -338,8 +615,65 @@ export function createConcierge(deps: ConciergeDeps = {}): Concierge {
     };
   }
 
+  function offerQaPrompt(): ConciergePrompt {
+    const suggestions = (offer?.faq ?? [])
+      .slice(0, 3)
+      .map((entry) => ({ label: entry.question, value: entry.id }));
+    return {
+      kind: 'chips',
+      options: [...suggestions, { ...SCRIPT.offer.readyChip }],
+      allowFreeText: true,
+    };
+  }
+
   function currentPrompt(): ConciergePrompt {
     switch (stage) {
+      case 'offer-welcome':
+        return offerQaPrompt();
+      case 'consent-steps':
+        return {
+          kind: 'steps-consent',
+          steps: [...SCRIPT.offer.journeySteps],
+          required: [...REQUIRED_CONSENTS],
+        };
+      case 'id-method':
+        return { kind: 'choice-cards', options: [...SCRIPT.offer.idMethodCards] };
+      case 'identity-confirm':
+        return { kind: 'identity-confirm' };
+      case 'contact-method':
+        return { kind: 'choice-cards', options: [...SCRIPT.offer.contactMethodCards] };
+      case 'contact':
+        return { kind: 'contact-form' };
+      case 'contact-typo':
+        return {
+          kind: 'chips',
+          options: [
+            { label: 'Use the corrected address', value: 'use-suggested' },
+            { label: 'Keep what I typed', value: 'keep-original' },
+          ],
+          allowFreeText: false,
+        };
+      case 'services':
+        return {
+          kind: 'multi-select',
+          options: [...SCRIPT.offer.serviceOptions],
+          confirmLabel: 'Continue',
+        };
+      case 'sentiment':
+        return { kind: 'chips', options: [...SCRIPT.offer.sentimentChips], allowFreeText: false };
+      case 'transfer':
+        return {
+          kind: 'transfer',
+          accountNumber: accountNumber ?? '',
+          rate: offer?.headlineRate ?? '',
+          amountMinimum: offer ? formatSgd(offer.minimumDeposit) : '',
+          deadline: offer ? fundingDeadline(offer, clock()) : '',
+          isVerificationPending,
+        };
+      case 'setup':
+        return { kind: 'setup', options: [...SCRIPT.offer.setupOptions] };
+      case 'tour':
+        return { kind: 'chips', options: [...SCRIPT.offer.tourChips], allowFreeText: false };
       case 'discovery':
         return goalPrompt();
       case 'discovery-context':
@@ -382,8 +716,10 @@ export function createConcierge(deps: ConciergeDeps = {}): Concierge {
   return {
     start,
     handle,
+    snapshot,
     profile,
     audit,
+    offer,
     get recommendation() {
       return recommendation;
     },
