@@ -30,35 +30,30 @@ interface TranscriptEntry {
 const REVEAL_INTERVAL_MS = 650;
 
 export function App() {
-  const engineRef = useRef<Concierge | null>(null);
-  if (!engineRef.current) {
-    engineRef.current = createConcierge();
-  }
-  const engine = engineRef.current;
+  const engineRef = useRef<Concierge>(createConcierge());
 
   const [entries, setEntries] = useState<TranscriptEntry[]>([]);
   const [activeTurn, setActiveTurn] = useState<ConciergeTurn | null>(null);
   const [isTyping, setIsTyping] = useState(false);
   const [productName, setProductName] = useState<string | undefined>(undefined);
 
-  const hasStartedRef = useRef(false);
   const nextIdRef = useRef(0);
   const timeoutsRef = useRef<number[]>([]);
   const endOfConversationRef = useRef<HTMLDivElement | null>(null);
 
+  // Each effect run begins a fresh session and the cleanup aborts it, so
+  // StrictMode's dev-only remount restarts cleanly instead of stranding the
+  // welcome messages in cleared timeouts.
   useEffect(() => {
-    if (hasStartedRef.current) {
-      return;
-    }
-    hasStartedRef.current = true;
-    revealTurn(engine.start());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
+    engineRef.current = createConcierge();
+    setEntries([]);
+    setProductName(undefined);
+    revealTurn(engineRef.current.start());
     return () => {
       timeoutsRef.current.forEach((id) => window.clearTimeout(id));
+      timeoutsRef.current = [];
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -96,7 +91,7 @@ export function App() {
     if (echo) {
       appendEntry('customer', echo);
     }
-    revealTurn(engine.handle(action));
+    revealTurn(engineRef.current.handle(action));
   }
 
   function handleFreeText(text: string): void {
@@ -165,7 +160,7 @@ export function App() {
         return (
           <FinancialForm
             whyWeAsk={prompt.whyWeAsk}
-            prefilledIncomeBand={engine.profile.incomeBand}
+            prefilledIncomeBand={engineRef.current.profile.incomeBand}
             onSubmitFinancial={handleFinancial}
           />
         );
@@ -174,7 +169,7 @@ export function App() {
       case 'review':
         return (
           <ReviewCard
-            profile={engine.profile}
+            profile={engineRef.current.profile}
             productName={productName}
             onConfirm={() => sendAction({ kind: 'confirm-review' }, 'Everything is correct')}
           />
