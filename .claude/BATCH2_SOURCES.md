@@ -70,7 +70,7 @@ mentions with no separate LICENSE file: andrej-karpathy-skills, pua).
 | headroomlabs-ai/headroom | e8151f059b4a9ba3fa43c7c67a7d310af08c1f3d | Apache 2.0 |
 | bmad-code-org/BMAD-METHOD | 50b3238abb598c8f00725536c8dd2463c87307db | MIT |
 | mvanhorn/last30days-skill | a5b3ca1f3ccd76eb176603991ae1ec1e07105ce0 | MIT |
-| pbakaus/impeccable | 582f23eae3c9ef4db71366e944b0555d65b7aacc | Apache 2.0 |
+| pbakaus/impeccable | 0d1c34e9d0fcfff1070c7210cd808eda504105d7 | Apache 2.0 |
 | sickn33/antigravity-awesome-skills | 7595cdf403884c25112f8b06450b5f846244a845 | CC BY 4.0 (capped) |
 | kepano/obsidian-skills | a1dc48e68138490d522c04cbf5822214c6eb1202 | MIT |
 | wshobson/agents | 5cc2549a50fc672230efd0a0307e2fd27ffba792 | MIT (capped) |

@@ -16,6 +16,7 @@ Leonxlnx/taste-skill batches (see `ARCADS_SOURCE.md` and
 | `ai-media-generator` | https://github.com/Hao0321/ai-media-generator | `fdb63315f851792c2e342288b6c3b696077d94b9` | MIT |
 | 165 skills under `skills/*/*/` in the source repo, flattened here to one folder per skill (category grouping dropped since Claude Code discovers skills as direct children of `.claude/skills/`) | https://github.com/GarethManning/education-agent-skills | `9c06a5c557bf929c8e6b702056fcd0f56836670b` | **CC BY-SA 4.0** (share-alike — modifications/redistribution of these specific skills must carry the same license and attribution) |
 | `rocket-fuel` (from `rocket-fuel/`; requires the OpenAI Codex CLI at runtime) | https://github.com/NulightJens/rocket-fuel-skill | `47dde42974cdd7df11c7c1d89f7d9a11b234b176` | MIT (see folder's `LICENSE`) |
+| `remotion-video` (repo-root `SKILL.md` + `scripts/` + `templates/`; READMEs skipped) | https://github.com/wshuyi/remotion-video-skill | `d16ebd9ca330d636cf82bfd33d48ae12df74fadd` | MIT (README-stated, no LICENSE file in repo) |
 
 Setup scripts, `.env`/API-key handling, CLI packaging, and non-skill reference
 assets (screenshots, example projects, docs sites) from each source repo were
