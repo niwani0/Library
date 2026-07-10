@@ -63,7 +63,7 @@ mentions with no separate LICENSE file: andrej-karpathy-skills, pua).
 | DietrichGebert/ponytail | 40e50d9e03242aa5dd53ac771950f9127362b25f | MIT |
 | Egonex-AI/Understand-Anything | 0e8ad84a2a5236dca533beef618d71ee3f4568f6 | MIT |
 | addyosmani/agent-skills | 8c6530305396f341b5da7201cf1f7e390fdb863f | MIT |
-| ruvnet/ruflo | a5f86ad0ada8aca3e8f664202a452714355990f5 | MIT (capped) |
+| ruvnet/ruflo | 7ef4d4e655d81c0451f6f40f35729cce6c9928e7 | MIT (capped) |
 | mem0ai/mem0 | cd79fa8914b5b1cf66daacc957d826065df57df8 | Apache 2.0 |
 | santifer/career-ops | 220288e93753933ceafe12f7bcb71ae6788bdeb0 | MIT |
 | MemPalace/mempalace | da5a48caf5d8a843df7568a00e44c714bd91ab11 | MIT |
