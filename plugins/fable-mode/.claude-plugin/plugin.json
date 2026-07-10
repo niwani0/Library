@@ -1,0 +1,8 @@
+{
+  "name": "fable-mode",
+  "version": "1.0.0",
+  "description": "Fable-style working discipline: deeper scoping, evidence checks, adversarial review, verification, and clear reporting for high-stakes tasks.",
+  "author": {
+    "name": "niwani0"
+  }
+}
