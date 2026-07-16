@@ -46,12 +46,29 @@ The trajectory chart's series palette was validated for colourblind-safety
 with the `dataviz` skill validator (light-mode categorical: blue / teal /
 amber, plus the IWPB-9 total as an emphasized dark line with direct labels).
 
-## Using it
+## Formats
 
-Open `index.html` in any browser.
+- **`index.html`** — the interactive web deck (17 slides). Navigate with arrow
+  keys / space / PageUp / PageDown, the on-screen `‹ ›`, or `Home` / `End`.
+  The print stylesheet lays out every slide as a 16:9 page.
+- **`Wealth-Penetration-Funnel.pptx`** — native PowerPoint (24 slides = the 17
+  core slides + a 7-slide appendix). Regenerate with `python3 build_pptx.py`.
 
-- **Navigate:** arrow keys / space / PageUp / PageDown, on-screen `‹ ›`, or `Home` / `End`.
-- **Print / PDF:** the print stylesheet lays out every slide as a 16:9 page.
+## Appendix (PPTX only)
+
+1. Appendix divider
+2. **Taxonomy mapping key** — reconciles the three market views (IWPB-9 FRP ·
+   Core-5 NNM · NNIA product tree), with the AOC/China decode flagged for
+   confirmation.
+3. **Wealth penetration %** — full per-market trajectory 2024→2030
+4. **TRB qualifiers %** — full per-market trajectory 2024→2030
+5. **Active customers + new-cohort @MOB3** penetration tables
+6. **NNIA by region + Core-5 momentum** recap
+7. **Rendered penetration chart + sources & caveats**
+
+The trajectory slide carries a **native, editable** PowerPoint line chart; the
+appendix embeds the **pixel-perfect rendered** version of the same chart.
+Market classifications match the web deck (unchanged).
 
 ## Notes
 
