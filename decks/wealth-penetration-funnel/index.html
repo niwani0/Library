@@ -24,7 +24,6 @@
     --good: #1f8a4c;
     --warn: #b8860b;
     --bad: #c0392b;
-    /* chart series (validated light-mode categorical) */
     --s-total: #0b1e34;
     --s-asia: #1f6feb;
     --s-ameu: #0f9488;
@@ -141,11 +140,16 @@
   .decision::before { counter-increment: d; content: counter(d); flex: none; width: 27px; height: 27px; border-radius: 8px; background: var(--gold); color: var(--navy); font-weight: 900; display: grid; place-items: center; font-size: 14px; }
   .decision p { font-size: 13.5px; color: #eaf0f6; }
 
-  /* chart */
-  .legend { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 6px; }
-  .legend span { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--ink); font-weight: 600; }
-  .legend i { width: 22px; height: 3px; border-radius: 2px; display: inline-block; }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 2px; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--ink); font-weight: 600; }
+  .legend i { width: 20px; height: 3px; border-radius: 2px; display: inline-block; }
   .chartwrap { width: 100%; overflow-x: auto; }
+
+  /* bottleneck bars */
+  .barrow { display: grid; grid-template-columns: 150px 1fr; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .barrow .bl { font-size: 13px; font-weight: 700; color: var(--navy); }
+  .track { position: relative; height: 30px; background: var(--mist); border-radius: 6px; overflow: hidden; }
+  .fill { height: 100%; border-radius: 6px; display: flex; align-items: center; justify-content: flex-end; padding-right: 9px; color: #fff; font-weight: 800; font-size: 13px; }
 
   .chrome { position: fixed; bottom: 0; left: 0; right: 0; height: 46px; display: flex; align-items: center; justify-content: center; gap: 14px; background: rgba(6,19,33,.92); backdrop-filter: blur(6px); z-index: 50; }
   .chrome button { background: #1a3350; color: #eaf0f6; border: none; border-radius: 6px; width: 30px; height: 30px; font-size: 15px; cursor: pointer; }
@@ -176,125 +180,97 @@
       <h1>The Path to 50% Wealth Penetration</h1>
       <p class="lead" style="color:#cdd8e4;margin-top:16px;max-width:54ch;">The current FRP lands penetration at 42.8% by 2030 — 7.2pp short of the ambition. A portfolio-system diagnosis of why, and the interventions that close the gap.</p>
       <div class="storyline">
-        <p>We are <span class="em">not on track</span> for 50% — the plan itself only reaches <span class="em">42.8%</span> by 2030. The issue is not one conversion campaign; it is a portfolio system problem across <span class="em">acquisition quality, on-book conversion, and structural dilution</span>. We diagnose each stage, act on the true bottleneck, and manage the full funnel on common quality and value measures.</p>
+        <p>We are <span class="em">not on track</span> for 50% — the plan itself only reaches <span class="em">42.8%</span> by 2030. The issue is not one conversion campaign; it is a portfolio system problem across <span class="em">acquisition quality, on-book conversion, and structural dilution</span>. We run a funnel-diagnostic loop — define the outcome, diagnose the funnel, isolate the true bottleneck, intervene, close the measurement loop — borrowing the operating instinct behind dialer.io: relentlessly diagnose where the funnel leaks, and fix the true bottleneck first.</p>
       </div>
       <div class="agenda">
-        <div><b>01</b> Case for change</div>
-        <div><b>06</b> NTB diagnostic</div>
-        <div><b>11</b> ETB action plan</div>
-        <div><b>02</b> Penetration trajectory</div>
-        <div><b>07</b> Core-5 NNM momentum</div>
-        <div><b>12</b> Portfolio clean-up plan</div>
-        <div><b>03</b> The wealth growth funnel</div>
-        <div><b>08</b> ETB diagnostic</div>
-        <div><b>13</b> Integrated roadmap</div>
-        <div><b>04</b> Position by market</div>
-        <div><b>09</b> Portfolio dilution</div>
-        <div><b>14</b> Measurement loop</div>
-        <div><b>05</b> Diagnostic section</div>
-        <div><b>10</b> NTB action plan</div>
-        <div><b>15</b> Executive decisions</div>
+        <div><b>01</b> Define — the gap</div>
+        <div><b>06</b> Portfolio dilution</div>
+        <div><b>11</b> Portfolio clean-up plan</div>
+        <div><b>02</b> The wealth growth funnel</div>
+        <div><b>07</b> Isolate the true bottleneck</div>
+        <div><b>12</b> Integrated roadmap</div>
+        <div><b>03</b> Position by market</div>
+        <div><b>08</b> NTB action plan</div>
+        <div><b>13</b> Measurement loop</div>
+        <div><b>04</b> NTB diagnostic</div>
+        <div><b>09</b> Core-5 momentum</div>
+        <div><b>14</b> Executive decisions</div>
+        <div><b>05</b> ETB diagnostic</div>
+        <div><b>10</b> ETB action plan</div>
+        <div></div>
       </div>
     </div>
   </section>
 
-  <!-- 1 · CASE FOR CHANGE -->
+  <!-- 1 · DEFINE — THE GAP (merged case + chart) -->
   <section class="slide">
     <div class="head"><span class="num">01</span>
-      <div><div class="kicker">Executive objective &amp; case for change</div>
+      <div><div class="kicker">Define the outcome · case for change</div>
       <h1>The plan does not reach the ambition</h1></div>
     </div>
-    <div class="cols c2" style="margin-top:4px;">
+    <div class="cols c3" style="gap:12px;">
+      <div class="card metric"><div class="v">50%</div><div class="l">Wealth penetration ambition</div></div>
+      <div class="card metric"><div class="v" style="color:var(--bad);">42.8%</div><div class="l">IWPB-9 at 2030 on current FRP</div></div>
+      <div class="card metric"><div class="v" style="color:var(--clean);">−7.2pt</div><div class="l">Gap the plan does not close</div></div>
+    </div>
+    <div class="cols" style="grid-template-columns: 1.35fr 1fr; margin-top:14px;">
       <div>
-        <div class="cols c3" style="gap:10px;">
-          <div class="card metric"><div class="v">50%</div><div class="l">Wealth penetration ambition</div></div>
-          <div class="card metric"><div class="v" style="color:var(--bad);">42.8%</div><div class="l">IWPB-9 at 2030 on current FRP</div></div>
-          <div class="card metric"><div class="v" style="color:var(--clean);">−7.2pt</div><div class="l">Gap the plan does not close</div></div>
+        <div class="legend">
+          <span><i style="background:var(--s-total)"></i>IWPB-9</span>
+          <span><i style="background:var(--s-asia)"></i>Asia</span>
+          <span><i style="background:var(--s-ameu)"></i>Am &amp; EU</span>
+          <span><i style="background:var(--s-me)"></i>Middle East</span>
+          <span><i style="height:0;border-top:2px dashed var(--gold)"></i>50% ambition</span>
         </div>
-        <p style="margin:14px 0 6px;"><strong>Trajectory (IWPB-9, portfolio MOB4+):</strong> 32.2% (2024A) → 36.2% (2026 FRP) → 42.8% (2030 FRP). No region reaches 50% — Asia 46.2%, Americas &amp; EU 40.4%, Middle East 30.8%.</p>
-        <h3 style="margin:12px 0 7px;">Why the trajectory falls short</h3>
-        <ul class="card" style="list-style:none;">
-          <li class="small" style="margin-bottom:6px;">▸ <strong>Acquisition quality is the drag</strong> — new-cohort penetration at MOB3 is only <strong>22%</strong> vs 36% on-book; MOB3 qualification is flat (~38–39%).</li>
-          <li class="small" style="margin-bottom:6px;">▸ <strong>Conversion of the on-book base alone</strong> cannot cover the gap.</li>
-          <li class="small">▸ Some markets improve penetration by shrinking the denominator, not growing wealth.</li>
-        </ul>
+        <div class="chartwrap">
+        <svg viewBox="0 0 980 400" width="100%" role="img" aria-label="Wealth penetration by region 2024 to 2030: IWPB-9 rises 32.2 to 42.8 percent, staying below the 50 percent ambition line; Asia 46.2, Americas and Europe 40.4, Middle East 30.8.">
+          <g font-size="11" fill="#8a97a5" font-family="var(--font)">
+            <line x1="70" y1="360" x2="900" y2="360" stroke="#c7d0da"/>
+            <line x1="70" y1="286.7" x2="900" y2="286.7" stroke="#eef2f6"/><text x="60" y="290" text-anchor="end">20%</text>
+            <line x1="70" y1="213.3" x2="900" y2="213.3" stroke="#eef2f6"/><text x="60" y="217" text-anchor="end">30%</text>
+            <line x1="70" y1="140" x2="900" y2="140" stroke="#eef2f6"/><text x="60" y="144" text-anchor="end">40%</text>
+            <text x="60" y="364" text-anchor="end">10%</text>
+          </g>
+          <line x1="70" y1="66.7" x2="900" y2="66.7" stroke="#c9962f" stroke-width="2" stroke-dasharray="7 5"/>
+          <text x="900" y="60" text-anchor="end" font-size="12" font-weight="700" fill="#a9761c">50% ambition</text>
+          <g font-size="11.5" fill="#5c6b7a" font-family="var(--font)" text-anchor="middle">
+            <text x="70" y="382">2024</text><text x="208.3" y="382">2025</text><text x="346.7" y="382">2026</text>
+            <text x="485" y="382">2027</text><text x="623.3" y="382">2028</text><text x="761.7" y="382">2029</text><text x="900" y="382">2030</text>
+          </g>
+          <polyline fill="none" stroke="#d97706" stroke-width="2.5" points="70,317.5 208.3,307.2 346.7,288.1 485,269.1 623.3,240.5 761.7,214.1 900,207.5"/>
+          <polyline fill="none" stroke="#0f9488" stroke-width="2.5" points="70,207.5 208.3,214.1 346.7,185.5 485,184.7 623.3,169.3 761.7,153.2 900,137.1"/>
+          <polyline fill="none" stroke="#1f6feb" stroke-width="2.5" points="70,177.4 208.3,158.3 346.7,140.7 485,135.6 623.3,123.1 761.7,109.2 900,94.5"/>
+          <polyline fill="none" stroke="#0b1e34" stroke-width="3.5" points="70,197.2 208.3,191.3 346.7,167.9 485,164.9 623.3,150.3 761.7,134.1 900,119.5"/>
+          <circle cx="900" cy="94.5" r="4" fill="#1f6feb"/><circle cx="900" cy="119.5" r="4.5" fill="#0b1e34"/>
+          <circle cx="900" cy="137.1" r="4" fill="#0f9488"/><circle cx="900" cy="207.5" r="4" fill="#d97706"/>
+          <g font-size="12" font-weight="700" font-family="var(--font)">
+            <text x="912" y="92" fill="#1f6feb">46.2 Asia</text>
+            <text x="912" y="123" fill="#0b1e34">42.8 IWPB-9</text>
+            <text x="912" y="148" fill="#0f9488">40.4 Am&amp;EU</text>
+            <text x="912" y="211" fill="#d97706">30.8 ME</text>
+          </g>
+        </svg>
+        </div>
+        <p class="q" style="margin-top:2px;">Portfolio MOB4+, 2024A → 2030 FRP. No region reaches 50% — MX (60.8%) the only market above; US (22.7%) furthest below.</p>
       </div>
       <div>
-        <h3 style="margin-bottom:8px;">Two non-negotiable outcomes</h3>
-        <div class="card pool-etb" style="margin-bottom:11px;">
+        <div class="card pool-etb" style="margin-bottom:10px;">
           <span class="tag etb">Outcome 1</span>
-          <p style="margin-top:8px;"><strong>Grow absolute wealth customers and NNIA.</strong> Active customers already plan +9.6% CAGR to 2.86m by 2030 — but qualified, wealth-active growth must outpace raw acquisition.</p>
+          <p style="margin-top:7px;font-size:13px;"><strong>Grow absolute wealth customers and NNIA.</strong> Active customers plan +9.6% CAGR to 2.86m by 2030 — qualified, wealth-active growth must outpace raw acquisition.</p>
         </div>
         <div class="card pool-clean">
           <span class="tag clean">Outcome 2</span>
-          <p style="margin-top:8px;"><strong>Improve penetration without relying solely on denominator reduction.</strong> Clean-up supports health but cannot be the primary route to 50%.</p>
+          <p style="margin-top:7px;font-size:13px;"><strong>Improve penetration without relying solely on denominator reduction.</strong> Clean-up supports health but cannot be the primary route to 50%.</p>
         </div>
-        <div class="headline">We cannot convert our way out of continuously acquiring low-quality customers.</div>
+        <div class="headline" style="margin-top:10px;font-size:14.5px;">We cannot convert our way out of continuously acquiring low-quality customers.</div>
       </div>
     </div>
     <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">01</span></div>
   </section>
 
-  <!-- 2 · TRAJECTORY CHART -->
+  <!-- 2 · THE FUNNEL -->
   <section class="slide">
     <div class="head"><span class="num">02</span>
-      <div><div class="kicker">Wealth penetration trajectory · 2024 → 2030</div>
-      <h1>Every region plateaus below the 50% line</h1></div>
-    </div>
-    <div class="legend">
-      <span><i style="background:var(--s-total)"></i>IWPB-9 (total)</span>
-      <span><i style="background:var(--s-asia)"></i>Asia</span>
-      <span><i style="background:var(--s-ameu)"></i>Americas &amp; EU</span>
-      <span><i style="background:var(--s-me)"></i>Middle East</span>
-      <span><i style="background:var(--gold);height:0;border-top:2px dashed var(--gold)"></i>50% ambition</span>
-    </div>
-    <div class="chartwrap" style="margin-top:6px;">
-    <svg viewBox="0 0 980 400" width="100%" role="img" aria-label="Line chart of wealth penetration percent by region, 2024 to 2030. IWPB-9 total rises from 32.2 to 42.8 percent, staying below the 50 percent ambition line; Asia reaches 46.2, Americas and Europe 40.4, Middle East 30.8.">
-      <!-- gridlines + y labels -->
-      <g font-size="11" fill="#8a97a5" font-family="var(--font)">
-        <line x1="70" y1="360" x2="900" y2="360" stroke="#c7d0da"/>
-        <line x1="70" y1="286.7" x2="900" y2="286.7" stroke="#eef2f6"/><text x="60" y="290" text-anchor="end">20%</text>
-        <line x1="70" y1="213.3" x2="900" y2="213.3" stroke="#eef2f6"/><text x="60" y="217" text-anchor="end">30%</text>
-        <line x1="70" y1="140" x2="900" y2="140" stroke="#eef2f6"/><text x="60" y="144" text-anchor="end">40%</text>
-        <text x="60" y="364" text-anchor="end">10%</text>
-      </g>
-      <!-- 50% ambition line -->
-      <line x1="70" y1="66.7" x2="900" y2="66.7" stroke="#c9962f" stroke-width="2" stroke-dasharray="7 5"/>
-      <text x="900" y="60" text-anchor="end" font-size="12" font-weight="700" fill="#a9761c">50% ambition</text>
-      <!-- x labels -->
-      <g font-size="11.5" fill="#5c6b7a" font-family="var(--font)" text-anchor="middle">
-        <text x="70" y="382">2024</text><text x="208.3" y="382">2025</text><text x="346.7" y="382">2026</text>
-        <text x="485" y="382">2027</text><text x="623.3" y="382">2028</text><text x="761.7" y="382">2029</text><text x="900" y="382">2030</text>
-      </g>
-      <!-- Middle East -->
-      <polyline fill="none" stroke="#d97706" stroke-width="2.5" points="70,317.5 208.3,307.2 346.7,288.1 485,269.1 623.3,240.5 761.7,214.1 900,207.5"/>
-      <!-- Americas & EU -->
-      <polyline fill="none" stroke="#0f9488" stroke-width="2.5" points="70,207.5 208.3,214.1 346.7,185.5 485,184.7 623.3,169.3 761.7,153.2 900,137.1"/>
-      <!-- Asia -->
-      <polyline fill="none" stroke="#1f6feb" stroke-width="2.5" points="70,177.4 208.3,158.3 346.7,140.7 485,135.6 623.3,123.1 761.7,109.2 900,94.5"/>
-      <!-- IWPB-9 total (hero) -->
-      <polyline fill="none" stroke="#0b1e34" stroke-width="3.5" points="70,197.2 208.3,191.3 346.7,167.9 485,164.9 623.3,150.3 761.7,134.1 900,119.5"/>
-      <!-- end dots -->
-      <circle cx="900" cy="94.5" r="4" fill="#1f6feb"/>
-      <circle cx="900" cy="119.5" r="4.5" fill="#0b1e34"/>
-      <circle cx="900" cy="137.1" r="4" fill="#0f9488"/>
-      <circle cx="900" cy="207.5" r="4" fill="#d97706"/>
-      <!-- end labels -->
-      <g font-size="12" font-weight="700" font-family="var(--font)">
-        <text x="912" y="92" fill="#1f6feb">46.2 Asia</text>
-        <text x="912" y="123" fill="#0b1e34">42.8 IWPB-9</text>
-        <text x="912" y="148" fill="#0f9488">40.4 Am&amp;EU</text>
-        <text x="912" y="211" fill="#d97706">30.8 ME</text>
-      </g>
-    </svg>
-    </div>
-    <p class="q" style="margin-top:2px;">Source: FRP wealth-penetration table (portfolio MOB4+), refresh 17/6/2026. MX is the only market planned above 50% (60.8%); US the furthest below (22.7%).</p>
-    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">02</span></div>
-  </section>
-
-  <!-- 3 · THE FUNNEL -->
-  <section class="slide">
-    <div class="head"><span class="num">03</span>
       <div><div class="kicker">Define the wealth growth funnel</div>
       <h1>One common funnel — where value is created or lost</h1></div>
     </div>
@@ -324,29 +300,33 @@
           <span class="tag clean">Clean-up</span> <strong style="font-size:14px;">Value protection</strong>
           <p class="small" style="margin-top:5px;">What is structurally dragging penetration and productivity down?</p>
         </div>
-        <div class="primary-q" style="margin-top:11px;"><b>Output:</b> one diagnostic architecture so NTB, ETB and clean-up are never discussed as disconnected initiatives.</div>
       </div>
     </div>
-    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">03</span></div>
+    <p class="q" style="margin-top:12px;"><strong>Method:</strong> a funnel-diagnostic loop — define the outcome → diagnose the funnel → isolate the true bottleneck → apply targeted interventions → close the measurement loop. The framing borrows the operating instinct behind dialer.io (relentlessly diagnose where the funnel leaks and fix the true bottleneck); the loop itself is standard funnel-diagnostic practice.</p>
+    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">02</span></div>
   </section>
 
-  <!-- 4 · SCORECARD -->
+  <!-- DIVIDER: DIAGNOSTIC -->
+  <section class="slide dark">
+    <div class="sect">
+      <div class="big">Section I · Diagnostic</div>
+      <h1>Diagnose the funnel before prescribing a fix</h1>
+      <p>Three diagnoses, one architecture. Are we acquiring the wrong customers — or the right customers we fail to convert? Do we lack opportunity on-book — or fail to commercialise it? And which customers are permanently diluting the portfolio?</p>
+    </div>
+    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">·</span></div>
+  </section>
+
+  <!-- 3 · SCORECARD -->
   <section class="slide">
-    <div class="head"><span class="num">04</span>
+    <div class="head"><span class="num">03</span>
       <div><div class="kicker">Current position by market · IWPB-9, portfolio MOB4+</div>
       <h1>Which markets are on track — and where the funnel breaks</h1></div>
     </div>
     <table>
       <thead>
         <tr>
-          <th>Market</th>
-          <th class="num">Pen. 2024</th>
-          <th class="num">Pen. 2026</th>
-          <th class="num">Pen. 2030</th>
-          <th class="num">Gap to 50% (2030)</th>
-          <th class="num">TRB-qual % 2026</th>
-          <th class="num">New-cohort pen. @MOB3</th>
-          <th>Classification</th>
+          <th>Market</th><th class="num">Pen. 2024</th><th class="num">Pen. 2026</th><th class="num">Pen. 2030</th>
+          <th class="num">Gap to 50% (2030)</th><th class="num">TRB-qual % 2026</th><th class="num">New-cohort pen. @MOB3</th><th>Classification</th>
         </tr>
       </thead>
       <tbody>
@@ -364,23 +344,13 @@
         <tr class="tot"><td>IWPB-9 Markets</td><td class="num">32.2%</td><td class="num">36.2%</td><td class="num">42.8%</td><td class="num neg">−7.2</td><td class="num">47.1%</td><td class="num">22.0%</td><td><span class="pill conv">Fix conversion</span></td></tr>
       </tbody>
     </table>
-    <p class="q" style="margin-top:10px;">Regions at 2030: Asia 46.2% · Americas &amp; EU 40.4% · Middle East 30.8%. Classification maps each market to its dominant broken stage — this is the funnel diagnostic before prescribing a solution.</p>
-    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">04</span></div>
+    <p class="q" style="margin-top:10px;">Regions at 2030: Asia 46.2% · Americas &amp; EU 40.4% · Middle East 30.8%. Classification maps each market to its dominant broken stage — the funnel diagnostic before prescribing a solution.</p>
+    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">03</span></div>
   </section>
 
-  <!-- 5 · DIVIDER: DIAGNOSTIC -->
-  <section class="slide dark">
-    <div class="sect">
-      <div class="big">Section I · Diagnostic</div>
-      <h1>Diagnose the funnel before prescribing a fix</h1>
-      <p>Three diagnoses, one architecture. Are we acquiring the wrong customers — or the right customers we fail to convert? Do we lack opportunity on-book — or fail to commercialise it? And which customers are permanently diluting the portfolio?</p>
-    </div>
-    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">·</span></div>
-  </section>
-
-  <!-- 6 · NTB DIAGNOSTIC -->
+  <!-- 4 · NTB DIAGNOSTIC -->
   <section class="slide">
-    <div class="head"><span class="num">06</span>
+    <div class="head"><span class="num">04</span>
       <div><div class="kicker">NTB diagnostic · new acquisition</div>
       <h1>Are we acquiring customers capable of driving wealth growth?</h1></div>
     </div>
@@ -400,60 +370,32 @@
       <div class="card pool-ntb"><h3>E · Economics</h3><ul><li>Acquisition &amp; offer cost</li><li>TRB &amp; NNIA generated</li><li>Payback &amp; EV by channel</li></ul></div>
     </div>
     <div class="primary-q" style="margin-top:12px;"><b>Verdict from the data:</b> we are acquiring the <b>wrong quality</b> — new cohorts qualify and activate at roughly half the on-book rate, and MOB3 qualification is not improving. Acquisition, not just conversion, must be fixed. UAE and Singapore show the sharpest MOB3 shortfalls (10–11% new-cohort penetration).</div>
-    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">06</span></div>
+    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">04</span></div>
   </section>
 
-  <!-- 7 · CORE-5 MOMENTUM -->
+  <!-- 5 · ETB DIAGNOSTIC -->
   <section class="slide">
-    <div class="head"><span class="num">07</span>
-      <div><div class="kicker">Momentum callout · IWPB Core-5 · MTD June Week 4</div>
-      <h1>The engine can run — when the funnel is orchestrated</h1></div>
-    </div>
-    <div class="cols c3" style="margin-top:2px;gap:14px;">
-      <div class="card" style="border-top:4px solid var(--gold);">
-        <h3>NNM ($m)</h3>
-        <div class="metric" style="margin:8px 0;"><div class="v">1,189</div><div class="l">MTD Jun W4 · vs PY 408 · Plan 1,190</div></div>
-        <p class="small"><span class="pos">+191%</span> vs prior year · <strong>(0)%</strong> to plan</p>
-      </div>
-      <div class="card" style="border-top:4px solid var(--etb);">
-        <h3>Investment NNIA ($m)</h3>
-        <div class="metric" style="margin:8px 0;"><div class="v">1,101</div><div class="l">MTD Jun W4 · vs PY 286 · Plan 834</div></div>
-        <p class="small"><span class="pos">&gt;200%</span> vs prior year · <span class="pos">+32%</span> to plan</p>
-      </div>
-      <div class="card" style="border-top:4px solid var(--clean);">
-        <h3>Premier Net New Deposit ($m)</h3>
-        <div class="metric" style="margin:8px 0;"><div class="v">88</div><div class="l">MTD Jun W4 · vs PY 122 · Plan 356</div></div>
-        <p class="small"><span class="neg">(28)%</span> vs prior year · <span class="neg">(75)%</span> to plan</p>
-      </div>
-    </div>
-    <div class="headline" style="margin-top:16px;">Week 4 delivered $1.1bn NNM, led by improved Investment NNIA (China Mutual Funds) and Premier deposits back in positive territory, aided by UAE salary-credit inflows.</div>
-    <p class="q" style="margin-top:10px;">Core-5 = China, Singapore, Malaysia, Taiwan, UAE. By-market NNM: China 456 · UAE 538 · Taiwan 180 · Malaysia 37 · Singapore (22). Deposits still lag plan — the orchestration gap the ETB engine must close.</p>
-    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">07</span></div>
-  </section>
-
-  <!-- 8 · ETB DIAGNOSTIC -->
-  <section class="slide">
-    <div class="head"><span class="num">08</span>
+    <div class="head"><span class="num">05</span>
       <div><div class="kicker">ETB diagnostic · existing customers</div>
       <h1>Where is investable money sitting — and why isn't it converting?</h1></div>
     </div>
     <div class="cols c2" style="margin-top:2px;">
       <div>
-        <h3 style="margin-bottom:7px;">Segment the ETB opportunity</h3>
+        <h3 style="margin-bottom:8px;">Segment the ETB opportunity</h3>
         <div class="cols c2" style="gap:8px;">
-          <div class="card pool-etb" style="padding:10px 12px;"><p class="small"><strong>CASA idle cash</strong></p></div>
-          <div class="card pool-etb" style="padding:10px 12px;"><p class="small"><strong>TD maturity / rollover</strong></p></div>
-          <div class="card pool-etb" style="padding:10px 12px;"><p class="small"><strong>Wealth customers, top-up potential</strong></p></div>
-          <div class="card pool-etb" style="padding:10px 12px;"><p class="small"><strong>Qualified non-wealth customers</strong></p></div>
-          <div class="card pool-etb" style="padding:10px 12px;"><p class="small"><strong>Near-qualified customers</strong></p></div>
-          <div class="card pool-etb" style="padding:10px 12px;"><p class="small"><strong>High-propensity digital leads</strong></p></div>
+          <div class="card pool-etb" style="padding:11px 12px;"><p class="small"><strong>CASA idle cash</strong></p></div>
+          <div class="card pool-etb" style="padding:11px 12px;"><p class="small"><strong>TD maturity / rollover</strong></p></div>
+          <div class="card pool-etb" style="padding:11px 12px;"><p class="small"><strong>Wealth customers, top-up potential</strong></p></div>
+          <div class="card pool-etb" style="padding:11px 12px;"><p class="small"><strong>Qualified non-wealth customers</strong></p></div>
+          <div class="card pool-etb" style="padding:11px 12px;"><p class="small"><strong>Near-qualified customers</strong></p></div>
+          <div class="card pool-etb" style="padding:11px 12px;"><p class="small"><strong>High-propensity digital leads</strong></p></div>
         </div>
         <div class="card" style="background:var(--mist);margin-top:10px;padding:10px 12px;">
           <p class="small"><strong>Where the NNIA actually sits (May YTD, $mn):</strong> Asia 5,867 · Americas &amp; EU 516 (−794 vs plan) · Middle East 447 (−238 vs plan). Global product mix skews to Mutual Funds (6.7bn) and Structured (5.9bn); Equities run <span class="neg">negative</span>.</p>
         </div>
       </div>
       <div>
-        <h3 style="margin-bottom:7px;">Diagnose each segment through six lenses</h3>
+        <h3 style="margin-bottom:8px;">Diagnose each segment through six lenses</h3>
         <div class="steps">
           <div class="step"><span class="sn" style="background:var(--etb)">1</span><p class="small"><strong>Opportunity size</strong> — how much addressable balance exists?</p></div>
           <div class="step"><span class="sn" style="background:var(--etb)">2</span><p class="small"><strong>Propensity</strong> — which customers are most likely to act?</p></div>
@@ -465,12 +407,12 @@
       </div>
     </div>
     <div class="primary-q" style="margin-top:12px;"><b>Verdict from the data:</b> the opportunity exists — Core-5 NNIA is running &gt;200% vs prior year — but <b>Americas &amp; EU and Middle East miss plan by $0.8bn and $0.2bn</b>, and Premier deposits lag plan 75%. The failure is <b>commercialisation and persistence</b>, not raw opportunity.</div>
-    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">08</span></div>
+    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">05</span></div>
   </section>
 
-  <!-- 9 · PORTFOLIO DILUTION -->
+  <!-- 6 · PORTFOLIO DILUTION -->
   <section class="slide">
-    <div class="head"><span class="num">09</span>
+    <div class="head"><span class="num">06</span>
       <div><div class="kicker">Portfolio dilution diagnostic · value protection</div>
       <h1>What is structurally dragging penetration down?</h1></div>
     </div>
@@ -503,23 +445,57 @@
         <div class="primary-q" style="margin-top:10px;"><b>Primary question:</b> which customers have a <b>credible path to value</b>, and which are <b>permanently diluting</b> the portfolio?</div>
       </div>
     </div>
-    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">09</span></div>
+    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">06</span></div>
   </section>
 
-  <!-- 10 · DIVIDER: ACTION -->
+  <!-- 7 · ISOLATE THE TRUE BOTTLENECK (NEW) -->
+  <section class="slide">
+    <div class="head"><span class="num">07</span>
+      <div><div class="kicker">Isolate the true bottleneck</div>
+      <h1>The true bottleneck is acquisition quality</h1></div>
+    </div>
+    <div class="cols" style="grid-template-columns: 1.25fr 1fr; margin-top:4px;">
+      <div>
+        <p style="margin-bottom:14px;font-size:14px;">Three stages leak, but they are not equal. On-book conversion and clean-up move the ratio at the margin; the <strong>largest and most persistent leak is low-quality inflow</strong> entering at roughly half the on-book wealth rate and diluting the mix every year.</p>
+        <div class="barrow"><div class="bl">New cohort @MOB3</div><div class="track"><div class="fill" style="width:44%;background:var(--bad);">22%</div></div></div>
+        <div class="barrow"><div class="bl">On-book (MOB4+)</div><div class="track"><div class="fill" style="width:72%;background:var(--ntb);">36%</div></div></div>
+        <div class="barrow"><div class="bl">2030 ambition</div><div class="track"><div class="fill" style="width:100%;background:var(--gold);">50%</div></div></div>
+        <p class="q" style="margin-top:4px;">MOB3 qualification flat at ~38–39% since 2024; TRB per new customer dipped in 2025. Every vintage acquired at 22% pulls the on-book average down before conversion can lift it.</p>
+      </div>
+      <div>
+        <h3 style="margin-bottom:9px;">Rank the levers by leverage</h3>
+        <div class="card pool-ntb" style="margin-bottom:9px;">
+          <span class="tag ntb">Primary lever</span> <strong style="font-size:13.5px;">NTB · acquisition quality</strong>
+          <p class="small" style="margin-top:4px;">Largest, most persistent drag. Fix first — raise the MOB3 line toward on-book, or the gap never closes.</p>
+        </div>
+        <div class="card pool-etb" style="margin-bottom:9px;">
+          <span class="tag etb">Accelerant</span> <strong style="font-size:13.5px;">ETB · on-book conversion</strong>
+          <p class="small" style="margin-top:4px;">Real, provable momentum (NNIA &gt;200% vs PY) — but it cannot outrun continuous low-quality inflow on its own.</p>
+        </div>
+        <div class="card pool-clean">
+          <span class="tag clean">Guardrail</span> <strong style="font-size:13.5px;">Clean-up · dilution</strong>
+          <p class="small" style="margin-top:4px;">Protects the ratio and RM capacity — but cannot be the primary route to 50%.</p>
+        </div>
+      </div>
+    </div>
+    <div class="headline" style="margin-top:14px;">Move the MOB3 line toward the on-book line and the 2030 gap closes. Keep acquiring at 22%, and no amount of on-book conversion catches up.</div>
+    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">07</span></div>
+  </section>
+
+  <!-- DIVIDER: ACTION -->
   <section class="slide dark">
     <div class="sect">
       <div class="big">Section II · Action</div>
-      <h1>Act on the true bottleneck — one lever at a time</h1>
-      <p>Fix contactability before blaming conversion. Make acquisition the first quality-control point, run ETB as an orchestrated conversion engine, and remove structural dilution without gaming the denominator.</p>
+      <h1>Act on the true bottleneck — quality first</h1>
+      <p>Fix contactability before blaming conversion. Make acquisition the first quality-control point, prove the engine can run, run ETB as an orchestrated conversion engine, and remove structural dilution without gaming the denominator.</p>
     </div>
     <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">·</span></div>
   </section>
 
-  <!-- 11 · NTB ACTION -->
+  <!-- 8 · NTB ACTION -->
   <section class="slide">
-    <div class="head"><span class="num">10</span>
-      <div><div class="kicker">NTB action plan</div>
+    <div class="head"><span class="num">08</span>
+      <div><div class="kicker">NTB action plan · the isolated bottleneck</div>
       <h1>Make acquisition the first quality-control point</h1></div>
     </div>
     <div class="cols c3" style="gap:12px;margin-top:2px;">
@@ -531,12 +507,40 @@
       <div class="card pool-ntb"><h3>4 · Reallocate acquisition investment</h3><ul><li>Scale high-quality channels (AOC-type, MOB3 pen. 45%)</li><li>Redesign weak channels (UAE / SGH MOB3 pen. ~10%)</li><li>Stop persistently dilutive acquisition</li></ul></div>
       <div class="card pool-ntb"><h3>5 · Build hero conversion pathways</h3><ul><li>TD hook → income / yield solution</li><li>International (UAE salary credits) → offshore wealth activation</li><li>Mortgage relationship → investable balance conversion</li><li>Card-only → funded Premier &amp; wealth activation</li></ul></div>
     </div>
-    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">10</span></div>
+    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">08</span></div>
   </section>
 
-  <!-- 12 · ETB ACTION -->
+  <!-- 9 · CORE-5 MOMENTUM (moved into action block) -->
   <section class="slide">
-    <div class="head"><span class="num">11</span>
+    <div class="head"><span class="num">09</span>
+      <div><div class="kicker">Proof point · IWPB Core-5 · MTD June Week 4</div>
+      <h1>The engine can run — when the funnel is orchestrated</h1></div>
+    </div>
+    <div class="cols c3" style="margin-top:2px;gap:14px;">
+      <div class="card" style="border-top:4px solid var(--gold);">
+        <h3>NNM ($m)</h3>
+        <div class="metric" style="margin:8px 0;"><div class="v">1,189</div><div class="l">MTD Jun W4 · vs PY 408 · Plan 1,190</div></div>
+        <p class="small"><span class="pos">+191%</span> vs prior year · <strong>(0)%</strong> to plan</p>
+      </div>
+      <div class="card" style="border-top:4px solid var(--etb);">
+        <h3>Investment NNIA ($m)</h3>
+        <div class="metric" style="margin:8px 0;"><div class="v">1,101</div><div class="l">MTD Jun W4 · vs PY 286 · Plan 834</div></div>
+        <p class="small"><span class="pos">&gt;200%</span> vs prior year · <span class="pos">+32%</span> to plan</p>
+      </div>
+      <div class="card" style="border-top:4px solid var(--clean);">
+        <h3>Premier Net New Deposit ($m)</h3>
+        <div class="metric" style="margin:8px 0;"><div class="v">88</div><div class="l">MTD Jun W4 · vs PY 122 · Plan 356</div></div>
+        <p class="small"><span class="neg">(28)%</span> vs prior year · <span class="neg">(75)%</span> to plan</p>
+      </div>
+    </div>
+    <div class="headline" style="margin-top:16px;">When acquisition quality is fixed, this is the upside: Week 4 delivered $1.1bn NNM, led by improved Investment NNIA (China Mutual Funds) and Premier deposits back in positive territory, aided by UAE salary-credit inflows.</div>
+    <p class="q" style="margin-top:10px;">Core-5 = China, Singapore, Malaysia, Taiwan, UAE. By-market NNM: China 456 · UAE 538 · Taiwan 180 · Malaysia 37 · Singapore (22). Deposits still lag plan — the orchestration gap the ETB engine must close.</p>
+    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">09</span></div>
+  </section>
+
+  <!-- 10 · ETB ACTION -->
+  <section class="slide">
+    <div class="head"><span class="num">10</span>
       <div><div class="kicker">ETB action plan</div>
       <h1>Convert addressable balances into sustainable NNIA</h1></div>
     </div>
@@ -549,13 +553,13 @@
       <div class="card pool-etb" style="padding:12px 10px;"><h3 style="font-size:13.5px;">6 · Convert</h3><p class="small" style="margin-top:3px;">Appointment → recommendation → NNIA.</p></div>
       <div class="card pool-etb" style="padding:12px 10px;"><h3 style="font-size:13.5px;">7 · Retain</h3><p class="small" style="margin-top:3px;">Does flow remain at 3/6/12 months?</p></div>
     </div>
-    <div class="headline" style="margin-top:18px;">ETB conversion must be run as an orchestrated funnel — not isolated campaigns and uncoordinated leads. Close the deposit-to-plan gap (Premier NND at 25% of plan) by nurturing before the liquidity event.</div>
-    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">11</span></div>
+    <div class="headline" style="margin-top:18px;">Run ETB as an orchestrated funnel — a Speed-to-Lead-style cadence (contact fast, nurture before the liquidity event), not isolated campaigns and uncoordinated leads. Close the deposit-to-plan gap (Premier NND at 25% of plan).</div>
+    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">10</span></div>
   </section>
 
-  <!-- 13 · CLEAN-UP -->
+  <!-- 11 · CLEAN-UP -->
   <section class="slide">
-    <div class="head"><span class="num">12</span>
+    <div class="head"><span class="num">11</span>
       <div><div class="kicker">Portfolio clean-up action plan</div>
       <h1>Remove structural dilution — without gaming the denominator</h1></div>
     </div>
@@ -567,12 +571,12 @@
     <div class="headline" style="background:#f6e0da;border-left-color:var(--clean);color:#7a2f14;margin-top:18px;">
       <strong>Guardrail —</strong> Clean-up supports portfolio health, but it cannot be the primary route to 50%. The denominator must fall because customers genuinely leave the segment, not to flatter the ratio.
     </div>
-    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">12</span></div>
+    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">11</span></div>
   </section>
 
-  <!-- 14 · ROADMAP -->
+  <!-- 12 · ROADMAP -->
   <section class="slide">
-    <div class="head"><span class="num">13</span>
+    <div class="head"><span class="num">12</span>
       <div><div class="kicker">Integrated action roadmap</div>
       <h1>Three levers, one sequenced view to 2030</h1></div>
     </div>
@@ -590,12 +594,12 @@
         <div class="small"><strong>Baseline</strong></div><div class="small"><strong>Target</strong></div><div class="small"><strong>Owner</strong></div><div class="small"><strong>Delivery date</strong></div><div class="small"><strong>Financial impact</strong></div><div class="small"><strong>Data dependency</strong></div><div class="small"><strong>Decision required</strong></div>
       </div>
     </div>
-    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">13</span></div>
+    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">12</span></div>
   </section>
 
-  <!-- 15 · MEASUREMENT -->
+  <!-- 13 · MEASUREMENT -->
   <section class="slide">
-    <div class="head"><span class="num">14</span>
+    <div class="head"><span class="num">13</span>
       <div><div class="kicker">Measurement &amp; management loop</div>
       <h1>A monthly cockpit that closes the loop</h1></div>
     </div>
@@ -613,12 +617,12 @@
         <div class="node">What stops if it fails?</div><span class="arrow" style="transform:rotate(90deg)">↺</span>
       </div>
     </div>
-    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">14</span></div>
+    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50% · a dialer.io-style reporting cockpit</span><span class="fl">13</span></div>
   </section>
 
-  <!-- 16 · DECISIONS -->
+  <!-- 14 · DECISIONS -->
   <section class="slide dark">
-    <div class="head"><span class="num" style="background:var(--gold);color:var(--navy)">15</span>
+    <div class="head"><span class="num" style="background:var(--gold);color:var(--navy)">14</span>
       <div><div class="kicker">Executive decisions required</div>
       <h1 style="color:#fff">Seven decisions to put us on the path to 50%</h1></div>
     </div>
@@ -631,7 +635,7 @@
       <div class="decision"><p>Require each market to submit a <strong>quantified path to 50%</strong> (US, UAE, CIIOM first).</p></div>
       <div class="decision"><p>Embed the actions into <strong>FRP before the planning cycle closes</strong>.</p></div>
     </div>
-    <div class="foot"><span class="fl" style="color:#6d8298">PREMIER WEALTH · PATH TO 50%</span><span class="fl" style="color:#6d8298">15</span></div>
+    <div class="foot"><span class="fl" style="color:#6d8298">PREMIER WEALTH · PATH TO 50%</span><span class="fl" style="color:#6d8298">14</span></div>
   </section>
 
 </div>
@@ -646,10 +650,10 @@
 <script>
   const slides = Array.from(document.querySelectorAll('.slide'));
   const titles = [
-    'Title', '01 · Case for change', '02 · Penetration trajectory', '03 · Wealth growth funnel',
-    '04 · Position by market', 'Section · Diagnostic', '06 · NTB diagnostic', '07 · Core-5 momentum',
-    '08 · ETB diagnostic', '09 · Portfolio dilution', 'Section · Action', '10 · NTB action plan',
-    '11 · ETB action plan', '12 · Portfolio clean-up', '13 · Integrated roadmap', '14 · Measurement loop', '15 · Executive decisions'
+    'Title', '01 · Define — the gap', '02 · Wealth growth funnel', 'Section · Diagnostic',
+    '03 · Position by market', '04 · NTB diagnostic', '05 · ETB diagnostic', '06 · Portfolio dilution',
+    '07 · Isolate the bottleneck', 'Section · Action', '08 · NTB action plan', '09 · Core-5 momentum',
+    '10 · ETB action plan', '11 · Portfolio clean-up', '12 · Integrated roadmap', '13 · Measurement loop', '14 · Executive decisions'
   ];
   let i = 0;
   const posn = document.getElementById('posn');

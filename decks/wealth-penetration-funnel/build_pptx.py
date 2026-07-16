@@ -203,77 +203,61 @@ def s0_title():
     line(tbox(s,0.75,3.55,10.2,0.9),
          "The current FRP lands penetration at 42.8% by 2030 — 7.2pp short of the ambition. A portfolio-system diagnosis of why, and the interventions that close the gap.",
          size=15,color=C("cdd8e4"),first=True,ls=1.25)
-    runs(tbox(s,0.75,4.75,11.3,1.4),
-      [("We are not on track for 50% — the plan itself only reaches ",14,C("b9c6d4"),False),
-       ("42.8%",14,GOLD,True),
-       (" by 2030. The issue is not one campaign; it is a portfolio system problem across ",14,C("b9c6d4"),False),
-       ("acquisition quality, on-book conversion, and structural dilution.",14,GOLD,True),
-       (" We diagnose each stage, act on the true bottleneck, and manage the full funnel on common measures.",14,C("b9c6d4"),False)],
+    runs(tbox(s,0.75,4.75,11.5,1.7),
+      [("We are not on track for 50% — the plan itself only reaches ",13.5,C("b9c6d4"),False),
+       ("42.8%",13.5,GOLD,True),
+       (" by 2030. The issue is not one campaign; it is a portfolio system problem across ",13.5,C("b9c6d4"),False),
+       ("acquisition quality, on-book conversion, and structural dilution.",13.5,GOLD,True),
+       (" We run a funnel-diagnostic loop — define the outcome, diagnose the funnel, isolate the true bottleneck, intervene, close the measurement loop — borrowing the operating instinct behind dialer.io: relentlessly diagnose where the funnel leaks, and fix the true bottleneck first.",13.5,C("b9c6d4"),False)],
       first=True,ls=1.3)
     foot(s,"",dark=True)
 
-def s1_case():
-    s=slide(); header(s,"01","Executive objective & case for change","The plan does not reach the ambition")
-    metric(s,0.75,1.95,3.05,1.15,"50%","Wealth penetration ambition")
-    metric(s,3.95,1.95,3.05,1.15,"42.8%","IWPB-9 at 2030 on current FRP",vcolor=BAD)
-    metric(s,7.15,1.95,3.0,1.15,"−7.2pt","Gap the plan does not close",vcolor=CLEAN)
-    tf=tbox(s,0.75,3.28,6.5,0.9)
-    runs(tf,[("Trajectory (IWPB-9, MOB4+): ",12,NAVY,True),
-             ("32.2% (2024A) → 36.2% (2026 FRP) → 42.8% (2030 FRP). No region reaches 50% — Asia 46.2%, Americas & EU 40.4%, Middle East 30.8%.",12,INK,False)],first=True,ls=1.2)
-    card(s,0.75,4.25,6.5,2.15)
-    tf=tbox(s,0.95,4.42,6.1,1.9)
-    line(tf,"Why the trajectory falls short",size=13,color=NAVY,bold=True,first=True,sa=6)
-    runs(tf,[("▸ Acquisition quality is the drag",11.5,CLEAN,True),(" — new-cohort penetration @MOB3 is only 22% vs 36% on-book; MOB3 qualification is flat (~38–39%).",11.5,INK,False)],ls=1.18,sa=6)
-    line(tf,"▸ Conversion of the on-book base alone cannot cover the gap.",size=11.5,color=INK,sa=6,ls=1.18)
-    line(tf,"▸ Some markets improve penetration by shrinking the denominator, not growing wealth.",size=11.5,color=INK,sa=0,ls=1.18)
-    line(tbox(s,7.55,1.95,5.0,0.3),"Two non-negotiable outcomes",size=13,color=NAVY,bold=True,first=True,sa=0)
-    card(s,7.55,2.32,5.0,1.28,accent=ETB)
-    tf=tbox(s,7.75,2.5,4.6,1.05)
-    line(tf,"OUTCOME 1",size=9,color=ETB,bold=True,first=True,sa=3)
-    runs(tf,[("Grow absolute wealth customers and NNIA.",11,NAVY,True),(" Active customers plan +9.6% CAGR to 2.86m by 2030 — qualified, wealth-active growth must outpace raw acquisition.",11,INK,False)],ls=1.15)
-    card(s,7.55,3.75,5.0,1.28,accent=CLEAN)
-    tf=tbox(s,7.75,3.93,4.6,1.05)
-    line(tf,"OUTCOME 2",size=9,color=CLEAN,bold=True,first=True,sa=3)
-    runs(tf,[("Improve penetration without relying solely on denominator reduction.",11,NAVY,True),(" Clean-up supports health but cannot be the primary route to 50%.",11,INK,False)],ls=1.15)
-    headline(s,7.55,5.2,5.0,"We cannot convert our way out of continuously acquiring low-quality customers.")
-    foot(s,1)
-
-def s2_chart():
-    s=slide(); header(s,"02","Wealth penetration trajectory · 2024 → 2030","Every region plateaus below the 50% line")
+def s1_define_gap():
+    s=slide(); header(s,"01","Define the outcome · case for change","The plan does not reach the ambition")
+    metric(s,0.75,1.8,3.83,0.95,"50%","Wealth penetration ambition")
+    metric(s,4.75,1.8,3.83,0.95,"42.8%","IWPB-9 at 2030 on current FRP",vcolor=BAD)
+    metric(s,8.77,1.8,3.83,0.95,"−7.2pt","Gap the plan does not close",vcolor=CLEAN)
+    # trajectory chart as the evidence panel (left)
     cd=CategoryChartData(); cd.categories=YEARS
-    cd.add_series("IWPB-9 (total)",tuple(PEN["IWPB9"]))
+    cd.add_series("IWPB-9",tuple(PEN["IWPB9"]))
     cd.add_series("Asia",tuple(PEN["ASIA"]))
     cd.add_series("Americas & EU",tuple(PEN["AMEU"]))
     cd.add_series("Middle East",tuple(PEN["ME"]))
     cd.add_series("50% ambition",tuple([50]*7))
-    gf=s.shapes.add_chart(XL_CHART_TYPE.LINE,Inches(0.7),Inches(1.95),Inches(11.9),Inches(4.7),cd)
+    gf=s.shapes.add_chart(XL_CHART_TYPE.LINE,Inches(0.35),Inches(2.9),Inches(7.6),Inches(3.75),cd)
     ch=gf.chart; ch.has_title=False
     ch.has_legend=True; ch.legend.position=XL_LEGEND_POSITION.BOTTOM; ch.legend.include_in_layout=False
-    ch.legend.font.size=Pt(11); ch.legend.font.name=FONT
+    ch.legend.font.size=Pt(9.5); ch.legend.font.name=FONT
     cols=[NAVY,NTB,ETB,SME,GOLD]; widths=[3.0,2.0,2.0,2.0,1.5]
     for ser,col,wd in zip(ch.series,cols,widths):
-        ser.smooth=False
-        lf=ser.format.line; lf.color.rgb=col; lf.width=Pt(wd)
-    # dashed ambition line
+        ser.smooth=False; lf=ser.format.line; lf.color.rgb=col; lf.width=Pt(wd)
     try:
         from pptx.enum.line import MSO_LINE_DASH_STYLE
         ch.series[4].format.line.dash_style=MSO_LINE_DASH_STYLE.DASH
     except Exception: pass
     va=ch.value_axis; va.minimum_scale=10; va.maximum_scale=55; va.major_unit=10
-    va.has_major_gridlines=True
-    va.major_gridlines.format.line.color.rgb=C("eef2f6")
+    va.has_major_gridlines=True; va.major_gridlines.format.line.color.rgb=C("eef2f6")
     va.tick_labels.number_format='0"%"'; va.tick_labels.number_format_is_linked=False
-    va.tick_labels.font.size=Pt(10); va.tick_labels.font.color.rgb=MUTED
+    va.tick_labels.font.size=Pt(9); va.tick_labels.font.color.rgb=MUTED
     va.format.line.color.rgb=LINE
-    ca=ch.category_axis; ca.tick_labels.font.size=Pt(11); ca.tick_labels.font.color.rgb=MUTED
+    ca=ch.category_axis; ca.tick_labels.font.size=Pt(9.5); ca.tick_labels.font.color.rgb=MUTED
     ca.format.line.color.rgb=C("c7d0da"); ca.major_tick_mark=XL_TICK_MARK.NONE
-    line(tbox(s,0.7,6.72,11.9,0.35),
-         "Source: FRP wealth-penetration table (portfolio MOB4+), refresh 17/6/2026. MX is the only market planned above 50% (60.8%); US the furthest below (22.7%).",
-         size=9.5,color=MUTED,italic=True,first=True,sa=0)
-    foot(s,2)
+    # right: two outcomes + headline
+    card(s,8.1,2.9,4.5,1.42,accent=ETB)
+    tf=tbox(s,8.3,3.08,4.1,1.2)
+    line(tf,"OUTCOME 1",size=9,color=ETB,bold=True,first=True,sa=3)
+    runs(tf,[("Grow absolute wealth customers and NNIA.",10.5,NAVY,True),(" Active customers plan +9.6% CAGR to 2.86m by 2030 — qualified, wealth-active growth must outpace raw acquisition.",10.5,INK,False)],ls=1.13)
+    card(s,8.1,4.42,4.5,1.42,accent=CLEAN)
+    tf=tbox(s,8.3,4.6,4.1,1.2)
+    line(tf,"OUTCOME 2",size=9,color=CLEAN,bold=True,first=True,sa=3)
+    runs(tf,[("Improve penetration without relying solely on denominator reduction.",10.5,NAVY,True),(" Clean-up supports health but cannot be the primary route to 50%.",10.5,INK,False)],ls=1.13)
+    headline(s,8.1,5.94,4.5,"We cannot convert our way out of continuously acquiring low-quality customers.")
+    line(tbox(s,0.5,6.7,7.4,0.3),"Portfolio MOB4+, 2024A → 2030 FRP. No region reaches 50% — MX (60.8%) only market above; US (22.7%) furthest below.",
+         size=8.5,color=MUTED,italic=True,first=True,sa=0)
+    foot(s,1)
 
 def s3_funnel():
-    s=slide(); header(s,"03","Define the wealth growth funnel","One common funnel — where value is created or lost")
+    s=slide(); header(s,"02","Define the wealth growth funnel","One common funnel — where value is created or lost")
     stages=[("1","Acquired / upgraded","entry into Premier",C("1f6feb")),
             ("2","Funded","money in",C("2a6fb0")),
             ("3","TRB qualified","47% on-book · 39% @MOB3",C("0f9488")),
@@ -305,10 +289,14 @@ def s3_funnel():
         line(tbox(s,8.85,yy+0.17,3.5,0.3),ttl,size=12,color=NAVY,bold=True,first=True,sa=0)
         line(tbox(s,7.75,yy+0.52,4.6,0.42),desc,size=10.5,color=MUTED,first=True,sa=0,ls=1.1)
         yy+=1.12
-    foot(s,3)
+    runs(tbox(s,0.75,6.62,11.85,0.4),
+         [("Method: ",9.5,NAVY,True),
+          ("a funnel-diagnostic loop — define the outcome → diagnose → isolate the true bottleneck → intervene → close the measurement loop. The framing borrows the operating instinct behind dialer.io (relentlessly diagnose where the funnel leaks and fix the true bottleneck); the loop itself is standard funnel-diagnostic practice.",9.5,MUTED,False)],
+         first=True,ls=1.1)
+    foot(s,2)
 
 def s4_scorecard():
-    s=slide(); header(s,"04","Current position by market · IWPB-9, portfolio MOB4+","Which markets are on track — and where the funnel breaks")
+    s=slide(); header(s,"03","Current position by market · IWPB-9, portfolio MOB4+","Which markets are on track — and where the funnel breaks")
     heads=["Market","Pen. 2024","Pen. 2026","Pen. 2030","Gap to 50%","TRB-qual 2026","Pen. @MOB3","Classification"]
     ratios=[2.5,1.05,1.05,1.05,1.1,1.25,1.1,1.85]
     aligns=[LEFT,RIGHT,RIGHT,RIGHT,RIGHT,RIGHT,RIGHT,LEFT]
@@ -332,7 +320,7 @@ def s4_scorecard():
     line(tbox(s,0.75,6.72,11.85,0.4),
          "Regions at 2030: Asia 46.2% · Americas & EU 40.4% · Middle East 30.8%. Classification maps each market to its dominant broken stage — the funnel diagnostic before prescribing a solution.",
          size=9.5,color=MUTED,italic=True,first=True,sa=0)
-    foot(s,4)
+    foot(s,3)
 
 def divider(num_txt,big,title,body):
     s=slide(dark=True)
@@ -343,7 +331,7 @@ def divider(num_txt,big,title,body):
     return s
 
 def s6_ntb():
-    s=slide(); header(s,"06","NTB diagnostic · new acquisition","Are we acquiring customers capable of driving wealth growth?")
+    s=slide(); header(s,"04","NTB diagnostic · new acquisition","Are we acquiring customers capable of driving wealth growth?")
     card(s,0.75,1.95,11.85,1.05,fill=MIST)
     tiles=[("22.0%","New-cohort penetration @MOB3 (2026) — vs 36.2% on-book"),
            ("~38–39%","TRB qualification @MOB3 — flat since 2024"),
@@ -370,10 +358,10 @@ def s6_ntb():
     headline(s,0.75,5.45,11.85,
         "Verdict: we are acquiring the wrong quality — new cohorts qualify and activate at ~half the on-book rate, and MOB3 qualification is not improving. Acquisition, not just conversion, must be fixed (UAE & Singapore worst at ~10–11% MOB3).",
         fill=MIST,bar=NAVY,txt=NAVY)
-    foot(s,6)
+    foot(s,4)
 
 def s7_core5():
-    s=slide(); header(s,"07","Momentum callout · IWPB Core-5 · MTD June Week 4","The engine can run — when the funnel is orchestrated")
+    s=slide(); header(s,"09","Proof point · IWPB Core-5 · MTD June Week 4","The engine can run — when the funnel is orchestrated")
     panels=[("NNM ($m)","1,189","MTD Jun W4 · vs PY 408 · Plan 1,190","+191% vs PY · (0)% to plan",GOLD,GOOD),
             ("Investment NNIA ($m)","1,101","MTD Jun W4 · vs PY 286 · Plan 834",">200% vs PY · +32% to plan",ETB,GOOD),
             ("Premier Net New Deposit ($m)","88","MTD Jun W4 · vs PY 122 · Plan 356","(28)% vs PY · (75)% to plan",CLEAN,BAD)]
@@ -387,14 +375,14 @@ def s7_core5():
         line(tf,note,size=11,color=ncol,bold=True,sa=0,ls=1.1)
         x+=4.05
     headline(s,0.75,4.5,11.85,
-        "Week 4 delivered $1.1bn NNM, led by improved Investment NNIA (China Mutual Funds) and Premier deposits back in positive territory, aided by UAE salary-credit inflows.")
+        "When acquisition quality is fixed, this is the upside: Week 4 delivered $1.1bn NNM, led by improved Investment NNIA (China Mutual Funds) and Premier deposits back in positive territory, aided by UAE salary-credit inflows.")
     line(tbox(s,0.75,5.55,11.85,0.6),
         "Core-5 = China, Singapore, Malaysia, Taiwan, UAE. By-market NNM: China 456 · UAE 538 · Taiwan 180 · Malaysia 37 · Singapore (22). Deposits still lag plan — the orchestration gap the ETB engine must close.",
         size=10,color=MUTED,italic=True,first=True,sa=0,ls=1.2)
-    foot(s,7)
+    foot(s,9)
 
 def s8_etb():
-    s=slide(); header(s,"08","ETB diagnostic · existing customers","Where is investable money sitting — and why isn't it converting?")
+    s=slide(); header(s,"05","ETB diagnostic · existing customers","Where is investable money sitting — and why isn't it converting?")
     line(tbox(s,0.75,1.95,6,0.3),"Segment the ETB opportunity",size=13,color=NAVY,bold=True,first=True,sa=0)
     segs=["CASA idle cash","TD maturity / rollover","Wealth customers, top-up potential",
           "Qualified non-wealth customers","Near-qualified customers","High-propensity digital leads"]
@@ -426,10 +414,10 @@ def s8_etb():
     headline(s,0.75,5.7,11.85,
         "Verdict: the opportunity exists — Core-5 NNIA runs >200% vs PY — but Americas & EU and Middle East miss plan by $0.8bn and $0.2bn, and Premier deposits lag plan 75%. The failure is commercialisation and persistence, not raw opportunity.",
         fill=MIST,bar=NAVY,txt=NAVY)
-    foot(s,8)
+    foot(s,5)
 
 def s9_dilution():
-    s=slide(); header(s,"09","Portfolio dilution diagnostic · value protection","What is structurally dragging penetration down?")
+    s=slide(); header(s,"06","Portfolio dilution diagnostic · value protection","What is structurally dragging penetration down?")
     line(tbox(s,0.75,1.95,6,0.3),"Sources of structural dilution",size=13,color=NAVY,bold=True,first=True,sa=0)
     card(s,0.75,2.32,5.85,2.15,accent=CLEAN)
     tf=tbox(s,0.95,2.5,5.5,1.95)
@@ -454,7 +442,41 @@ def s9_dilution():
         line(tf,d,size=9,color=MUTED,sa=0,ls=1.0)
     headline(s,7.0,4.62,5.6,"Which customers have a credible path to value, and which are permanently diluting the portfolio?",
              fill=MIST,bar=NAVY,txt=NAVY)
-    foot(s,9)
+    foot(s,6)
+
+def s7_bottleneck():
+    s=slide(); header(s,"07","Isolate the true bottleneck","The true bottleneck is acquisition quality")
+    line(tbox(s,0.75,1.9,6.9,0.85),
+         "Three stages leak, but they are not equal. On-book conversion and clean-up move the ratio at the margin; the largest and most persistent leak is low-quality inflow entering at roughly half the on-book wealth rate and diluting the mix every year.",
+         size=12.5,color=INK,first=True,sa=0,ls=1.2)
+    def bar(y,label,val,color):
+        line(tbox(s,0.75,y+0.06,1.7,0.3),label,size=11,color=NAVY,bold=True,first=True,sa=0)
+        track_w=4.8
+        shp(s,MSO_SHAPE.ROUNDED_RECTANGLE,2.55,y,track_w,0.34,fill=MIST,radius=0.14)
+        fw=track_w*val/50.0
+        shp(s,MSO_SHAPE.ROUNDED_RECTANGLE,2.55,y,fw,0.34,fill=color,radius=0.14)
+        t=tbox(s,2.55,y+0.05,fw-0.12,0.26); t.vertical_anchor=MSO_ANCHOR.MIDDLE
+        line(t,f"{val}%",size=11,color=WHITE,bold=True,align=RIGHT,first=True,sa=0)
+    bar(2.95,"New cohort @MOB3",22,BAD)
+    bar(3.55,"On-book (MOB4+)",36,NTB)
+    bar(4.15,"2030 ambition",50,GOLD)
+    line(tbox(s,0.75,4.75,6.9,0.6),
+         "MOB3 qualification flat at ~38–39% since 2024; TRB per new customer dipped in 2025. Every vintage acquired at 22% pulls the on-book average down before conversion can lift it.",
+         size=9.5,color=MUTED,italic=True,first=True,sa=0,ls=1.15)
+    line(tbox(s,8.0,1.9,4.6,0.3),"Rank the levers by leverage",size=13,color=NAVY,bold=True,first=True,sa=0)
+    levers=[("PRIMARY LEVER","NTB · acquisition quality","Largest, most persistent drag. Fix first — raise the MOB3 line toward on-book, or the gap never closes.",NTB,NTBS),
+            ("ACCELERANT","ETB · on-book conversion","Real, provable momentum (NNIA >200% vs PY) — but it cannot outrun continuous low-quality inflow on its own.",ETB,ETBS),
+            ("GUARDRAIL","Clean-up · dilution","Protects the ratio and RM capacity — but cannot be the primary route to 50%.",CLEAN,CLEANS)]
+    yy=2.3
+    for tag,ttl,desc,col,soft in levers:
+        card(s,8.0,yy,4.6,1.12,accent=col)
+        pill(s,8.2,yy+0.16,1.15,tag,soft,col)
+        line(tbox(s,9.45,yy+0.17,3.0,0.3),ttl,size=11.5,color=NAVY,bold=True,first=True,sa=0)
+        line(tbox(s,8.2,yy+0.52,4.2,0.5),desc,size=9.5,color=MUTED,first=True,sa=0,ls=1.12)
+        yy+=1.22
+    headline(s,0.75,5.75,11.85,
+        "Move the MOB3 line toward the on-book line and the 2030 gap closes. Keep acquiring at 22%, and no amount of on-book conversion catches up.")
+    foot(s,7)
 
 def action_cards(s,rows3):
     x=0.75;w=3.83
@@ -466,7 +488,7 @@ def action_cards(s,rows3):
         x+=4.05
 
 def s10_ntb_action():
-    s=slide(); header(s,"10","NTB action plan","Make acquisition the first quality-control point")
+    s=slide(); header(s,"08","NTB action plan · the isolated bottleneck","Make acquisition the first quality-control point")
     action_cards(s,[
       ("1 · Define “good NTB”",["funded within X days","TRB qualified within Y days","generates NNIA within Z days","stays qualified past early life","target: MOB3 pen. 22% → 36%"],NTB),
       ("2 · Quality gates",["by market · channel · campaign","by proposition · product hook","by customer source"],NTB),
@@ -481,10 +503,10 @@ def s10_ntb_action():
     line(tf,"5 · Build hero conversion pathways",size=12,color=NAVY,bold=True,first=True,sa=5)
     for it in ["TD hook → income / yield solution","International (UAE salary credits) → offshore activation","Mortgage → investable balance · Card-only → funded Premier"]:
         line(tf,"• "+it,size=10.5,color=INK,sa=4,ls=1.12)
-    foot(s,10)
+    foot(s,8)
 
 def s11_etb_action():
-    s=slide(); header(s,"11","ETB action plan","Convert addressable balances into sustainable NNIA")
+    s=slide(); header(s,"10","ETB action plan","Convert addressable balances into sustainable NNIA")
     steps=[("1 · Identify","Customer-level opportunity pools."),("2 · Prioritise","Balance × propensity × trigger × EV."),
            ("3 · Nurture","Engage before the event — esp. TD maturity."),("4 · Match","A few relevant propositions, not broad pushing."),
            ("5 · Route","Digital · RM · specialist · campaign."),("6 · Convert","Appointment → recommendation → NNIA."),
@@ -497,11 +519,11 @@ def s11_etb_action():
         line(tf,desc,size=9.5,color=INK,sa=0,ls=1.14)
         x+=1.695
     headline(s,0.75,4.9,11.85,
-        "ETB conversion must be run as an orchestrated funnel — not isolated campaigns and uncoordinated leads. Close the deposit-to-plan gap (Premier NND at 25% of plan) by nurturing before the liquidity event.")
-    foot(s,11)
+        "Run ETB as an orchestrated funnel — a Speed-to-Lead-style cadence (contact fast, nurture before the liquidity event), not isolated campaigns and uncoordinated leads. Close the deposit-to-plan gap (Premier NND at 25% of plan).")
+    foot(s,10)
 
 def s12_cleanup():
-    s=slide(); header(s,"12","Portfolio clean-up action plan","Remove structural dilution — without gaming the denominator")
+    s=slide(); header(s,"11","Portfolio clean-up action plan","Remove structural dilution — without gaming the denominator")
     action_cards(s,[
       ("A · Reaffirm eligibility",["Qualification rules","Grace periods","International / multi-market treatment","Upgrade & downgrade rules"],CLEAN),
       ("B · Apply disciplined actions",["Retain high-potential customers","Migrate to appropriate service models","Downgrade persistently unqualified","Protect credible recovery paths"],CLEAN),
@@ -509,10 +531,10 @@ def s12_cleanup():
     headline(s,0.75,5.05,11.85,
         "Guardrail — Clean-up supports portfolio health, but it cannot be the primary route to 50%. The denominator must fall because customers genuinely leave the segment, not to flatter the ratio.",
         fill=CLEANS,bar=CLEAN,txt=C("7a2f14"))
-    foot(s,12)
+    foot(s,11)
 
 def s13_roadmap():
-    s=slide(); header(s,"13","Integrated action roadmap","Three levers, one sequenced view to 2030")
+    s=slide(); header(s,"12","Integrated action roadmap","Three levers, one sequenced view to 2030")
     heads=["Horizon","NTB","ETB","Clean-up"]
     ratios=[1.4,3.5,3.5,3.0]; aligns=[LEFT,LEFT,LEFT,LEFT]
     rows=[["Now – year end","Define quality; start channel & vintage reporting; lift MOB3 penetration.","Priority balance campaigns; TD nurturing; convert Core-5 momentum to deposits.","Validate qualification & downgrade rules; fix CIIOM-type noise."],
@@ -536,10 +558,10 @@ def s13_roadmap():
     for f in fields:
         line(tbox(s,x,5.5,1.6,0.6),f,size=10,color=NAVY,bold=True,first=True,sa=0,ls=1.05)
         x+=1.66
-    foot(s,13)
+    foot(s,12)
 
 def s14_measure():
-    s=slide(); header(s,"14","Measurement & management loop","A monthly cockpit that closes the loop")
+    s=slide(); header(s,"13","Measurement & management loop","A monthly cockpit that closes the loop")
     cols=[("NTB",NTB,NTBS,["Funded rate","TRB-qualified rate @MOB3","Penetration @MOB3 / MOB6","NNIA per acquired customer","Qualification retention @MOB12"]),
           ("ETB",ETB,ETBS,["Addressable balance","Customers contacted","Recommendations delivered","Conversion rate","NNIA generated · flow retained"]),
           ("Portfolio",CLEAN,CLEANS,["Qualified customer rate","Wealth penetration","Downgrade / inactive rate","Wealth customer growth","Revenue & NNIA per qual. cust."])]
@@ -561,10 +583,12 @@ def s14_measure():
         if i<3:
             line(tbox(s,x+2.6,5.5,0.35,0.5),"→",size=18,color=GOLD,bold=True,align=CENTER,first=True,sa=0)
         x+=2.92
-    foot(s,14)
+    line(tbox(s,0.75,6.5,11.85,0.3),"A dialer.io-style reporting cockpit: read the funnel monthly, and drive every red metric back to a diagnosed bottleneck and a dated hypothesis.",
+         size=9,color=MUTED,italic=True,first=True,sa=0)
+    foot(s,13)
 
 def s15_decisions():
-    s=slide(dark=True); header(s,"15","Executive decisions required","Seven decisions to put us on the path to 50%",dark=True)
+    s=slide(dark=True); header(s,"14","Executive decisions required","Seven decisions to put us on the path to 50%",dark=True)
     decs=["Confirm 50% wealth penetration as the governing ambition and agree the horizon — the FRP currently lands at 42.8%.",
           "Agree the minimum NTB quality standard and a MOB3 penetration target above today's 22%.",
           "Mandate channel- and vintage-level reporting.",
@@ -581,7 +605,7 @@ def s15_decisions():
         tf=tbox(s,1.45,y+0.12,10.9,0.44); tf.vertical_anchor=MSO_ANCHOR.MIDDLE
         line(tf,d,size=12,color=C("eaf0f6"),first=True,sa=0,ls=1.06)
         y+=0.735
-    foot(s,15,dark=True)
+    foot(s,14,dark=True)
 
 # ---------- APPENDIX ----------
 def app_divider():
@@ -695,13 +719,13 @@ def a6_sources():
     foot(s,"A6")
 
 # ---- build ----
-s0_title(); s1_case(); s2_chart(); s3_funnel(); s4_scorecard()
+s0_title(); s1_define_gap(); s3_funnel()
 divider("","Section I · Diagnostic","Diagnose the funnel before prescribing a fix",
     "Three diagnoses, one architecture. Are we acquiring the wrong customers — or the right customers we fail to convert? Do we lack opportunity on-book — or fail to commercialise it? And which customers are permanently diluting the portfolio?")
-s6_ntb(); s7_core5(); s8_etb(); s9_dilution()
-divider("","Section II · Action","Act on the true bottleneck — one lever at a time",
-    "Fix contactability before blaming conversion. Make acquisition the first quality-control point, run ETB as an orchestrated conversion engine, and remove structural dilution without gaming the denominator.")
-s10_ntb_action(); s11_etb_action(); s12_cleanup(); s13_roadmap(); s14_measure(); s15_decisions()
+s4_scorecard(); s6_ntb(); s8_etb(); s9_dilution(); s7_bottleneck()
+divider("","Section II · Action","Act on the true bottleneck — quality first",
+    "Fix contactability before blaming conversion. Make acquisition the first quality-control point, prove the engine can run, run ETB as an orchestrated conversion engine, and remove structural dilution without gaming the denominator.")
+s10_ntb_action(); s7_core5(); s11_etb_action(); s12_cleanup(); s13_roadmap(); s14_measure(); s15_decisions()
 app_divider(); a1_taxonomy()
 full_table_slide("A2",PEN,"Wealth penetration % — full trajectory","Appendix · wealth penetration (portfolio MOB4+)",pct,
     "Portfolio MOB4+, 2024 Actuals → 2030 FRP. IWPB-9 reaches 42.8% vs 50% ambition. MX only market above 50%; US furthest below.","A2")

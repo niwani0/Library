@@ -1,10 +1,18 @@
 # Wealth Penetration Funnel — Path to 50%
 
 A self-contained, keyboard-navigable HTML deck arguing the case for reaching 50%
-wealth penetration. It applies the **Dialer.io governing structure** —
-define the outcome → diagnose the funnel → isolate the true bottleneck →
-apply targeted interventions → close the measurement loop — to a wealth-growth
-funnel rather than a lead-to-sale funnel.
+wealth penetration. It runs a **funnel-diagnostic loop** — define the outcome →
+diagnose the funnel → isolate the true bottleneck → apply targeted interventions →
+close the measurement loop — applied to a wealth-growth funnel rather than a
+lead-to-sale funnel.
+
+The framing borrows the *operating instinct* behind **dialer.io** (relentlessly
+diagnose where the funnel leaks, and fix the true bottleneck first) and its
+**Speed-to-Lead cadence** / reporting-cockpit ideas. Note: the five-step loop
+itself is standard funnel-diagnostic / CRO practice, **not** a framework
+published by dialer.io or its CEO Matt Ryder — see
+`research-dialer-methodology.md` for the sourcing check. Attribution in the deck
+is deliberately soft for this reason.
 
 ## The funnel
 
@@ -17,21 +25,23 @@ customer pools that share one diagnostic architecture:
 
 ## Slides (17 total: title + 14 content + 2 section dividers)
 
-1. Case for change — 42.8% vs 50% at 2030, real FRP trajectory
-2. Penetration trajectory chart (2024→2030, IWPB-9 + Asia/Am&EU/ME vs 50% line)
-3. Define the wealth growth funnel
-4. Current position by market (real IWPB-9 scorecard + classification)
-5. *Section divider — Diagnostic*
-6. NTB diagnostic (real MOB3 quality metrics)
-7. Core-5 NNM momentum callout (MTD June Week 4)
-8. ETB diagnostic (real NNIA-by-region)
-9. Portfolio dilution diagnostic
-10. *Section divider — Action*
-11. NTB action plan
-12. ETB action plan
+Order follows the loop: **Define → Diagnose → Isolate → Act → Measure.**
+
+1. Define — the gap (42.8% vs 50% at 2030, trajectory chart as evidence panel)
+2. Define the wealth growth funnel (+ method note)
+3. *Section divider — Diagnostic*
+4. Current position by market (IWPB-9 scorecard + classification)
+5. NTB diagnostic (MOB3 quality metrics)
+6. ETB diagnostic (NNIA-by-region)
+7. Portfolio dilution diagnostic
+8. **Isolate the true bottleneck — acquisition quality** (22% MOB3 vs 36% on-book; levers ranked)
+9. *Section divider — Action*
+10. NTB action plan (the isolated bottleneck, led)
+11. Core-5 momentum — "the engine can run" proof point
+12. ETB action plan (Speed-to-Lead-style cadence)
 13. Portfolio clean-up action plan
 14. Integrated action roadmap
-15. Measurement & management loop
+15. Measurement & management loop (dialer.io-style cockpit)
 16. Executive decisions required
 
 ## Data
