@@ -15,20 +15,36 @@ customer pools that share one diagnostic architecture:
 - **ETB** — existing customers (is on-book investable money converting?)
 - **Clean-up** — value protection (what structurally dilutes the portfolio?)
 
-## Slides (15 total: title + 12 core + 2 section dividers)
+## Slides (17 total: title + 14 content + 2 section dividers)
 
-1. Executive objective & case for change
-2. Define the wealth growth funnel
-3. Current position by market (scorecard + classification)
-4. NTB diagnostic
-5. ETB diagnostic
-6. Portfolio dilution diagnostic
-7. NTB action plan
-8. ETB action plan
-9. Portfolio clean-up action plan
-10. Integrated action roadmap
-11. Measurement & management loop
-12. Executive decisions required
+1. Case for change — 42.8% vs 50% at 2030, real FRP trajectory
+2. Penetration trajectory chart (2024→2030, IWPB-9 + Asia/Am&EU/ME vs 50% line)
+3. Define the wealth growth funnel
+4. Current position by market (real IWPB-9 scorecard + classification)
+5. *Section divider — Diagnostic*
+6. NTB diagnostic (real MOB3 quality metrics)
+7. Core-5 NNM momentum callout (MTD June Week 4)
+8. ETB diagnostic (real NNIA-by-region)
+9. Portfolio dilution diagnostic
+10. *Section divider — Action*
+11. NTB action plan
+12. ETB action plan
+13. Portfolio clean-up action plan
+14. Integrated action roadmap
+15. Measurement & management loop
+16. Executive decisions required
+
+## Data
+
+Real figures are drawn from the FRP / NNIA pack shared 16 Jul 2026 and
+transcribed into `data.md` (source of truth). The headline finding: on the
+current FRP, IWPB-9 wealth penetration reaches only **42.8% by 2030 — 7.2pp
+short of the 50% ambition**, with acquisition quality (22% new-cohort
+penetration at MOB3 vs 36% on-book) as the primary drag.
+
+The trajectory chart's series palette was validated for colourblind-safety
+with the `dataviz` skill validator (light-mode categorical: blue / teal /
+amber, plus the IWPB-9 total as an emphasized dark line with direct labels).
 
 ## Using it
 
@@ -39,7 +55,9 @@ Open `index.html` in any browser.
 
 ## Notes
 
-- All figures on the market scorecard are **illustrative placeholders** — replace
-  them with real market data, and move data definitions and diagnostic cuts into
-  an appendix as noted in the brief.
+- Figures are transcribed from screenshots of the FRP/NNIA pack (see `data.md`).
+  **Verify against the source workbook before external use** — a few cells were
+  read from low-resolution captures.
+- Three market taxonomies exist in the source (full product tree, Core-5 NNM,
+  IWPB-9 FRP). The deck leads on **IWPB-9** with a **Core-5** momentum callout.
 - No external assets or network calls; the file is fully offline-capable.

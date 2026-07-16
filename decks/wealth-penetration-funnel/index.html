@@ -15,215 +15,146 @@
     --muted: #5c6b7a;
     --gold: #c9962f;
     --gold-soft: #f3e4c0;
-    /* three pools */
-    --ntb: #1f6feb;      /* acquisition */
-    --etb: #12897e;      /* on-book conversion */
-    --clean: #b4562b;    /* dilution / clean-up */
+    --ntb: #1f6feb;
+    --etb: #0f9488;
+    --clean: #b4562b;
     --ntb-soft: #e3eefb;
-    --etb-soft: #d9f0ed;
+    --etb-soft: #d6efec;
     --clean-soft: #f6e4da;
     --good: #1f8a4c;
     --warn: #b8860b;
     --bad: #c0392b;
+    /* chart series (validated light-mode categorical) */
+    --s-total: #0b1e34;
+    --s-asia: #1f6feb;
+    --s-ameu: #0f9488;
+    --s-me: #d97706;
     --font: "Segoe UI", "Helvetica Neue", Arial, system-ui, sans-serif;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { height: 100%; }
-  body {
-    font-family: var(--font);
-    background: #061321;
-    color: var(--ink);
-    -webkit-font-smoothing: antialiased;
-  }
+  body { font-family: var(--font); background: #061321; color: var(--ink); -webkit-font-smoothing: antialiased; }
 
-  /* ---------- deck / slide framing ---------- */
   .deck { width: 100%; }
   .slide {
-    position: relative;
-    width: 100%;
-    max-width: 1280px;
-    aspect-ratio: 16 / 9;
-    margin: 0 auto;
-    background: var(--paper);
-    display: none;
-    padding: 54px 64px 60px;
-    overflow: hidden;
+    position: relative; width: 100%; max-width: 1280px; aspect-ratio: 16 / 9;
+    margin: 0 auto; background: var(--paper); display: none; padding: 50px 62px 58px; overflow: hidden;
   }
   .slide.active { display: block; }
+  @media (max-width: 900px) { .slide { padding: 24px 22px 32px; aspect-ratio: auto; min-height: 100vh; } }
 
-  @media (max-width: 900px) {
-    .slide { padding: 26px 26px 34px; aspect-ratio: auto; min-height: 100vh; }
-  }
-
-  /* full-bleed dark slides */
   .slide.dark { background: var(--navy); color: #eaf0f6; }
   .slide.dark h1, .slide.dark h2 { color: #fff; }
 
-  /* ---------- typography ---------- */
-  .kicker {
-    font-size: 12.5px; letter-spacing: .18em; text-transform: uppercase;
-    color: var(--gold); font-weight: 700; margin-bottom: 12px;
-  }
-  .slide.dark .kicker { color: var(--gold); }
-  h1 { font-size: 40px; line-height: 1.08; letter-spacing: -.01em; color: var(--navy); font-weight: 800; }
-  h2 { font-size: 27px; line-height: 1.12; letter-spacing: -.01em; color: var(--navy); font-weight: 800; }
-  h3 { font-size: 15.5px; color: var(--navy); font-weight: 800; }
-  p { font-size: 15px; line-height: 1.5; color: var(--ink); }
+  .kicker { font-size: 12.5px; letter-spacing: .18em; text-transform: uppercase; color: var(--gold); font-weight: 700; margin-bottom: 10px; }
+  h1 { font-size: 38px; line-height: 1.08; letter-spacing: -.01em; color: var(--navy); font-weight: 800; }
+  h2 { font-size: 26px; line-height: 1.12; color: var(--navy); font-weight: 800; }
+  h3 { font-size: 15px; color: var(--navy); font-weight: 800; }
+  p { font-size: 14.5px; line-height: 1.5; color: var(--ink); }
   .lead { font-size: 18px; line-height: 1.45; color: var(--muted); font-weight: 400; }
   .small { font-size: 12.5px; color: var(--muted); line-height: 1.45; }
-  .q { font-size: 13.5px; color: var(--muted); font-style: italic; }
+  .q { font-size: 12.5px; color: var(--muted); font-style: italic; }
   strong { font-weight: 700; }
 
-  .head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 18px; }
-  .head .num {
-    font-size: 13px; font-weight: 800; color: #fff; background: var(--navy);
-    border-radius: 6px; padding: 3px 9px; letter-spacing: .04em; flex: none; transform: translateY(-3px);
-  }
-  .divider-line { height: 3px; width: 54px; background: var(--gold); border-radius: 3px; margin: 10px 0 20px; }
+  .head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 16px; }
+  .head .num { font-size: 13px; font-weight: 800; color: #fff; background: var(--navy); border-radius: 6px; padding: 3px 9px; flex: none; transform: translateY(-3px); }
 
-  /* headline banner */
-  .headline {
-    margin-top: 16px; padding: 14px 18px; border-left: 4px solid var(--gold);
-    background: var(--gold-soft); border-radius: 0 8px 8px 0;
-    font-size: 16px; font-weight: 700; color: #6b4d13; line-height: 1.35;
-  }
-  .primary-q {
-    margin-top: 14px; padding: 12px 16px; border-radius: 8px;
-    background: var(--mist); border: 1px solid var(--line);
-    font-size: 14px; line-height: 1.4;
-  }
+  .headline { margin-top: 14px; padding: 13px 18px; border-left: 4px solid var(--gold); background: var(--gold-soft); border-radius: 0 8px 8px 0; font-size: 16px; font-weight: 700; color: #6b4d13; line-height: 1.35; }
+  .primary-q { margin-top: 12px; padding: 11px 16px; border-radius: 8px; background: var(--mist); border: 1px solid var(--line); font-size: 13.5px; line-height: 1.4; }
   .primary-q b { color: var(--navy); }
 
-  /* ---------- layout helpers ---------- */
-  .cols { display: grid; gap: 18px; }
+  .cols { display: grid; gap: 16px; }
   .c2 { grid-template-columns: 1fr 1fr; }
   .c3 { grid-template-columns: repeat(3, 1fr); }
   .c4 { grid-template-columns: repeat(4, 1fr); }
   .c5 { grid-template-columns: repeat(5, 1fr); }
-  .flex { display: flex; gap: 14px; }
 
-  .card {
-    background: var(--paper); border: 1px solid var(--line); border-radius: 12px;
-    padding: 16px 16px; box-shadow: 0 1px 2px rgba(16,32,46,.04);
-  }
-  .card h3 { margin-bottom: 8px; }
+  .card { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 15px 16px; box-shadow: 0 1px 2px rgba(16,32,46,.04); }
+  .card h3 { margin-bottom: 7px; }
   .card ul { margin: 6px 0 0 0; padding-left: 16px; }
-  .card li { font-size: 12.8px; line-height: 1.5; color: var(--ink); margin-bottom: 3px; }
+  .card li { font-size: 12.6px; line-height: 1.48; color: var(--ink); margin-bottom: 3px; }
 
-  .tag {
-    display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: .05em;
-    text-transform: uppercase; padding: 3px 8px; border-radius: 20px;
-  }
+  .tag { display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; padding: 3px 8px; border-radius: 20px; }
   .tag.ntb { background: var(--ntb-soft); color: var(--ntb); }
   .tag.etb { background: var(--etb-soft); color: var(--etb); }
   .tag.clean { background: var(--clean-soft); color: var(--clean); }
-
   .pool-ntb { border-top: 4px solid var(--ntb); }
   .pool-etb { border-top: 4px solid var(--etb); }
   .pool-clean { border-top: 4px solid var(--clean); }
 
-  /* ---------- funnel ---------- */
   .funnel { display: flex; flex-direction: column; gap: 7px; }
-  .fstage {
-    display: flex; align-items: center; gap: 12px;
-    color: #fff; padding: 9px 16px; border-radius: 7px; font-weight: 700; font-size: 14px;
-  }
-  .fstage .fnum {
-    width: 22px; height: 22px; border-radius: 50%; background: rgba(255,255,255,.22);
-    display: grid; place-items: center; font-size: 12px; flex: none;
-  }
+  .fstage { display: flex; align-items: center; gap: 12px; color: #fff; padding: 9px 16px; border-radius: 7px; font-weight: 700; font-size: 14px; }
+  .fstage .fnum { width: 22px; height: 22px; border-radius: 50%; background: rgba(255,255,255,.22); display: grid; place-items: center; font-size: 12px; flex: none; }
   .fstage .fsub { margin-left: auto; font-weight: 500; font-size: 12px; opacity: .85; }
 
-  /* ---------- table / scorecard ---------- */
   table { width: 100%; border-collapse: collapse; font-size: 12px; }
-  th, td { text-align: left; padding: 7px 9px; border-bottom: 1px solid var(--line); }
-  th { font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); font-weight: 700; background: var(--mist); }
+  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+  th { font-size: 10.5px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); font-weight: 700; background: var(--mist); }
   td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
-  tbody tr:last-child td { border-bottom: none; }
   .mkt { font-weight: 700; color: var(--navy); }
-  .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
-  .g { background: var(--good); } .a { background: var(--warn); } .r { background: var(--bad); }
-  .pill { font-size: 10.5px; font-weight: 700; padding: 2px 7px; border-radius: 12px; white-space: nowrap; }
+  .grp td { background: #eef2f6; font-weight: 800; color: var(--navy); font-size: 10.5px; text-transform: uppercase; letter-spacing: .04em; }
+  .tot td { border-top: 2px solid var(--navy); font-weight: 800; color: var(--navy); }
+  .pill { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 12px; white-space: nowrap; }
   .pill.scale { background: #dff3e6; color: var(--good); }
   .pill.conv { background: #e3eefb; color: var(--ntb); }
   .pill.acq { background: #fdeede; color: var(--clean); }
   .pill.clean { background: #f6e0da; color: var(--bad); }
   .pill.full { background: #efe0f2; color: #7b3f8f; }
+  .pos { color: var(--good); } .neg { color: var(--bad); }
 
-  /* ---------- roadmap ---------- */
   .road th { background: var(--navy); color: #fff; }
   .road td { vertical-align: top; font-size: 12px; }
   .road .hrz { font-weight: 800; color: var(--navy); background: var(--mist); width: 130px; }
 
-  /* ---------- numbered / step list ---------- */
   .steps { display: grid; gap: 8px; }
   .step { display: flex; gap: 12px; align-items: flex-start; }
-  .step .sn {
-    flex: none; width: 26px; height: 26px; border-radius: 8px; color: #fff; font-weight: 800; font-size: 13px;
-    display: grid; place-items: center;
-  }
+  .step .sn { flex: none; width: 26px; height: 26px; border-radius: 8px; color: #fff; font-weight: 800; font-size: 13px; display: grid; place-items: center; }
 
-  /* ---------- title slide ---------- */
   .title-wrap { height: 100%; display: flex; flex-direction: column; justify-content: center; }
-  .title-wrap h1 { font-size: 56px; line-height: 1.02; color: #fff; max-width: 15ch; }
-  .brandbar { display: flex; align-items: center; gap: 10px; margin-bottom: 26px; }
-  .brandbar .logo {
-    width: 34px; height: 34px; border-radius: 8px; background: linear-gradient(135deg, var(--gold), #e6b95a);
-    display: grid; place-items: center; color: var(--navy); font-weight: 900; font-size: 18px;
-  }
+  .title-wrap h1 { font-size: 54px; line-height: 1.02; color: #fff; max-width: 16ch; }
+  .brandbar { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; }
+  .brandbar .logo { width: 34px; height: 34px; border-radius: 8px; background: linear-gradient(135deg, var(--gold), #e6b95a); display: grid; place-items: center; color: var(--navy); font-weight: 900; font-size: 18px; }
   .brandbar span { color: #cdd8e4; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; font-size: 12.5px; }
-  .storyline { margin-top: 30px; max-width: 60ch; }
+  .storyline { margin-top: 26px; max-width: 62ch; }
   .storyline p { color: #b9c6d4; font-size: 16px; line-height: 1.55; }
   .storyline .em { color: var(--gold); font-weight: 700; }
-  .agenda { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px 26px; margin-top: 34px; max-width: 900px; }
-  .agenda div { color: #9fb0c1; font-size: 12.5px; padding: 4px 0; border-top: 1px solid #223a52; }
+  .agenda { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px 26px; margin-top: 28px; max-width: 920px; }
+  .agenda div { color: #9fb0c1; font-size: 12px; padding: 4px 0; border-top: 1px solid #223a52; }
   .agenda div b { color: #eaf0f6; font-weight: 700; }
 
-  /* section divider */
   .sect { height: 100%; display: flex; flex-direction: column; justify-content: center; }
   .sect .big { font-size: 15px; color: var(--gold); font-weight: 800; letter-spacing: .2em; text-transform: uppercase; }
-  .sect h1 { color: #fff; font-size: 46px; margin: 14px 0 18px; max-width: 20ch; }
-  .sect p { color: #b9c6d4; font-size: 17px; max-width: 62ch; }
+  .sect h1 { color: #fff; font-size: 44px; margin: 14px 0 18px; max-width: 20ch; }
+  .sect p { color: #b9c6d4; font-size: 17px; max-width: 64ch; }
 
-  /* mini metric */
   .metric { text-align: left; }
   .metric .v { font-size: 30px; font-weight: 800; color: var(--navy); line-height: 1; }
   .metric .l { font-size: 11.5px; color: var(--muted); margin-top: 5px; }
 
-  /* loop diagram */
   .loop { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
-  .loop .node {
-    background: var(--navy); color: #fff; font-size: 12px; font-weight: 700; padding: 9px 12px; border-radius: 8px;
-  }
+  .loop .node { background: var(--navy); color: #fff; font-size: 12px; font-weight: 700; padding: 9px 12px; border-radius: 8px; }
   .loop .arrow { color: var(--gold); font-size: 18px; font-weight: 800; }
 
-  /* decision list */
-  .decisions { counter-reset: d; display: grid; gap: 9px; }
-  .decision { display: flex; gap: 14px; align-items: flex-start; background: var(--mist); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
-  .decision::before {
-    counter-increment: d; content: counter(d); flex: none;
-    width: 28px; height: 28px; border-radius: 8px; background: var(--gold); color: var(--navy);
-    font-weight: 900; display: grid; place-items: center; font-size: 14px;
-  }
-  .decision p { font-size: 14px; }
+  .decisions { counter-reset: d; display: grid; gap: 8px; }
+  .decision { display: flex; gap: 14px; align-items: flex-start; background: #0f2a44; border: 1px solid #1d3a57; border-radius: 10px; padding: 11px 14px; }
+  .decision::before { counter-increment: d; content: counter(d); flex: none; width: 27px; height: 27px; border-radius: 8px; background: var(--gold); color: var(--navy); font-weight: 900; display: grid; place-items: center; font-size: 14px; }
+  .decision p { font-size: 13.5px; color: #eaf0f6; }
 
-  /* ---------- nav / chrome ---------- */
-  .chrome {
-    position: fixed; bottom: 0; left: 0; right: 0; height: 46px;
-    display: flex; align-items: center; justify-content: center; gap: 14px;
-    background: rgba(6,19,33,.92); backdrop-filter: blur(6px); z-index: 50;
-  }
-  .chrome button {
-    background: #1a3350; color: #eaf0f6; border: none; border-radius: 6px;
-    width: 30px; height: 30px; font-size: 15px; cursor: pointer;
-  }
+  /* chart */
+  .legend { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 6px; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--ink); font-weight: 600; }
+  .legend i { width: 22px; height: 3px; border-radius: 2px; display: inline-block; }
+  .chartwrap { width: 100%; overflow-x: auto; }
+
+  .chrome { position: fixed; bottom: 0; left: 0; right: 0; height: 46px; display: flex; align-items: center; justify-content: center; gap: 14px; background: rgba(6,19,33,.92); backdrop-filter: blur(6px); z-index: 50; }
+  .chrome button { background: #1a3350; color: #eaf0f6; border: none; border-radius: 6px; width: 30px; height: 30px; font-size: 15px; cursor: pointer; }
   .chrome button:hover { background: #29527d; }
-  .chrome .pos { color: #9fb0c1; font-size: 12.5px; min-width: 74px; text-align: center; font-variant-numeric: tabular-nums; }
-  .chrome .title { color: #6d8298; font-size: 12px; max-width: 40ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .chrome .posn { color: #9fb0c1; font-size: 12.5px; min-width: 74px; text-align: center; font-variant-numeric: tabular-nums; }
+  .chrome .title { color: #6d8298; font-size: 12px; max-width: 42ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .progress { position: fixed; top: 0; left: 0; height: 3px; background: var(--gold); z-index: 60; transition: width .25s ease; }
 
-  .foot { position: absolute; bottom: 18px; left: 64px; right: 64px; display: flex; justify-content: space-between; align-items: center; }
+  .foot { position: absolute; bottom: 16px; left: 62px; right: 62px; display: flex; justify-content: space-between; align-items: center; }
   .foot .fl { font-size: 10.5px; color: var(--muted); letter-spacing: .04em; }
   .slide.dark .foot .fl { color: #6d8298; }
 
@@ -241,56 +172,58 @@
   <!-- 0 · TITLE -->
   <section class="slide dark active">
     <div class="title-wrap">
-      <div class="brandbar"><div class="logo">W</div><span>Premier Wealth · Strategy</span></div>
+      <div class="brandbar"><div class="logo">W</div><span>Premier Wealth · Strategy · FRP 2026</span></div>
       <h1>The Path to 50% Wealth Penetration</h1>
-      <p class="lead" style="color:#cdd8e4;margin-top:18px;max-width:52ch;">A portfolio-system diagnosis of customer inflow, on-book conversion, and structural dilution — and the interventions that close the gap.</p>
+      <p class="lead" style="color:#cdd8e4;margin-top:16px;max-width:54ch;">The current FRP lands penetration at 42.8% by 2030 — 7.2pp short of the ambition. A portfolio-system diagnosis of why, and the interventions that close the gap.</p>
       <div class="storyline">
-        <p>We are <span class="em">not on track</span> for 50%. The issue is not one conversion campaign — it is a portfolio system problem across <span class="em">acquisition, on-book conversion, and structural dilution</span>. We diagnose each stage, act on the true bottleneck, and manage the full funnel on common quality and value measures.</p>
+        <p>We are <span class="em">not on track</span> for 50% — the plan itself only reaches <span class="em">42.8%</span> by 2030. The issue is not one conversion campaign; it is a portfolio system problem across <span class="em">acquisition quality, on-book conversion, and structural dilution</span>. We diagnose each stage, act on the true bottleneck, and manage the full funnel on common quality and value measures.</p>
       </div>
       <div class="agenda">
-        <div><b>01</b> Executive objective &amp; case for change</div>
-        <div><b>05</b> ETB diagnostic</div>
-        <div><b>09</b> Portfolio clean-up plan</div>
-        <div><b>02</b> The wealth growth funnel</div>
-        <div><b>06</b> Portfolio dilution diagnostic</div>
-        <div><b>10</b> Integrated action roadmap</div>
-        <div><b>03</b> Current position by market</div>
-        <div><b>07</b> NTB action plan</div>
-        <div><b>11</b> Measurement &amp; management loop</div>
-        <div><b>04</b> NTB diagnostic</div>
-        <div><b>08</b> ETB action plan</div>
-        <div><b>12</b> Executive decisions required</div>
+        <div><b>01</b> Case for change</div>
+        <div><b>06</b> NTB diagnostic</div>
+        <div><b>11</b> ETB action plan</div>
+        <div><b>02</b> Penetration trajectory</div>
+        <div><b>07</b> Core-5 NNM momentum</div>
+        <div><b>12</b> Portfolio clean-up plan</div>
+        <div><b>03</b> The wealth growth funnel</div>
+        <div><b>08</b> ETB diagnostic</div>
+        <div><b>13</b> Integrated roadmap</div>
+        <div><b>04</b> Position by market</div>
+        <div><b>09</b> Portfolio dilution</div>
+        <div><b>14</b> Measurement loop</div>
+        <div><b>05</b> Diagnostic section</div>
+        <div><b>10</b> NTB action plan</div>
+        <div><b>15</b> Executive decisions</div>
       </div>
     </div>
   </section>
 
-  <!-- 1 · EXECUTIVE OBJECTIVE -->
+  <!-- 1 · CASE FOR CHANGE -->
   <section class="slide">
     <div class="head"><span class="num">01</span>
       <div><div class="kicker">Executive objective &amp; case for change</div>
-      <h1>What we are trying to achieve — and why current plans fall short</h1></div>
+      <h1>The plan does not reach the ambition</h1></div>
     </div>
-    <div class="cols c2" style="margin-top:6px;">
+    <div class="cols c2" style="margin-top:4px;">
       <div>
-        <h3 style="margin-bottom:8px;">The ambition</h3>
-        <p style="margin-bottom:14px;"><strong>50% wealth penetration</strong> is the governing ambition. Reaching it requires more than converting the existing portfolio.</p>
         <div class="cols c3" style="gap:10px;">
           <div class="card metric"><div class="v">50%</div><div class="l">Wealth penetration ambition</div></div>
-          <div class="card metric"><div class="v" style="color:var(--bad);">~34%</div><div class="l">Current FRP / market trajectory to 2030</div></div>
-          <div class="card metric"><div class="v" style="color:var(--clean);">−16pt</div><div class="l">Gap the plan does not yet close</div></div>
+          <div class="card metric"><div class="v" style="color:var(--bad);">42.8%</div><div class="l">IWPB-9 at 2030 on current FRP</div></div>
+          <div class="card metric"><div class="v" style="color:var(--clean);">−7.2pt</div><div class="l">Gap the plan does not close</div></div>
         </div>
-        <h3 style="margin:16px 0 8px;">Why the current trajectory falls short</h3>
+        <p style="margin:14px 0 6px;"><strong>Trajectory (IWPB-9, portfolio MOB4+):</strong> 32.2% (2024A) → 36.2% (2026 FRP) → 42.8% (2030 FRP). No region reaches 50% — Asia 46.2%, Americas &amp; EU 40.4%, Middle East 30.8%.</p>
+        <h3 style="margin:12px 0 7px;">Why the trajectory falls short</h3>
         <ul class="card" style="list-style:none;">
-          <li class="small" style="margin-bottom:6px;">▸ Conversion of the on-book base alone cannot cover the gap.</li>
-          <li class="small" style="margin-bottom:6px;">▸ We keep acquiring low-quality customers who never fund or qualify.</li>
-          <li class="small">▸ Penetration gains are partly cosmetic — driven by shrinking the denominator, not growing wealth.</li>
+          <li class="small" style="margin-bottom:6px;">▸ <strong>Acquisition quality is the drag</strong> — new-cohort penetration at MOB3 is only <strong>22%</strong> vs 36% on-book; MOB3 qualification is flat (~38–39%).</li>
+          <li class="small" style="margin-bottom:6px;">▸ <strong>Conversion of the on-book base alone</strong> cannot cover the gap.</li>
+          <li class="small">▸ Some markets improve penetration by shrinking the denominator, not growing wealth.</li>
         </ul>
       </div>
       <div>
         <h3 style="margin-bottom:8px;">Two non-negotiable outcomes</h3>
-        <div class="card pool-etb" style="margin-bottom:12px;">
+        <div class="card pool-etb" style="margin-bottom:11px;">
           <span class="tag etb">Outcome 1</span>
-          <p style="margin-top:8px;"><strong>Grow absolute wealth customers and NNIA.</strong> Real, retained net-new invested assets — not recycled money.</p>
+          <p style="margin-top:8px;"><strong>Grow absolute wealth customers and NNIA.</strong> Active customers already plan +9.6% CAGR to 2.86m by 2030 — but qualified, wealth-active growth must outpace raw acquisition.</p>
         </div>
         <div class="card pool-clean">
           <span class="tag clean">Outcome 2</span>
@@ -302,9 +235,66 @@
     <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">01</span></div>
   </section>
 
-  <!-- 2 · THE FUNNEL -->
+  <!-- 2 · TRAJECTORY CHART -->
   <section class="slide">
     <div class="head"><span class="num">02</span>
+      <div><div class="kicker">Wealth penetration trajectory · 2024 → 2030</div>
+      <h1>Every region plateaus below the 50% line</h1></div>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--s-total)"></i>IWPB-9 (total)</span>
+      <span><i style="background:var(--s-asia)"></i>Asia</span>
+      <span><i style="background:var(--s-ameu)"></i>Americas &amp; EU</span>
+      <span><i style="background:var(--s-me)"></i>Middle East</span>
+      <span><i style="background:var(--gold);height:0;border-top:2px dashed var(--gold)"></i>50% ambition</span>
+    </div>
+    <div class="chartwrap" style="margin-top:6px;">
+    <svg viewBox="0 0 980 400" width="100%" role="img" aria-label="Line chart of wealth penetration percent by region, 2024 to 2030. IWPB-9 total rises from 32.2 to 42.8 percent, staying below the 50 percent ambition line; Asia reaches 46.2, Americas and Europe 40.4, Middle East 30.8.">
+      <!-- gridlines + y labels -->
+      <g font-size="11" fill="#8a97a5" font-family="var(--font)">
+        <line x1="70" y1="360" x2="900" y2="360" stroke="#c7d0da"/>
+        <line x1="70" y1="286.7" x2="900" y2="286.7" stroke="#eef2f6"/><text x="60" y="290" text-anchor="end">20%</text>
+        <line x1="70" y1="213.3" x2="900" y2="213.3" stroke="#eef2f6"/><text x="60" y="217" text-anchor="end">30%</text>
+        <line x1="70" y1="140" x2="900" y2="140" stroke="#eef2f6"/><text x="60" y="144" text-anchor="end">40%</text>
+        <text x="60" y="364" text-anchor="end">10%</text>
+      </g>
+      <!-- 50% ambition line -->
+      <line x1="70" y1="66.7" x2="900" y2="66.7" stroke="#c9962f" stroke-width="2" stroke-dasharray="7 5"/>
+      <text x="900" y="60" text-anchor="end" font-size="12" font-weight="700" fill="#a9761c">50% ambition</text>
+      <!-- x labels -->
+      <g font-size="11.5" fill="#5c6b7a" font-family="var(--font)" text-anchor="middle">
+        <text x="70" y="382">2024</text><text x="208.3" y="382">2025</text><text x="346.7" y="382">2026</text>
+        <text x="485" y="382">2027</text><text x="623.3" y="382">2028</text><text x="761.7" y="382">2029</text><text x="900" y="382">2030</text>
+      </g>
+      <!-- Middle East -->
+      <polyline fill="none" stroke="#d97706" stroke-width="2.5" points="70,317.5 208.3,307.2 346.7,288.1 485,269.1 623.3,240.5 761.7,214.1 900,207.5"/>
+      <!-- Americas & EU -->
+      <polyline fill="none" stroke="#0f9488" stroke-width="2.5" points="70,207.5 208.3,214.1 346.7,185.5 485,184.7 623.3,169.3 761.7,153.2 900,137.1"/>
+      <!-- Asia -->
+      <polyline fill="none" stroke="#1f6feb" stroke-width="2.5" points="70,177.4 208.3,158.3 346.7,140.7 485,135.6 623.3,123.1 761.7,109.2 900,94.5"/>
+      <!-- IWPB-9 total (hero) -->
+      <polyline fill="none" stroke="#0b1e34" stroke-width="3.5" points="70,197.2 208.3,191.3 346.7,167.9 485,164.9 623.3,150.3 761.7,134.1 900,119.5"/>
+      <!-- end dots -->
+      <circle cx="900" cy="94.5" r="4" fill="#1f6feb"/>
+      <circle cx="900" cy="119.5" r="4.5" fill="#0b1e34"/>
+      <circle cx="900" cy="137.1" r="4" fill="#0f9488"/>
+      <circle cx="900" cy="207.5" r="4" fill="#d97706"/>
+      <!-- end labels -->
+      <g font-size="12" font-weight="700" font-family="var(--font)">
+        <text x="912" y="92" fill="#1f6feb">46.2 Asia</text>
+        <text x="912" y="123" fill="#0b1e34">42.8 IWPB-9</text>
+        <text x="912" y="148" fill="#0f9488">40.4 Am&amp;EU</text>
+        <text x="912" y="211" fill="#d97706">30.8 ME</text>
+      </g>
+    </svg>
+    </div>
+    <p class="q" style="margin-top:2px;">Source: FRP wealth-penetration table (portfolio MOB4+), refresh 17/6/2026. MX is the only market planned above 50% (60.8%); US the furthest below (22.7%).</p>
+    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">02</span></div>
+  </section>
+
+  <!-- 3 · THE FUNNEL -->
+  <section class="slide">
+    <div class="head"><span class="num">03</span>
       <div><div class="kicker">Define the wealth growth funnel</div>
       <h1>One common funnel — where value is created or lost</h1></div>
     </div>
@@ -313,20 +303,20 @@
         <div class="funnel">
           <div class="fstage" style="background:#1f6feb;"><span class="fnum">1</span> Acquired / upgraded <span class="fsub">entry into Premier</span></div>
           <div class="fstage" style="background:#2a6fb0;"><span class="fnum">2</span> Funded <span class="fsub">money in</span></div>
-          <div class="fstage" style="background:#12897e;"><span class="fnum">3</span> TRB qualified <span class="fsub">crosses threshold</span></div>
-          <div class="fstage" style="background:#1f8a4c;"><span class="fnum">4</span> Wealth activated <span class="fsub">first wealth product</span></div>
+          <div class="fstage" style="background:#0f9488;"><span class="fnum">3</span> TRB qualified <span class="fsub">47% on-book · 39% @MOB3</span></div>
+          <div class="fstage" style="background:#1f8a4c;"><span class="fnum">4</span> Wealth activated <span class="fsub">36% on-book · 22% @MOB3</span></div>
           <div class="fstage" style="background:#c9962f;"><span class="fnum">5</span> NNIA generating <span class="fsub">net-new invested assets</span></div>
           <div class="fstage" style="background:#8a5a1e;"><span class="fnum">6</span> Sustained / retained <span class="fsub">still qualified at MOB12+</span></div>
         </div>
-        <p class="q" style="margin-top:14px;">An account opened is not value. Value is money that arrives, qualifies, activates, generates NNIA — and stays.</p>
+        <p class="q" style="margin-top:12px;">The MOB3 vs on-book gap at stages 3–4 is the tell: new inflow qualifies and activates at roughly half the on-book rate.</p>
       </div>
       <div>
-        <h3 style="margin-bottom:10px;">Three customer pools run through the same funnel</h3>
-        <div class="card pool-ntb" style="margin-bottom:10px;">
+        <h3 style="margin-bottom:10px;">Three customer pools, one architecture</h3>
+        <div class="card pool-ntb" style="margin-bottom:9px;">
           <span class="tag ntb">NTB</span> <strong style="font-size:14px;">New acquisition</strong>
           <p class="small" style="margin-top:5px;">Are we bringing in customers <em>capable</em> of driving wealth growth?</p>
         </div>
-        <div class="card pool-etb" style="margin-bottom:10px;">
+        <div class="card pool-etb" style="margin-bottom:9px;">
           <span class="tag etb">ETB</span> <strong style="font-size:14px;">Existing customers</strong>
           <p class="small" style="margin-top:5px;">Where is investable money sitting on-book, and why isn't it converting?</p>
         </div>
@@ -334,54 +324,51 @@
           <span class="tag clean">Clean-up</span> <strong style="font-size:14px;">Value protection</strong>
           <p class="small" style="margin-top:5px;">What is structurally dragging penetration and productivity down?</p>
         </div>
-        <div class="primary-q" style="margin-top:12px;"><b>Output:</b> one diagnostic architecture so NTB, ETB and clean-up are never discussed as disconnected initiatives.</div>
+        <div class="primary-q" style="margin-top:11px;"><b>Output:</b> one diagnostic architecture so NTB, ETB and clean-up are never discussed as disconnected initiatives.</div>
       </div>
     </div>
-    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">02</span></div>
+    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">03</span></div>
   </section>
 
-  <!-- 3 · CURRENT POSITION BY MARKET -->
+  <!-- 4 · SCORECARD -->
   <section class="slide">
-    <div class="head"><span class="num">03</span>
-      <div><div class="kicker">Current position by market</div>
+    <div class="head"><span class="num">04</span>
+      <div><div class="kicker">Current position by market · IWPB-9, portfolio MOB4+</div>
       <h1>Which markets are on track — and where the funnel breaks</h1></div>
     </div>
     <table>
       <thead>
         <tr>
           <th>Market</th>
-          <th class="num">Wealth pen.</th>
-          <th class="num">2030 traj.</th>
-          <th class="num">Gap to 50%</th>
-          <th class="num">Cust. growth</th>
-          <th class="num">NNIA growth</th>
-          <th class="num">TRB-qual %</th>
-          <th class="num">NTB pen.</th>
-          <th class="num">ETB conv.</th>
-          <th class="num">Downgr. %</th>
+          <th class="num">Pen. 2024</th>
+          <th class="num">Pen. 2026</th>
+          <th class="num">Pen. 2030</th>
+          <th class="num">Gap to 50% (2030)</th>
+          <th class="num">TRB-qual % 2026</th>
+          <th class="num">New-cohort pen. @MOB3</th>
           <th>Classification</th>
         </tr>
       </thead>
       <tbody>
-        <tr><td class="mkt">Market A</td><td class="num">46%</td><td class="num">52%</td><td class="num" style="color:var(--good)">+2</td><td class="num">+9%</td><td class="num">+11%</td><td class="num">71%</td><td class="num">38%</td><td class="num">7.2%</td><td class="num">6%</td><td><span class="pill scale">Scale what works</span></td></tr>
-        <tr><td class="mkt">Market B</td><td class="num">41%</td><td class="num">44%</td><td class="num" style="color:var(--warn)">−6</td><td class="num">+6%</td><td class="num">+5%</td><td class="num">63%</td><td class="num">31%</td><td class="num">3.1%</td><td class="num">11%</td><td><span class="pill conv">Fix conversion</span></td></tr>
-        <tr><td class="mkt">Market C</td><td class="num">33%</td><td class="num">36%</td><td class="num" style="color:var(--bad)">−14</td><td class="num">+12%</td><td class="num">+4%</td><td class="num">48%</td><td class="num">14%</td><td class="num">4.0%</td><td class="num">13%</td><td><span class="pill acq">Fix acquisition quality</span></td></tr>
-        <tr><td class="mkt">Market D</td><td class="num">37%</td><td class="num">39%</td><td class="num" style="color:var(--bad)">−11</td><td class="num">+2%</td><td class="num">−1%</td><td class="num">57%</td><td class="num">27%</td><td class="num">3.4%</td><td class="num">19%</td><td><span class="pill clean">Clean up structurally</span></td></tr>
-        <tr><td class="mkt">Market E</td><td class="num">28%</td><td class="num">30%</td><td class="num" style="color:var(--bad)">−20</td><td class="num">+4%</td><td class="num">+2%</td><td class="num">44%</td><td class="num">12%</td><td class="num">2.6%</td><td class="num">21%</td><td><span class="pill full">Full intervention</span></td></tr>
+        <tr class="grp"><td colspan="8">Priority Growth Markets</td></tr>
+        <tr><td class="mkt">Singapore (SGH)</td><td class="num">21.5%</td><td class="num">25.9%</td><td class="num">43.7%</td><td class="num neg">−6.3</td><td class="num">38.7%</td><td class="num">10.0%</td><td><span class="pill acq">Fix acquisition</span></td></tr>
+        <tr><td class="mkt">UAE</td><td class="num">15.8%</td><td class="num">19.8%</td><td class="num">30.8%</td><td class="num neg">−19.2</td><td class="num">28.3%</td><td class="num">11.4%</td><td><span class="pill acq">Fix acquisition</span></td></tr>
+        <tr><td class="mkt">India (INM)</td><td class="num">29.1%</td><td class="num">32.6%</td><td class="num">45.0%</td><td class="num neg">−5.0</td><td class="num">30.3%</td><td class="num">12.2%</td><td><span class="pill conv">Fix conversion</span></td></tr>
+        <tr><td class="mkt">AOC</td><td class="num">40.6%</td><td class="num">48.3%</td><td class="num">49.4%</td><td class="num neg">−0.6</td><td class="num">69.2%</td><td class="num">44.7%</td><td><span class="pill scale">Scale what works</span></td></tr>
+        <tr class="grp"><td colspan="8">Wealth &amp; International Connectivity</td></tr>
+        <tr><td class="mkt">Malaysia (MYH)</td><td class="num">36.6%</td><td class="num">37.0%</td><td class="num">40.3%</td><td class="num neg">−9.7</td><td class="num">60.1%</td><td class="num">19.5%</td><td><span class="pill conv">Fix conversion</span></td></tr>
+        <tr><td class="mkt">Taiwan (TWN)</td><td class="num">42.0%</td><td class="num">47.7%</td><td class="num">48.8%</td><td class="num neg">−1.2</td><td class="num">58.9%</td><td class="num">18.3%</td><td><span class="pill scale">Scale what works</span></td></tr>
+        <tr><td class="mkt">Channel Is. (CIIOM)</td><td class="num">0.0%</td><td class="num">18.2%</td><td class="num">20.0%</td><td class="num neg">−30.0</td><td class="num">51.0%</td><td class="num">3.2%</td><td><span class="pill clean">Clean up</span></td></tr>
+        <tr><td class="mkt">US</td><td class="num">17.4%</td><td class="num">17.7%</td><td class="num">22.7%</td><td class="num neg">−27.3</td><td class="num">40.7%</td><td class="num">9.5%</td><td><span class="pill full">Full intervention</span></td></tr>
+        <tr><td class="mkt">Mexico (MX)</td><td class="num">45.7%</td><td class="num">50.0%</td><td class="num">60.8%</td><td class="num pos">+10.8</td><td class="num">36.1%</td><td class="num">20.7%</td><td><span class="pill scale">Scale what works</span></td></tr>
+        <tr class="tot"><td>IWPB-9 Markets</td><td class="num">32.2%</td><td class="num">36.2%</td><td class="num">42.8%</td><td class="num neg">−7.2</td><td class="num">47.1%</td><td class="num">22.0%</td><td><span class="pill conv">Fix conversion</span></td></tr>
       </tbody>
     </table>
-    <div class="cols c5" style="margin-top:16px;gap:10px;">
-      <div class="card" style="padding:11px 12px;"><span class="pill scale">Scale what works</span><p class="small" style="margin-top:6px;">Funnel is healthy end-to-end. Protect and expand.</p></div>
-      <div class="card" style="padding:11px 12px;"><span class="pill conv">Fix conversion</span><p class="small" style="margin-top:6px;">Good inflow, weak activation of qualified base.</p></div>
-      <div class="card" style="padding:11px 12px;"><span class="pill acq">Fix acquisition</span><p class="small" style="margin-top:6px;">Volume without funding or qualification.</p></div>
-      <div class="card" style="padding:11px 12px;"><span class="pill clean">Clean up</span><p class="small" style="margin-top:6px;">Dilution and downgrade drag dominate.</p></div>
-      <div class="card" style="padding:11px 12px;"><span class="pill full">Full intervention</span><p class="small" style="margin-top:6px;">Breaks at multiple funnel stages at once.</p></div>
-    </div>
-    <p class="q" style="margin-top:12px;">This is the funnel diagnostic before prescribing a solution. Figures illustrative — replace with market data in the appendix.</p>
-    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">03</span></div>
+    <p class="q" style="margin-top:10px;">Regions at 2030: Asia 46.2% · Americas &amp; EU 40.4% · Middle East 30.8%. Classification maps each market to its dominant broken stage — this is the funnel diagnostic before prescribing a solution.</p>
+    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">04</span></div>
   </section>
 
-  <!-- DIVIDER: DIAGNOSTIC -->
+  <!-- 5 · DIVIDER: DIAGNOSTIC -->
   <section class="slide dark">
     <div class="sect">
       <div class="big">Section I · Diagnostic</div>
@@ -391,112 +378,135 @@
     <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">·</span></div>
   </section>
 
-  <!-- 4 · NTB DIAGNOSTIC -->
+  <!-- 6 · NTB DIAGNOSTIC -->
   <section class="slide">
-    <div class="head"><span class="num">04</span>
+    <div class="head"><span class="num">06</span>
       <div><div class="kicker">NTB diagnostic · new acquisition</div>
       <h1>Are we acquiring customers capable of driving wealth growth?</h1></div>
     </div>
-    <div class="cols c5" style="gap:12px;margin-top:2px;">
-      <div class="card pool-ntb"><h3>A · Source quality</h3><ul>
-        <li>Which channels generate funded, qualified, wealth-active customers?</li>
-        <li>Digital · branch · referral</li>
-        <li>International · mortgage</li>
-        <li>Upgrade · partnership</li></ul></div>
-      <div class="card pool-ntb"><h3>B · Early-life funding</h3><ul>
-        <li>TRB at MOB0 / 1 / 3 / 6</li>
-        <li>Funded within X days</li>
-        <li>Qualified within Y days</li></ul></div>
-      <div class="card pool-ntb"><h3>C · Wealth activation</h3><ul>
-        <li>Penetration at MOB1 / 3 / 6</li>
-        <li>Investment account opened</li>
-        <li>First wealth product</li>
-        <li>NNIA generated</li></ul></div>
-      <div class="card pool-ntb"><h3>D · Sustainability</h3><ul>
-        <li>Still qualified at MOB12</li>
-        <li>Downgraded / inactive / closed</li>
-        <li>Returning vs genuinely new money</li></ul></div>
-      <div class="card pool-ntb"><h3>E · Economics</h3><ul>
-        <li>Acquisition &amp; offer cost</li>
-        <li>TRB &amp; NNIA generated</li>
-        <li>Payback &amp; EV by channel</li></ul></div>
+    <div class="card" style="background:var(--mist);margin-bottom:12px;padding:12px 16px;">
+      <div class="cols c4" style="gap:14px;">
+        <div class="metric"><div class="v" style="font-size:26px;">22.0%</div><div class="l">New-cohort wealth penetration @MOB3 (2026) — vs 36.2% on-book</div></div>
+        <div class="metric"><div class="v" style="font-size:26px;">~38–39%</div><div class="l">TRB qualification @MOB3 — flat since 2024</div></div>
+        <div class="metric"><div class="v" style="font-size:26px;">69,163</div><div class="l">TRB per customer @MOB3 ($) — dipped to 62k in 2025</div></div>
+        <div class="metric"><div class="v" style="font-size:26px;">$1,552m</div><div class="l">TRB volume @MOB3 (2026 FRP)</div></div>
+      </div>
     </div>
-    <div class="primary-q" style="margin-top:18px;"><b>Primary diagnostic question:</b> Are we acquiring the <b>wrong customers</b>, or acquiring the <b>right customers but failing to convert</b> them? Answering per channel and vintage tells us whether to redesign acquisition or fix early-life conversion.</div>
-    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">04</span></div>
+    <div class="cols c5" style="gap:11px;">
+      <div class="card pool-ntb"><h3>A · Source quality</h3><ul><li>Which channels generate funded, qualified, wealth-active customers?</li><li>Digital · branch · referral · international · mortgage · upgrade</li></ul></div>
+      <div class="card pool-ntb"><h3>B · Early-life funding</h3><ul><li>TRB at MOB0/1/3/6</li><li>Funded within X days</li><li>Qualified within Y days</li></ul></div>
+      <div class="card pool-ntb"><h3>C · Wealth activation</h3><ul><li>Penetration at MOB1/3/6</li><li>Investment account opened</li><li>First wealth product · NNIA</li></ul></div>
+      <div class="card pool-ntb"><h3>D · Sustainability</h3><ul><li>Still qualified at MOB12</li><li>Downgraded / inactive</li><li>Returning vs new money</li></ul></div>
+      <div class="card pool-ntb"><h3>E · Economics</h3><ul><li>Acquisition &amp; offer cost</li><li>TRB &amp; NNIA generated</li><li>Payback &amp; EV by channel</li></ul></div>
+    </div>
+    <div class="primary-q" style="margin-top:12px;"><b>Verdict from the data:</b> we are acquiring the <b>wrong quality</b> — new cohorts qualify and activate at roughly half the on-book rate, and MOB3 qualification is not improving. Acquisition, not just conversion, must be fixed. UAE and Singapore show the sharpest MOB3 shortfalls (10–11% new-cohort penetration).</div>
+    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">06</span></div>
   </section>
 
-  <!-- 5 · ETB DIAGNOSTIC -->
+  <!-- 7 · CORE-5 MOMENTUM -->
   <section class="slide">
-    <div class="head"><span class="num">05</span>
+    <div class="head"><span class="num">07</span>
+      <div><div class="kicker">Momentum callout · IWPB Core-5 · MTD June Week 4</div>
+      <h1>The engine can run — when the funnel is orchestrated</h1></div>
+    </div>
+    <div class="cols c3" style="margin-top:2px;gap:14px;">
+      <div class="card" style="border-top:4px solid var(--gold);">
+        <h3>NNM ($m)</h3>
+        <div class="metric" style="margin:8px 0;"><div class="v">1,189</div><div class="l">MTD Jun W4 · vs PY 408 · Plan 1,190</div></div>
+        <p class="small"><span class="pos">+191%</span> vs prior year · <strong>(0)%</strong> to plan</p>
+      </div>
+      <div class="card" style="border-top:4px solid var(--etb);">
+        <h3>Investment NNIA ($m)</h3>
+        <div class="metric" style="margin:8px 0;"><div class="v">1,101</div><div class="l">MTD Jun W4 · vs PY 286 · Plan 834</div></div>
+        <p class="small"><span class="pos">&gt;200%</span> vs prior year · <span class="pos">+32%</span> to plan</p>
+      </div>
+      <div class="card" style="border-top:4px solid var(--clean);">
+        <h3>Premier Net New Deposit ($m)</h3>
+        <div class="metric" style="margin:8px 0;"><div class="v">88</div><div class="l">MTD Jun W4 · vs PY 122 · Plan 356</div></div>
+        <p class="small"><span class="neg">(28)%</span> vs prior year · <span class="neg">(75)%</span> to plan</p>
+      </div>
+    </div>
+    <div class="headline" style="margin-top:16px;">Week 4 delivered $1.1bn NNM, led by improved Investment NNIA (China Mutual Funds) and Premier deposits back in positive territory, aided by UAE salary-credit inflows.</div>
+    <p class="q" style="margin-top:10px;">Core-5 = China, Singapore, Malaysia, Taiwan, UAE. By-market NNM: China 456 · UAE 538 · Taiwan 180 · Malaysia 37 · Singapore (22). Deposits still lag plan — the orchestration gap the ETB engine must close.</p>
+    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">07</span></div>
+  </section>
+
+  <!-- 8 · ETB DIAGNOSTIC -->
+  <section class="slide">
+    <div class="head"><span class="num">08</span>
       <div><div class="kicker">ETB diagnostic · existing customers</div>
       <h1>Where is investable money sitting — and why isn't it converting?</h1></div>
     </div>
     <div class="cols c2" style="margin-top:2px;">
       <div>
-        <h3 style="margin-bottom:8px;">Segment the ETB opportunity</h3>
+        <h3 style="margin-bottom:7px;">Segment the ETB opportunity</h3>
         <div class="cols c2" style="gap:8px;">
-          <div class="card pool-etb" style="padding:11px 12px;"><p class="small"><strong>CASA idle cash</strong></p></div>
-          <div class="card pool-etb" style="padding:11px 12px;"><p class="small"><strong>TD maturity / rollover</strong></p></div>
-          <div class="card pool-etb" style="padding:11px 12px;"><p class="small"><strong>Wealth customers with top-up potential</strong></p></div>
-          <div class="card pool-etb" style="padding:11px 12px;"><p class="small"><strong>Qualified non-wealth customers</strong></p></div>
-          <div class="card pool-etb" style="padding:11px 12px;"><p class="small"><strong>Near-qualified customers</strong></p></div>
-          <div class="card pool-etb" style="padding:11px 12px;"><p class="small"><strong>High-propensity digital / behavioural leads</strong></p></div>
+          <div class="card pool-etb" style="padding:10px 12px;"><p class="small"><strong>CASA idle cash</strong></p></div>
+          <div class="card pool-etb" style="padding:10px 12px;"><p class="small"><strong>TD maturity / rollover</strong></p></div>
+          <div class="card pool-etb" style="padding:10px 12px;"><p class="small"><strong>Wealth customers, top-up potential</strong></p></div>
+          <div class="card pool-etb" style="padding:10px 12px;"><p class="small"><strong>Qualified non-wealth customers</strong></p></div>
+          <div class="card pool-etb" style="padding:10px 12px;"><p class="small"><strong>Near-qualified customers</strong></p></div>
+          <div class="card pool-etb" style="padding:10px 12px;"><p class="small"><strong>High-propensity digital leads</strong></p></div>
         </div>
-        <p class="q" style="margin-top:10px;">Distinguish existing-to-wealth conversion from existing-wealth top-up — they need different offers and owners.</p>
+        <div class="card" style="background:var(--mist);margin-top:10px;padding:10px 12px;">
+          <p class="small"><strong>Where the NNIA actually sits (May YTD, $mn):</strong> Asia 5,867 · Americas &amp; EU 516 (−794 vs plan) · Middle East 447 (−238 vs plan). Global product mix skews to Mutual Funds (6.7bn) and Structured (5.9bn); Equities run <span class="neg">negative</span>.</p>
+        </div>
       </div>
       <div>
-        <h3 style="margin-bottom:8px;">Diagnose each segment through six lenses</h3>
+        <h3 style="margin-bottom:7px;">Diagnose each segment through six lenses</h3>
         <div class="steps">
           <div class="step"><span class="sn" style="background:var(--etb)">1</span><p class="small"><strong>Opportunity size</strong> — how much addressable balance exists?</p></div>
           <div class="step"><span class="sn" style="background:var(--etb)">2</span><p class="small"><strong>Propensity</strong> — which customers are most likely to act?</p></div>
-          <div class="step"><span class="sn" style="background:var(--etb)">3</span><p class="small"><strong>Trigger</strong> — maturity, liquidity event, browsing, account opening, international movement.</p></div>
+          <div class="step"><span class="sn" style="background:var(--etb)">3</span><p class="small"><strong>Trigger</strong> — maturity, liquidity event, browsing, international movement.</p></div>
           <div class="step"><span class="sn" style="background:var(--etb)">4</span><p class="small"><strong>Offer fit</strong> — is there a relevant hero product or solution?</p></div>
           <div class="step"><span class="sn" style="background:var(--etb)">5</span><p class="small"><strong>Execution</strong> — was the customer contacted, advised, converted?</p></div>
           <div class="step"><span class="sn" style="background:var(--etb)">6</span><p class="small"><strong>Persistence</strong> — did the NNIA remain, or was it recycled money?</p></div>
         </div>
       </div>
     </div>
-    <div class="primary-q" style="margin-top:14px;"><b>Primary diagnostic question:</b> Do we <b>lack customer opportunity</b>, or are we <b>failing to commercialise the opportunity already on-book</b>?</div>
-    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">05</span></div>
+    <div class="primary-q" style="margin-top:12px;"><b>Verdict from the data:</b> the opportunity exists — Core-5 NNIA is running &gt;200% vs prior year — but <b>Americas &amp; EU and Middle East miss plan by $0.8bn and $0.2bn</b>, and Premier deposits lag plan 75%. The failure is <b>commercialisation and persistence</b>, not raw opportunity.</div>
+    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">08</span></div>
   </section>
 
-  <!-- 6 · PORTFOLIO DILUTION DIAGNOSTIC -->
+  <!-- 9 · PORTFOLIO DILUTION -->
   <section class="slide">
-    <div class="head"><span class="num">06</span>
+    <div class="head"><span class="num">09</span>
       <div><div class="kicker">Portfolio dilution diagnostic · value protection</div>
-      <h1>What is structurally dragging penetration and productivity down?</h1></div>
+      <h1>What is structurally dragging penetration down?</h1></div>
     </div>
     <div class="cols c2" style="margin-top:2px;">
       <div>
-        <h3 style="margin-bottom:8px;">Sources of structural dilution</h3>
+        <h3 style="margin-bottom:7px;">Sources of structural dilution</h3>
         <ul class="card pool-clean" style="list-style:none;">
-          <li class="small" style="margin-bottom:6px;">▸ Customers below the qualification threshold</li>
-          <li class="small" style="margin-bottom:6px;">▸ Grace-period customers</li>
-          <li class="small" style="margin-bottom:6px;">▸ Persistently inactive Premier customers</li>
-          <li class="small" style="margin-bottom:6px;">▸ Re-upgraded customers with no incremental value</li>
-          <li class="small" style="margin-bottom:6px;">▸ P1PA / multi-market customers with unclear qualification</li>
-          <li class="small" style="margin-bottom:6px;">▸ Low-value customers consuming RM capacity</li>
-          <li class="small" style="margin-bottom:6px;">▸ Customers cycling between upgrade and downgrade</li>
+          <li class="small" style="margin-bottom:5px;">▸ Customers below the qualification threshold</li>
+          <li class="small" style="margin-bottom:5px;">▸ Grace-period &amp; persistently inactive Premier customers</li>
+          <li class="small" style="margin-bottom:5px;">▸ Re-upgraded customers with no incremental value</li>
+          <li class="small" style="margin-bottom:5px;">▸ P1PA / multi-market customers with unclear qualification</li>
+          <li class="small" style="margin-bottom:5px;">▸ Low-value customers consuming RM capacity</li>
+          <li class="small" style="margin-bottom:5px;">▸ Upgrade–downgrade recyclers</li>
           <li class="small">▸ Markets improving penetration only by denominator reduction</li>
         </ul>
-      </div>
-      <div>
-        <h3 style="margin-bottom:8px;">A simple portfolio classification</h3>
-        <div class="cols c2" style="gap:8px;">
-          <div class="card" style="border-top:4px solid var(--good);padding:11px 12px;"><strong style="font-size:13px;color:var(--good)">Grow</strong><p class="small" style="margin-top:3px;">Clear upside; invest.</p></div>
-          <div class="card" style="border-top:4px solid var(--ntb);padding:11px 12px;"><strong style="font-size:13px;color:var(--ntb)">Convert</strong><p class="small" style="margin-top:3px;">Credible near-term path.</p></div>
-          <div class="card" style="border-top:4px solid var(--etb);padding:11px 12px;"><strong style="font-size:13px;color:var(--etb)">Retain</strong><p class="small" style="margin-top:3px;">Valuable; protect.</p></div>
-          <div class="card" style="border-top:4px solid var(--warn);padding:11px 12px;"><strong style="font-size:13px;color:var(--warn)">Migrate</strong><p class="small" style="margin-top:3px;">Right-fit service model.</p></div>
-          <div class="card" style="border-top:4px solid var(--clean);padding:11px 12px;"><strong style="font-size:13px;color:var(--clean)">Downgrade</strong><p class="small" style="margin-top:3px;">Persistently unqualified.</p></div>
-          <div class="card" style="border-top:4px solid var(--bad);padding:11px 12px;"><strong style="font-size:13px;color:var(--bad)">Exit / inactive</strong><p class="small" style="margin-top:3px;">No credible path.</p></div>
+        <div class="card" style="background:var(--clean-soft);border:none;margin-top:10px;padding:10px 12px;">
+          <p class="small" style="color:#7a2f14;"><strong>Data flags:</strong> CIIOM swings 0%→18%→14%→20% and TRB-qual jumps 38%→51%→42% — classic denominator noise. US penetration is stuck at ~17–23% despite a 300k+ book. Revenue per customer is <em>flat</em> (2,022→2,025) while TRB per customer rises — value isn't converting to revenue.</p>
         </div>
       </div>
+      <div>
+        <h3 style="margin-bottom:7px;">A simple portfolio classification</h3>
+        <div class="cols c2" style="gap:8px;">
+          <div class="card" style="border-top:4px solid var(--good);padding:10px 12px;"><strong style="font-size:13px;color:var(--good)">Grow</strong><p class="small" style="margin-top:3px;">Clear upside; invest.</p></div>
+          <div class="card" style="border-top:4px solid var(--ntb);padding:10px 12px;"><strong style="font-size:13px;color:var(--ntb)">Convert</strong><p class="small" style="margin-top:3px;">Credible near-term path.</p></div>
+          <div class="card" style="border-top:4px solid var(--etb);padding:10px 12px;"><strong style="font-size:13px;color:var(--etb)">Retain</strong><p class="small" style="margin-top:3px;">Valuable; protect.</p></div>
+          <div class="card" style="border-top:4px solid var(--warn);padding:10px 12px;"><strong style="font-size:13px;color:var(--warn)">Migrate</strong><p class="small" style="margin-top:3px;">Right-fit service model.</p></div>
+          <div class="card" style="border-top:4px solid var(--clean);padding:10px 12px;"><strong style="font-size:13px;color:var(--clean)">Downgrade</strong><p class="small" style="margin-top:3px;">Persistently unqualified.</p></div>
+          <div class="card" style="border-top:4px solid var(--bad);padding:10px 12px;"><strong style="font-size:13px;color:var(--bad)">Exit / inactive</strong><p class="small" style="margin-top:3px;">No credible path.</p></div>
+        </div>
+        <div class="primary-q" style="margin-top:10px;"><b>Primary question:</b> which customers have a <b>credible path to value</b>, and which are <b>permanently diluting</b> the portfolio?</div>
+      </div>
     </div>
-    <div class="primary-q" style="margin-top:14px;"><b>Primary diagnostic question:</b> Which customers have a <b>credible path to value</b>, and which are <b>permanently diluting</b> the portfolio?</div>
-    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">06</span></div>
+    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">09</span></div>
   </section>
 
-  <!-- DIVIDER: ACTION -->
+  <!-- 10 · DIVIDER: ACTION -->
   <section class="slide dark">
     <div class="sect">
       <div class="big">Section II · Action</div>
@@ -506,130 +516,93 @@
     <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">·</span></div>
   </section>
 
-  <!-- 7 · NTB ACTION PLAN -->
+  <!-- 11 · NTB ACTION -->
   <section class="slide">
-    <div class="head"><span class="num">07</span>
+    <div class="head"><span class="num">10</span>
       <div><div class="kicker">NTB action plan</div>
       <h1>Make acquisition the first quality-control point</h1></div>
     </div>
     <div class="cols c3" style="gap:12px;margin-top:2px;">
-      <div class="card pool-ntb"><h3>1 · Define "good NTB"</h3><p class="small" style="margin-top:5px;">An account opened is not "good". A good NTB customer is:</p><ul>
-        <li>funded within X days</li><li>TRB qualified within Y days</li><li>demonstrates wealth readiness</li><li>generates NNIA within Z days</li><li>stays qualified past early life</li></ul></div>
-      <div class="card pool-ntb"><h3>2 · Introduce quality gates</h3><p class="small" style="margin-top:5px;">Apply the definition by:</p><ul>
-        <li>market</li><li>channel</li><li>campaign</li><li>proposition</li><li>product hook</li><li>customer source</li></ul></div>
-      <div class="card pool-ntb"><h3>3 · Separate acquisition from conversion</h3><p class="small" style="margin-top:5px;">Track distinctly:</p><ul>
-        <li>acquired</li><li>funded</li><li>qualified</li><li>wealth activated</li><li>NNIA producing</li><li>sustained</li></ul></div>
+      <div class="card pool-ntb"><h3>1 · Define "good NTB"</h3><p class="small" style="margin-top:5px;">An account opened is not "good". A good NTB customer is:</p><ul><li>funded within X days</li><li>TRB qualified within Y days</li><li>generates NNIA within Z days</li><li>stays qualified past early life</li></ul><p class="small" style="margin-top:5px;">Target: lift MOB3 penetration from 22% toward the on-book 36%.</p></div>
+      <div class="card pool-ntb"><h3>2 · Quality gates</h3><p class="small" style="margin-top:5px;">Apply the definition by:</p><ul><li>market · channel · campaign</li><li>proposition · product hook</li><li>customer source</li></ul></div>
+      <div class="card pool-ntb"><h3>3 · Separate acquisition from conversion</h3><p class="small" style="margin-top:5px;">Track distinctly:</p><ul><li>acquired · funded · qualified</li><li>wealth activated</li><li>NNIA producing · sustained</li></ul></div>
     </div>
     <div class="cols c2" style="gap:12px;margin-top:12px;">
-      <div class="card pool-ntb"><h3>4 · Reallocate acquisition investment</h3><ul>
-        <li>Scale high-quality channels</li><li>Redesign weak channels</li><li>Stop persistently dilutive acquisition</li></ul></div>
-      <div class="card pool-ntb"><h3>5 · Build hero conversion pathways</h3><ul>
-        <li>TD hook → income / yield solution</li>
-        <li>International relationship → offshore wealth activation</li>
-        <li>Mortgage relationship → investable balance conversion</li>
-        <li>Card-only customer → funded Premier &amp; wealth activation</li></ul></div>
+      <div class="card pool-ntb"><h3>4 · Reallocate acquisition investment</h3><ul><li>Scale high-quality channels (AOC-type, MOB3 pen. 45%)</li><li>Redesign weak channels (UAE / SGH MOB3 pen. ~10%)</li><li>Stop persistently dilutive acquisition</li></ul></div>
+      <div class="card pool-ntb"><h3>5 · Build hero conversion pathways</h3><ul><li>TD hook → income / yield solution</li><li>International (UAE salary credits) → offshore wealth activation</li><li>Mortgage relationship → investable balance conversion</li><li>Card-only → funded Premier &amp; wealth activation</li></ul></div>
     </div>
-    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">07</span></div>
+    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">10</span></div>
   </section>
 
-  <!-- 8 · ETB ACTION PLAN -->
+  <!-- 12 · ETB ACTION -->
   <section class="slide">
-    <div class="head"><span class="num">08</span>
+    <div class="head"><span class="num">11</span>
       <div><div class="kicker">ETB action plan</div>
       <h1>Convert addressable balances into sustainable NNIA</h1></div>
     </div>
-    <div class="funnel" style="margin-top:2px;">
-      <div class="cols" style="grid-template-columns: repeat(7,1fr); gap:8px;">
-        <div class="card pool-etb" style="padding:12px 10px;"><span class="sn" style="background:var(--etb);width:22px;height:22px;border-radius:6px;display:inline-grid;font-size:11px;">1</span><h3 style="margin-top:6px;font-size:13.5px;">Identify</h3><p class="small" style="margin-top:3px;">Customer-level opportunity pools.</p></div>
-        <div class="card pool-etb" style="padding:12px 10px;"><span class="sn" style="background:var(--etb);width:22px;height:22px;border-radius:6px;display:inline-grid;font-size:11px;">2</span><h3 style="margin-top:6px;font-size:13.5px;">Prioritise</h3><p class="small" style="margin-top:3px;">Balance × propensity × trigger × EV.</p></div>
-        <div class="card pool-etb" style="padding:12px 10px;"><span class="sn" style="background:var(--etb);width:22px;height:22px;border-radius:6px;display:inline-grid;font-size:11px;">3</span><h3 style="margin-top:6px;font-size:13.5px;">Nurture</h3><p class="small" style="margin-top:3px;">Engage before the event — esp. TD maturity.</p></div>
-        <div class="card pool-etb" style="padding:12px 10px;"><span class="sn" style="background:var(--etb);width:22px;height:22px;border-radius:6px;display:inline-grid;font-size:11px;">4</span><h3 style="margin-top:6px;font-size:13.5px;">Match</h3><p class="small" style="margin-top:3px;">A few relevant propositions, not broad pushing.</p></div>
-        <div class="card pool-etb" style="padding:12px 10px;"><span class="sn" style="background:var(--etb);width:22px;height:22px;border-radius:6px;display:inline-grid;font-size:11px;">5</span><h3 style="margin-top:6px;font-size:13.5px;">Route</h3><p class="small" style="margin-top:3px;">Digital · RM · specialist · campaign.</p></div>
-        <div class="card pool-etb" style="padding:12px 10px;"><span class="sn" style="background:var(--etb);width:22px;height:22px;border-radius:6px;display:inline-grid;font-size:11px;">6</span><h3 style="margin-top:6px;font-size:13.5px;">Convert</h3><p class="small" style="margin-top:3px;">Appointment → recommendation → NNIA.</p></div>
-        <div class="card pool-etb" style="padding:12px 10px;"><span class="sn" style="background:var(--etb);width:22px;height:22px;border-radius:6px;display:inline-grid;font-size:11px;">7</span><h3 style="margin-top:6px;font-size:13.5px;">Retain</h3><p class="small" style="margin-top:3px;">Does the flow remain at 3 / 6 / 12 months?</p></div>
-      </div>
+    <div class="cols" style="grid-template-columns: repeat(7,1fr); gap:8px;margin-top:2px;">
+      <div class="card pool-etb" style="padding:12px 10px;"><h3 style="font-size:13.5px;">1 · Identify</h3><p class="small" style="margin-top:3px;">Customer-level opportunity pools.</p></div>
+      <div class="card pool-etb" style="padding:12px 10px;"><h3 style="font-size:13.5px;">2 · Prioritise</h3><p class="small" style="margin-top:3px;">Balance × propensity × trigger × EV.</p></div>
+      <div class="card pool-etb" style="padding:12px 10px;"><h3 style="font-size:13.5px;">3 · Nurture</h3><p class="small" style="margin-top:3px;">Engage before the event — esp. TD maturity.</p></div>
+      <div class="card pool-etb" style="padding:12px 10px;"><h3 style="font-size:13.5px;">4 · Match</h3><p class="small" style="margin-top:3px;">A few relevant propositions, not broad pushing.</p></div>
+      <div class="card pool-etb" style="padding:12px 10px;"><h3 style="font-size:13.5px;">5 · Route</h3><p class="small" style="margin-top:3px;">Digital · RM · specialist · campaign.</p></div>
+      <div class="card pool-etb" style="padding:12px 10px;"><h3 style="font-size:13.5px;">6 · Convert</h3><p class="small" style="margin-top:3px;">Appointment → recommendation → NNIA.</p></div>
+      <div class="card pool-etb" style="padding:12px 10px;"><h3 style="font-size:13.5px;">7 · Retain</h3><p class="small" style="margin-top:3px;">Does flow remain at 3/6/12 months?</p></div>
     </div>
-    <div class="headline" style="margin-top:20px;">ETB conversion must be run as an orchestrated funnel — not as isolated campaigns and uncoordinated leads.</div>
-    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">08</span></div>
+    <div class="headline" style="margin-top:18px;">ETB conversion must be run as an orchestrated funnel — not isolated campaigns and uncoordinated leads. Close the deposit-to-plan gap (Premier NND at 25% of plan) by nurturing before the liquidity event.</div>
+    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">11</span></div>
   </section>
 
-  <!-- 9 · PORTFOLIO CLEAN-UP -->
+  <!-- 13 · CLEAN-UP -->
   <section class="slide">
-    <div class="head"><span class="num">09</span>
+    <div class="head"><span class="num">12</span>
       <div><div class="kicker">Portfolio clean-up action plan</div>
       <h1>Remove structural dilution — without gaming the denominator</h1></div>
     </div>
     <div class="cols c3" style="gap:12px;margin-top:2px;">
-      <div class="card pool-clean"><h3>A · Reaffirm eligibility</h3><ul>
-        <li>Qualification rules</li><li>Grace periods</li><li>International / multi-market treatment</li><li>Upgrade &amp; downgrade rules</li></ul></div>
-      <div class="card pool-clean"><h3>B · Apply disciplined actions</h3><ul>
-        <li>Retain high-potential customers</li><li>Migrate to appropriate service models</li><li>Downgrade persistently unqualified</li><li>Protect temporary but credible recovery paths</li></ul></div>
-      <div class="card pool-clean"><h3>C · Prevent re-entry</h3><ul>
-        <li>Stop upgrade–downgrade recycling</li><li>Minimum quality thresholds on upgrades</li><li>Review origin &amp; performance of upgraded customers</li></ul></div>
+      <div class="card pool-clean"><h3>A · Reaffirm eligibility</h3><ul><li>Qualification rules</li><li>Grace periods</li><li>International / multi-market treatment</li><li>Upgrade &amp; downgrade rules</li></ul></div>
+      <div class="card pool-clean"><h3>B · Apply disciplined actions</h3><ul><li>Retain high-potential customers</li><li>Migrate to appropriate service models</li><li>Downgrade persistently unqualified</li><li>Protect credible recovery paths</li></ul></div>
+      <div class="card pool-clean"><h3>C · Prevent re-entry</h3><ul><li>Stop upgrade–downgrade recycling (see CIIOM volatility)</li><li>Minimum quality thresholds on upgrades</li><li>Review origin &amp; performance of upgrades</li></ul></div>
     </div>
-    <div class="headline" style="background:#f6e0da;border-left-color:var(--clean);color:#7a2f14;margin-top:20px;">
-      <strong>Guardrail —</strong> Clean-up supports portfolio health, but it cannot be the primary route to achieving 50%.
+    <div class="headline" style="background:#f6e0da;border-left-color:var(--clean);color:#7a2f14;margin-top:18px;">
+      <strong>Guardrail —</strong> Clean-up supports portfolio health, but it cannot be the primary route to 50%. The denominator must fall because customers genuinely leave the segment, not to flatter the ratio.
     </div>
-    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">09</span></div>
+    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">12</span></div>
   </section>
 
-  <!-- 10 · INTEGRATED ROADMAP -->
+  <!-- 14 · ROADMAP -->
   <section class="slide">
-    <div class="head"><span class="num">10</span>
+    <div class="head"><span class="num">13</span>
       <div><div class="kicker">Integrated action roadmap</div>
       <h1>Three levers, one sequenced view to 2030</h1></div>
     </div>
     <table class="road" style="margin-top:2px;">
       <thead><tr><th>Horizon</th><th><span class="tag ntb">NTB</span></th><th><span class="tag etb">ETB</span></th><th><span class="tag clean">Clean-up</span></th></tr></thead>
       <tbody>
-        <tr>
-          <td class="hrz">Now – year end</td>
-          <td>Define quality; start channel &amp; vintage reporting; improve early-life conversion.</td>
-          <td>Run priority balance campaigns; TD nurturing; work high-propensity leads.</td>
-          <td>Validate qualification &amp; downgrade rules.</td>
-        </tr>
-        <tr>
-          <td class="hrz">Next year</td>
-          <td>Reallocate acquisition spend; redesign weak channels.</td>
-          <td>Industrialise propensity, orchestration &amp; RM routing.</td>
-          <td>Embed recurring portfolio governance.</td>
-        </tr>
-        <tr>
-          <td class="hrz">To 2030</td>
-          <td>Sustain high-quality inflow.</td>
-          <td>Build a repeatable NNIA growth engine.</td>
-          <td>Maintain portfolio purity &amp; capacity.</td>
-        </tr>
+        <tr><td class="hrz">Now – year end</td><td>Define quality; start channel &amp; vintage reporting; lift MOB3 penetration.</td><td>Priority balance campaigns; TD nurturing; convert Core-5 momentum to deposits.</td><td>Validate qualification &amp; downgrade rules; fix CIIOM-type noise.</td></tr>
+        <tr><td class="hrz">Next year</td><td>Reallocate acquisition spend; redesign UAE/SGH channels.</td><td>Industrialise propensity, orchestration &amp; RM routing.</td><td>Embed recurring portfolio governance.</td></tr>
+        <tr><td class="hrz">To 2030</td><td>Sustain high-quality inflow (MOB3 pen → on-book).</td><td>Repeatable NNIA growth engine; close US penetration gap.</td><td>Maintain portfolio purity &amp; capacity.</td></tr>
       </tbody>
     </table>
-    <div class="card" style="margin-top:16px;background:var(--mist);">
+    <div class="card" style="margin-top:14px;background:var(--mist);">
       <h3 style="margin-bottom:8px;">Every action carries a complete decision record</h3>
       <div class="cols" style="grid-template-columns:repeat(7,1fr);gap:8px;">
-        <div class="small"><strong>Baseline</strong></div>
-        <div class="small"><strong>Target</strong></div>
-        <div class="small"><strong>Owner</strong></div>
-        <div class="small"><strong>Delivery date</strong></div>
-        <div class="small"><strong>Financial impact</strong></div>
-        <div class="small"><strong>Data dependency</strong></div>
-        <div class="small"><strong>Decision required</strong></div>
+        <div class="small"><strong>Baseline</strong></div><div class="small"><strong>Target</strong></div><div class="small"><strong>Owner</strong></div><div class="small"><strong>Delivery date</strong></div><div class="small"><strong>Financial impact</strong></div><div class="small"><strong>Data dependency</strong></div><div class="small"><strong>Decision required</strong></div>
       </div>
     </div>
-    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">10</span></div>
+    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">13</span></div>
   </section>
 
-  <!-- 11 · MEASUREMENT LOOP -->
+  <!-- 15 · MEASUREMENT -->
   <section class="slide">
-    <div class="head"><span class="num">11</span>
+    <div class="head"><span class="num">14</span>
       <div><div class="kicker">Measurement &amp; management loop</div>
       <h1>A monthly cockpit that closes the loop</h1></div>
     </div>
     <div class="cols c3" style="gap:12px;margin-top:2px;">
-      <div class="card pool-ntb"><h3><span class="tag ntb">NTB</span></h3><ul style="margin-top:6px;">
-        <li>Funded rate</li><li>TRB-qualified rate</li><li>Penetration at MOB3 / MOB6</li><li>NNIA per acquired customer</li><li>Qualification retention at MOB12</li></ul></div>
-      <div class="card pool-etb"><h3><span class="tag etb">ETB</span></h3><ul style="margin-top:6px;">
-        <li>Addressable balance</li><li>Customers contacted</li><li>Recommendations delivered</li><li>Conversion rate</li><li>NNIA generated</li><li>Flow retained</li></ul></div>
-      <div class="card pool-clean"><h3><span class="tag clean">Portfolio</span></h3><ul style="margin-top:6px;">
-        <li>Qualified customer rate</li><li>Wealth penetration</li><li>Downgrade / inactive rate</li><li>Wealth customer growth</li><li>Revenue &amp; NNIA per qualified cust.</li></ul></div>
+      <div class="card pool-ntb"><h3><span class="tag ntb">NTB</span></h3><ul style="margin-top:6px;"><li>Funded rate</li><li>TRB-qualified rate @MOB3</li><li>Penetration @MOB3 / MOB6</li><li>NNIA per acquired customer</li><li>Qualification retention @MOB12</li></ul></div>
+      <div class="card pool-etb"><h3><span class="tag etb">ETB</span></h3><ul style="margin-top:6px;"><li>Addressable balance</li><li>Customers contacted</li><li>Recommendations delivered</li><li>Conversion rate</li><li>NNIA generated · flow retained</li></ul></div>
+      <div class="card pool-clean"><h3><span class="tag clean">Portfolio</span></h3><ul style="margin-top:6px;"><li>Qualified customer rate</li><li>Wealth penetration</li><li>Downgrade / inactive rate</li><li>Wealth customer growth</li><li>Revenue &amp; NNIA per qualified cust.</li></ul></div>
     </div>
     <div class="card" style="margin-top:14px;background:var(--navy);color:#eaf0f6;border:none;">
       <h3 style="color:#fff;margin-bottom:10px;">For every red metric — the management decision</h3>
@@ -640,32 +613,32 @@
         <div class="node">What stops if it fails?</div><span class="arrow" style="transform:rotate(90deg)">↺</span>
       </div>
     </div>
-    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">11</span></div>
+    <div class="foot"><span class="fl">PREMIER WEALTH · PATH TO 50%</span><span class="fl">14</span></div>
   </section>
 
-  <!-- 12 · DECISIONS -->
+  <!-- 16 · DECISIONS -->
   <section class="slide dark">
-    <div class="head"><span class="num" style="background:var(--gold);color:var(--navy)">12</span>
+    <div class="head"><span class="num" style="background:var(--gold);color:var(--navy)">15</span>
       <div><div class="kicker">Executive decisions required</div>
       <h1 style="color:#fff">Seven decisions to put us on the path to 50%</h1></div>
     </div>
     <div class="decisions" style="margin-top:6px;">
-      <div class="decision" style="background:#0f2a44;border-color:#1d3a57;"><p style="color:#eaf0f6;">Confirm <strong>50% wealth penetration</strong> as the governing ambition and agree the target horizon.</p></div>
-      <div class="decision" style="background:#0f2a44;border-color:#1d3a57;"><p style="color:#eaf0f6;">Agree the <strong>minimum NTB quality standard</strong>.</p></div>
-      <div class="decision" style="background:#0f2a44;border-color:#1d3a57;"><p style="color:#eaf0f6;">Mandate <strong>channel- and vintage-level reporting</strong>.</p></div>
-      <div class="decision" style="background:#0f2a44;border-color:#1d3a57;"><p style="color:#eaf0f6;">Establish one <strong>accountable owner for ETB commercialisation</strong>.</p></div>
-      <div class="decision" style="background:#0f2a44;border-color:#1d3a57;"><p style="color:#eaf0f6;">Approve disciplined <strong>portfolio clean-up rules</strong>.</p></div>
-      <div class="decision" style="background:#0f2a44;border-color:#1d3a57;"><p style="color:#eaf0f6;">Require each market to submit a <strong>quantified path to the ambition</strong>.</p></div>
-      <div class="decision" style="background:#0f2a44;border-color:#1d3a57;"><p style="color:#eaf0f6;">Embed the actions into <strong>FRP before the planning cycle closes</strong>.</p></div>
+      <div class="decision"><p>Confirm <strong>50% wealth penetration</strong> as the governing ambition and agree the target horizon — the FRP currently lands at 42.8%.</p></div>
+      <div class="decision"><p>Agree the <strong>minimum NTB quality standard</strong> and a MOB3 penetration target above today's 22%.</p></div>
+      <div class="decision"><p>Mandate <strong>channel- and vintage-level reporting</strong>.</p></div>
+      <div class="decision"><p>Establish one <strong>accountable owner for ETB commercialisation</strong>.</p></div>
+      <div class="decision"><p>Approve disciplined <strong>portfolio clean-up rules</strong> — with the denominator guardrail.</p></div>
+      <div class="decision"><p>Require each market to submit a <strong>quantified path to 50%</strong> (US, UAE, CIIOM first).</p></div>
+      <div class="decision"><p>Embed the actions into <strong>FRP before the planning cycle closes</strong>.</p></div>
     </div>
-    <div class="foot"><span class="fl" style="color:#6d8298">PREMIER WEALTH · PATH TO 50%</span><span class="fl" style="color:#6d8298">12</span></div>
+    <div class="foot"><span class="fl" style="color:#6d8298">PREMIER WEALTH · PATH TO 50%</span><span class="fl" style="color:#6d8298">15</span></div>
   </section>
 
 </div>
 
 <div class="chrome">
   <button id="prev" aria-label="Previous">‹</button>
-  <span class="pos" id="pos">1 / 15</span>
+  <span class="posn" id="posn">1 / 17</span>
   <button id="next" aria-label="Next">›</button>
   <span class="title" id="ctitle"></span>
 </div>
@@ -673,22 +646,21 @@
 <script>
   const slides = Array.from(document.querySelectorAll('.slide'));
   const titles = [
-    'Title', '01 · Executive objective', '02 · Wealth growth funnel', '03 · Current position by market',
-    'Section · Diagnostic', '04 · NTB diagnostic', '05 · ETB diagnostic', '06 · Portfolio dilution',
-    'Section · Action', '07 · NTB action plan', '08 · ETB action plan', '09 · Portfolio clean-up',
-    '10 · Integrated roadmap', '11 · Measurement loop', '12 · Executive decisions'
+    'Title', '01 · Case for change', '02 · Penetration trajectory', '03 · Wealth growth funnel',
+    '04 · Position by market', 'Section · Diagnostic', '06 · NTB diagnostic', '07 · Core-5 momentum',
+    '08 · ETB diagnostic', '09 · Portfolio dilution', 'Section · Action', '10 · NTB action plan',
+    '11 · ETB action plan', '12 · Portfolio clean-up', '13 · Integrated roadmap', '14 · Measurement loop', '15 · Executive decisions'
   ];
   let i = 0;
-  const pos = document.getElementById('pos');
+  const posn = document.getElementById('posn');
   const ctitle = document.getElementById('ctitle');
   const progress = document.getElementById('progress');
-
   function show(n) {
     i = Math.max(0, Math.min(slides.length - 1, n));
     slides.forEach((s, k) => s.classList.toggle('active', k === i));
-    pos.textContent = (i + 1) + ' / ' + slides.length;
+    posn.textContent = (i + 1) + ' / ' + slides.length;
     ctitle.textContent = titles[i] || '';
-    progress.style.width = ((i) / (slides.length - 1) * 100) + '%';
+    progress.style.width = (i / (slides.length - 1) * 100) + '%';
     window.scrollTo(0, 0);
   }
   document.getElementById('next').onclick = () => show(i + 1);
