@@ -63,6 +63,9 @@ amber, plus the IWPB-9 total as an emphasized dark line with direct labels).
   The print stylesheet lays out every slide as a 16:9 page.
 - **`Wealth-Penetration-Funnel.pptx`** — native PowerPoint (24 slides = the 17
   core slides + a 7-slide appendix). Regenerate with `python3 build_pptx.py`.
+- **`Acquisition-Strategy.pptx`** — standalone 2-page deep-dive on the NTB
+  acquisition **operating model** (page 1) and **strategy** (page 2), for use as
+  a focused hand-out. Regenerate with `python3 build_acquisition_pptx.py`.
 
 ## Appendix (PPTX only)
 
