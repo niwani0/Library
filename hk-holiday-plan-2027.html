@@ -1,0 +1,421 @@
+<title>Hong Kong 2027 · Holiday Maximiser</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Bridge Hong Kong's 2027 public holidays with annual leave to build the longest possible breaks — with seasonal travel picks and flight times from HKG.">
+<style>
+  :root {
+    --paper: #ECEFEC;
+    --paper-2: #E2E7E2;
+    --card: #F6F8F5;
+    --ink: #0C2A2E;
+    --ink-soft: #33484A;
+    --muted: #6A7B79;
+    --line: #D2D9D3;
+    --jade: #128870;
+    --jade-soft: #d3ebe3;
+    --coral: #D65F2C;
+    --coral-soft: #f6e0d3;
+    --wknd: #9AA8A5;
+    --wknd-soft: #dde3e0;
+    --shadow: 0 1px 0 rgba(12,42,46,.04), 0 12px 30px -20px rgba(12,42,46,.35);
+    --mono: ui-monospace, "SF Mono", "Menlo", "Consolas", monospace;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --serif: Georgia, "Times New Roman", serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #081F22;
+      --paper-2: #0C282C;
+      --card: #0F2E32;
+      --ink: #EAF1EE;
+      --ink-soft: #B7C7C4;
+      --muted: #7F9491;
+      --line: #1C3B3F;
+      --jade: #35BE9F;
+      --jade-soft: #123c37;
+      --coral: #F0895A;
+      --coral-soft: #3a2419;
+      --wknd: #6E8380;
+      --wknd-soft: #17383b;
+      --shadow: 0 1px 0 rgba(0,0,0,.2), 0 16px 40px -24px rgba(0,0,0,.7);
+    }
+  }
+  :root[data-theme="light"] {
+    --paper: #ECEFEC; --paper-2: #E2E7E2; --card: #F6F8F5; --ink: #0C2A2E;
+    --ink-soft: #33484A; --muted: #6A7B79; --line: #D2D9D3; --jade: #128870;
+    --jade-soft: #d3ebe3; --coral: #D65F2C; --coral-soft: #f6e0d3; --wknd: #9AA8A5;
+    --wknd-soft: #dde3e0; --shadow: 0 1px 0 rgba(12,42,46,.04), 0 12px 30px -20px rgba(12,42,46,.35);
+  }
+  :root[data-theme="dark"] {
+    --paper: #081F22; --paper-2: #0C282C; --card: #0F2E32; --ink: #EAF1EE;
+    --ink-soft: #B7C7C4; --muted: #7F9491; --line: #1C3B3F; --jade: #35BE9F;
+    --jade-soft: #123c37; --coral: #F0895A; --coral-soft: #3a2419; --wknd: #6E8380;
+    --wknd-soft: #17383b; --shadow: 0 1px 0 rgba(0,0,0,.2), 0 16px 40px -24px rgba(0,0,0,.7);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: var(--sans); line-height: 1.55;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+    padding-bottom: 96px;
+  }
+  .wrap { max-width: 620px; margin: 0 auto; padding: 0 18px; }
+
+  .eyebrow {
+    font-family: var(--mono); font-size: 11px; letter-spacing: .22em;
+    text-transform: uppercase; color: var(--muted); margin: 0;
+  }
+  h1, h2, h3 { text-wrap: balance; }
+
+  /* ---- Hero ---- */
+  header { padding: 40px 0 26px; border-bottom: 1px solid var(--line); }
+  .flag { display: flex; align-items: center; gap: 10px; margin-bottom: 26px; }
+  .flag .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--coral); box-shadow: 0 0 0 4px var(--coral-soft); }
+  h1 {
+    font-family: var(--serif); font-weight: 700; font-size: clamp(34px, 10vw, 52px);
+    line-height: 1.02; margin: 0 0 18px; letter-spacing: -.01em;
+  }
+  h1 em { font-style: italic; color: var(--jade); }
+  .lede { font-size: 17px; color: var(--ink-soft); margin: 0 0 28px; max-width: 46ch; }
+
+  .thesis {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+    background: var(--line); border: 1px solid var(--line); border-radius: 14px; overflow: hidden;
+  }
+  .thesis .cell { background: var(--card); padding: 16px 12px; }
+  .thesis .num {
+    font-family: var(--mono); font-size: clamp(26px, 8vw, 34px); font-weight: 600;
+    line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -.02em;
+  }
+  .thesis .num.jade { color: var(--jade); }
+  .thesis .num.coral { color: var(--coral); }
+  .thesis .lab { font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-top: 8px; }
+
+  /* ---- Section headers ---- */
+  section { padding: 34px 0; border-bottom: 1px solid var(--line); }
+  .sec-head { margin-bottom: 22px; }
+  .sec-head h2 { font-family: var(--serif); font-size: 25px; margin: 6px 0 6px; font-weight: 700; }
+  .sec-head p { margin: 0; color: var(--muted); font-size: 14.5px; }
+
+  /* ---- Legend ---- */
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; margin: 4px 0 24px; }
+  .legend span { font-family: var(--mono); font-size: 11px; letter-spacing: .04em; color: var(--ink-soft); display: inline-flex; align-items: center; gap: 7px; }
+  .sw { width: 13px; height: 13px; border-radius: 4px; display: inline-block; }
+  .sw.h { background: var(--jade); }
+  .sw.l { background: var(--coral); }
+  .sw.w { background: var(--wknd); }
+
+  /* ---- Break cards ---- */
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+    padding: 20px 18px; margin-bottom: 18px; box-shadow: var(--shadow);
+    transition: opacity .2s ease, filter .2s ease;
+  }
+  .card.off { opacity: .48; filter: saturate(.4); }
+  .card-top { display: flex; align-items: flex-start; gap: 12px; }
+  .toggle {
+    appearance: none; -webkit-appearance: none; flex: none; margin: 2px 0 0;
+    width: 26px; height: 26px; border-radius: 8px; border: 1.5px solid var(--line);
+    background: var(--paper); cursor: pointer; position: relative; transition: .15s;
+  }
+  .toggle:checked { background: var(--jade); border-color: var(--jade); }
+  .toggle:checked::after {
+    content: ""; position: absolute; left: 8px; top: 3.5px; width: 6px; height: 12px;
+    border: solid #fff; border-width: 0 2.5px 2.5px 0; transform: rotate(42deg);
+  }
+  .toggle:focus-visible { outline: 3px solid var(--coral); outline-offset: 2px; }
+  .card-title { flex: 1; }
+  .card-title .when { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .card-title h3 { font-family: var(--serif); font-size: 21px; margin: 3px 0 0; font-weight: 700; }
+  .roi {
+    flex: none; text-align: right; font-family: var(--mono); line-height: 1.1;
+  }
+  .roi .big { font-size: 22px; font-weight: 600; color: var(--jade); font-variant-numeric: tabular-nums; }
+  .roi .sub { font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); display: block; margin-top: 3px; }
+
+  /* ---- Day strip ---- */
+  .strip-scroll { overflow-x: auto; margin: 18px -4px 4px; padding: 0 4px 6px; -webkit-overflow-scrolling: touch; }
+  .strip { display: flex; gap: 5px; min-width: min-content; }
+  .day {
+    flex: none; width: 40px; border-radius: 9px; padding: 7px 0 8px; text-align: center;
+    background: var(--wknd-soft); border: 1px solid transparent;
+  }
+  .day.h { background: var(--jade-soft); border-color: color-mix(in srgb, var(--jade) 30%, transparent); }
+  .day.l { background: var(--coral-soft); border-color: color-mix(in srgb, var(--coral) 35%, transparent); }
+  .day .wd { font-family: var(--mono); font-size: 9.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+  .day .dn { font-family: var(--mono); font-size: 16px; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; margin-top: 2px; }
+  .day .tag { font-family: var(--mono); font-size: 8px; letter-spacing: .06em; text-transform: uppercase; margin-top: 3px; }
+  .day.h .tag { color: var(--jade); }
+  .day.l .tag { color: var(--coral); }
+  .day.w .tag { color: var(--wknd); }
+  .mo-break { flex: none; align-self: center; font-family: var(--mono); font-size: 9px; color: var(--muted); writing-mode: vertical-rl; letter-spacing: .12em; padding: 0 1px; }
+
+  .note { font-size: 13px; color: var(--muted); margin: 14px 0 0; padding-left: 14px; border-left: 2px solid var(--line); }
+  .note b { color: var(--ink-soft); font-weight: 600; }
+
+  /* ---- Travel picks ---- */
+  .travel { margin-top: 18px; border-top: 1px dashed var(--line); padding-top: 16px; }
+  .travel-h { font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+  .pick { display: grid; grid-template-columns: 64px 1fr auto; gap: 10px; align-items: baseline; padding: 9px 0; border-top: 1px solid var(--line); }
+  .pick:first-of-type { border-top: none; }
+  .pick .reg { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--jade); padding-top: 2px; }
+  .pick .dest { }
+  .pick .dest b { font-weight: 600; font-size: 14.5px; }
+  .pick .dest span { display: block; font-size: 12.5px; color: var(--muted); margin-top: 1px; }
+  .pick .fly { font-family: var(--mono); font-size: 12px; color: var(--ink-soft); text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .pick .fly small { display: block; font-size: 8.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+
+  /* ---- Long weekend chips ---- */
+  .wins { display: grid; gap: 10px; }
+  .win {
+    display: grid; grid-template-columns: 26px 1fr auto; gap: 12px; align-items: center;
+    background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px;
+    transition: opacity .2s ease;
+  }
+  .win.off { opacity: .45; }
+  .win .toggle { width: 22px; height: 22px; border-radius: 7px; }
+  .win .toggle:checked::after { left: 6.5px; top: 2.5px; width: 5px; height: 10px; }
+  .win .wt b { font-weight: 600; font-size: 14.5px; }
+  .win .wt span { display: block; font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: .04em; margin-top: 1px; }
+  .win .wr { font-family: var(--mono); font-size: 12px; color: var(--coral); text-align: right; white-space: nowrap; }
+
+  /* ---- Holiday reference ---- */
+  .ref { font-family: var(--mono); font-size: 13px; }
+  .ref .row { display: grid; grid-template-columns: 88px 1fr; gap: 12px; padding: 8px 0; border-top: 1px solid var(--line); }
+  .ref .row:first-child { border-top: none; }
+  .ref .dt { color: var(--jade); font-variant-numeric: tabular-nums; letter-spacing: .02em; }
+  .ref .nm { color: var(--ink-soft); font-family: var(--sans); font-size: 13.5px; }
+  .ref .nm em { color: var(--muted); font-style: normal; font-size: 12px; }
+
+  /* ---- Sticky calculator ---- */
+  .calc {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border-top: 1px solid var(--line); padding: 10px 18px calc(10px + env(safe-area-inset-bottom));
+  }
+  .calc-inner { max-width: 620px; margin: 0 auto; display: flex; align-items: center; gap: 12px; }
+  .calc .grp { flex: 1; text-align: center; }
+  .calc .grp .n { font-family: var(--mono); font-size: 24px; font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums; }
+  .calc .grp.a .n { color: var(--coral); }
+  .calc .grp.b .n { color: var(--jade); }
+  .calc .grp .l { font-family: var(--mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+  .calc .arrow { color: var(--muted); font-size: 18px; flex: none; }
+  .calc .ratio { flex: none; font-family: var(--mono); font-size: 11px; color: var(--ink-soft); text-align: center; padding-left: 4px; border-left: 1px solid var(--line); }
+  .calc .ratio b { display: block; font-size: 17px; color: var(--jade); }
+
+  footer { padding: 26px 0 40px; color: var(--muted); font-size: 12px; }
+  footer p { margin: 0 0 8px; }
+  footer a { color: var(--jade); }
+
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="flag"><span class="dot"></span><span class="eyebrow">Hong Kong · 2027 · 17 public holidays</span></div>
+    <h1>Turn a handful of leave days into <em>weeks</em> away.</h1>
+    <p class="lede">Hong Kong's 2027 holidays cluster into five bridgeable runs. Spend leave on the gaps between them and the calendar opens right up — here's every break, ranked by payoff, with where in the world is in season.</p>
+    <div class="thesis" role="group" aria-label="Headline totals">
+      <div class="cell"><div class="num coral" id="tTotalLeave">17</div><div class="lab">Leave days</div></div>
+      <div class="cell"><div class="num jade" id="tTotalOff">44</div><div class="lab">Days off</div></div>
+      <div class="cell"><div class="num" id="tRuns">5</div><div class="lab">Long breaks</div></div>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">The plan</p>
+      <h2>Five breaks to build the year around</h2>
+      <p>Tick a break to count it in. The bar at the bottom keeps a running total of leave spent against days off gained.</p>
+    </div>
+    <div class="legend" aria-hidden="true">
+      <span><i class="sw h"></i> Public holiday</span>
+      <span><i class="sw l"></i> Annual leave</span>
+      <span><i class="sw w"></i> Weekend</span>
+    </div>
+    <div id="breaks"></div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">Bonus</p>
+      <h2>One-day long-weekend wins</h2>
+      <p>Four holidays land on a Thursday. Add the Friday and each becomes a four-day weekend for a single leave day.</p>
+    </div>
+    <div class="wins" id="wins"></div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">Reference</p>
+      <h2>Every 2027 public holiday</h2>
+      <p>The full statutory list, in order. Dates that fall on a Saturday or Sunday are noted.</p>
+    </div>
+    <div class="ref" id="ref"></div>
+  </section>
+
+  <footer>
+    <p>Flight times are approximate non-stop durations from Hong Kong International (HKG); long-haul routes to the Americas normally involve one or two stops, so add connection time. Leave counts assume a Monday–Friday work week with weekends off.</p>
+    <p>Holiday dates follow the Hong Kong Government's gazetted 2027 general holidays. Confirm against <a href="https://www.gov.hk/en/about/abouthk/holiday/2027.htm">gov.hk</a> before booking.</p>
+  </footer>
+</div>
+
+<div class="calc" role="status" aria-live="polite">
+  <div class="calc-inner">
+    <div class="grp a"><div class="n" id="cLeave">17</div><div class="l">Leave spent</div></div>
+    <div class="arrow" aria-hidden="true">→</div>
+    <div class="grp b"><div class="n" id="cOff">44</div><div class="l">Days off</div></div>
+    <div class="ratio">every day buys<b id="cRatio">2.6×</b></div>
+  </div>
+</div>
+
+<script>
+  const H="h", L="l", W="w";
+  const d = (dn, wd, t, mo) => ({dn, wd, t, mo});
+
+  const breaks = [
+    {
+      id:"cny", on:true, when:"Early February", title:"Lunar New Year", leave:3, off:9,
+      days:[d(6,"Sat",H),d(7,"Sun",W),d(8,"Mon",H),d(9,"Tue",H),d(10,"Wed",L),d(11,"Thu",L),d(12,"Fri",L),d(13,"Sat",W),d(14,"Sun",W)],
+      note:"Three holidays (6th, 8th, 9th — the 4th day substitutes the Sunday) already give a Sat–Tue run. Book the Wed–Fri after and you sail to the next weekend: <b>9 days for 3</b>.",
+      travel:[
+        {reg:"Asia", dest:"Thailand & Vietnam", why:"Dry-season beaches, peak weather", fly:"2h 50m"},
+        {reg:"Europe", dest:"Swiss & Austrian Alps", why:"Ski season at its best", fly:"~13h"},
+        {reg:"Americas", dest:"Rio & Patagonia", why:"Southern summer, pre-Carnival buzz", fly:"~30h"}
+      ]
+    },
+    {
+      id:"easter", on:true, when:"Late March → April", title:"Easter → Ching Ming", leave:4, off:11,
+      days:[d(26,"Fri",H),d(27,"Sat",H),d(28,"Sun",W),d(29,"Mon",H),d(30,"Tue",L),d(31,"Wed",L),d(1,"Thu",L,"APR"),d(2,"Fri",L),d(3,"Sat",W),d(4,"Sun",W),d(5,"Mon",H)],
+      note:"The year's best payoff. Easter's three holidays and Ching Ming sit a working week apart — <b>four leave days bridge them into 11</b>, landing exactly on Japan's cherry blossom.",
+      travel:[
+        {reg:"Asia", dest:"Japan — Kyoto & Tokyo", why:"Cherry blossom peak, perfect timing", fly:"4h 15m"},
+        {reg:"Europe", dest:"Andalusia & Sicily", why:"Warm, uncrowded spring shoulder", fly:"~13h"},
+        {reg:"Americas", dest:"Mendoza & Patagonia", why:"Wine harvest, golden autumn", fly:"~30h"}
+      ]
+    },
+    {
+      id:"tuenng", on:true, when:"Mid June", title:"Tuen Ng · Dragon Boat", leave:2, off:5,
+      days:[d(9,"Wed",H),d(10,"Thu",L),d(11,"Fri",L),d(12,"Sat",W),d(13,"Sun",W)],
+      note:"A Wednesday holiday. Take the Thu–Fri after for a <b>5-day break on 2 leave days</b>. Add the Mon–Tue before as well and it stretches to nine.",
+      travel:[
+        {reg:"Asia", dest:"Bali", why:"Dry season begins, best months ahead", fly:"~5h"},
+        {reg:"Europe", dest:"Barcelona & the Med", why:"Warm and green before July crowds", fly:"~14h"},
+        {reg:"Americas", dest:"Peru — Cusco & Machu Picchu", why:"Dry season opens, clear Andes skies", fly:"~26h"}
+      ]
+    },
+    {
+      id:"national", on:true, when:"Early October", title:"National Day → Chung Yeung", leave:4, off:10,
+      days:[d(1,"Fri",H),d(2,"Sat",W),d(3,"Sun",W),d(4,"Mon",L),d(5,"Tue",L),d(6,"Wed",L),d(7,"Thu",L),d(8,"Fri",H),d(9,"Sat",W),d(10,"Sun",W)],
+      note:"National Day (Fri 1st) and Chung Yeung (Fri 8th) each anchor a weekend. Fill the four workdays between and you get a <b>clean 10-day run</b> — long enough for a proper long-haul trip.",
+      travel:[
+        {reg:"Asia", dest:"Vietnam & Japan", why:"Cool, dry, first autumn colour", fly:"2h"},
+        {reg:"Europe", dest:"Tuscany & Portugal", why:"Golden autumn, harvest season", fly:"~15h"},
+        {reg:"Americas", dest:"Patagonia & Atacama", why:"Southern spring reopening", fly:"~25h"}
+      ]
+    },
+    {
+      id:"xmas", on:true, when:"Christmas → New Year", title:"Christmas → New Year", leave:4, off:9,
+      days:[d(25,"Sat",H),d(26,"Sun",W),d(27,"Mon",H),d(28,"Tue",L),d(29,"Wed",L),d(30,"Thu",L),d(31,"Fri",L),d(1,"Sat",H,"JAN"),d(2,"Sun",W)],
+      note:"Christmas Day (Sat) and its Monday substitute open the run; four leave days carry you across to New Year's Day 2028 (itself a holiday): <b>9 days for 4</b>.",
+      travel:[
+        {reg:"Asia", dest:"Cambodia & Thailand", why:"Peak dry season, Angkor at its best", fly:"2h 40m"},
+        {reg:"Europe", dest:"Vienna & the Alps", why:"Christmas markets, fresh ski snow", fly:"~12h"},
+        {reg:"Americas", dest:"Buenos Aires & Rio", why:"Southern summer in full swing", fly:"~30h"}
+      ]
+    }
+  ];
+
+  const wins = [
+    {id:"nyd", on:false, name:"New Year's Day", detail:"Fri 1 Jan + Mon 4 Jan", leave:1, off:4},
+    {id:"buddha", on:false, name:"Buddha's Birthday", detail:"Thu 13 May + Fri 14 May", leave:1, off:4},
+    {id:"hksar", on:false, name:"HKSAR Establishment Day", detail:"Thu 1 Jul + Fri 2 Jul", leave:1, off:4},
+    {id:"midautumn", on:false, name:"Mid-Autumn Festival", detail:"Thu 16 Sep + Fri 17 Sep", leave:1, off:4}
+  ];
+
+  const refList = [
+    ["1 Jan","New Year's Day","Friday"],
+    ["6 Feb","Lunar New Year's Day","Saturday"],
+    ["8 Feb","3rd day of Lunar New Year",""],
+    ["9 Feb","4th day of Lunar New Year","substitute holiday"],
+    ["26 Mar","Good Friday",""],
+    ["27 Mar","Day after Good Friday","Saturday"],
+    ["29 Mar","Easter Monday",""],
+    ["5 Apr","Ching Ming Festival",""],
+    ["1 May","Labour Day","Saturday"],
+    ["13 May","Buddha's Birthday",""],
+    ["9 Jun","Tuen Ng (Dragon Boat) Festival",""],
+    ["1 Jul","HKSAR Establishment Day",""],
+    ["16 Sep","Day after Mid-Autumn Festival",""],
+    ["1 Oct","National Day",""],
+    ["8 Oct","Chung Yeung Festival",""],
+    ["25 Dec","Christmas Day","Saturday"],
+    ["27 Dec","First weekday after Christmas",""]
+  ];
+
+  const tagText = {h:"Hol", l:"Leave", w:"Wknd"};
+
+  function strip(days){
+    let html = '<div class="strip-scroll"><div class="strip">';
+    days.forEach(x => {
+      if(x.mo) html += `<div class="mo-break">${x.mo}</div>`;
+      html += `<div class="day ${x.t}"><div class="wd">${x.wd}</div><div class="dn">${x.dn}</div><div class="tag">${tagText[x.t]}</div></div>`;
+    });
+    return html + '</div></div>';
+  }
+
+  function travelRows(t){
+    return t.map(p => `<div class="pick"><div class="reg">${p.reg}</div><div class="dest"><b>${p.dest}</b><span>${p.why}</span></div><div class="fly">${p.fly}<small>from HKG</small></div></div>`).join('');
+  }
+
+  const bEl = document.getElementById('breaks');
+  bEl.innerHTML = breaks.map(b => `
+    <article class="card${b.on?'':' off'}" id="card-${b.id}">
+      <div class="card-top">
+        <input class="toggle" type="checkbox" ${b.on?'checked':''} data-kind="break" data-id="${b.id}" aria-label="Include ${b.title}">
+        <div class="card-title"><div class="when">${b.when}</div><h3>${b.title}</h3></div>
+        <div class="roi"><span class="big">${b.off}</span><span class="sub">days · ${b.leave} leave</span></div>
+      </div>
+      ${strip(b.days)}
+      <p class="note">${b.note}</p>
+      <div class="travel"><div class="travel-h">In season · where to go</div>${travelRows(b.travel)}</div>
+    </article>`).join('');
+
+  const wEl = document.getElementById('wins');
+  wEl.innerHTML = wins.map(w => `
+    <label class="win${w.on?'':' off'}" id="win-${w.id}">
+      <input class="toggle" type="checkbox" ${w.on?'checked':''} data-kind="win" data-id="${w.id}" aria-label="Include ${w.name}">
+      <div class="wt"><b>${w.name}</b><span>${w.detail}</span></div>
+      <div class="wr">+4 off · 1 leave</div>
+    </label>`).join('');
+
+  document.getElementById('ref').innerHTML = refList.map(r =>
+    `<div class="row"><div class="dt">${r[0]}</div><div class="nm">${r[1]}${r[2]?` <em>· ${r[2]}</em>`:''}</div></div>`).join('');
+
+  function recalc(){
+    let leave=0, off=0, runs=0;
+    breaks.forEach(b => { if(b.on){ leave+=b.leave; off+=b.off; runs++; } });
+    wins.forEach(w => { if(w.on){ leave+=w.leave; off+=w.off; } });
+    document.getElementById('cLeave').textContent = leave;
+    document.getElementById('cOff').textContent = off;
+    document.getElementById('cRatio').textContent = leave ? (off/leave).toFixed(1)+'×' : '—';
+    document.getElementById('tTotalLeave').textContent = leave;
+    document.getElementById('tTotalOff').textContent = off;
+    document.getElementById('tRuns').textContent = runs;
+  }
+
+  document.addEventListener('change', e => {
+    const t = e.target;
+    if(t.dataset.kind === 'break'){
+      const b = breaks.find(x => x.id === t.dataset.id); b.on = t.checked;
+      document.getElementById('card-'+b.id).classList.toggle('off', !b.on);
+    } else if(t.dataset.kind === 'win'){
+      const w = wins.find(x => x.id === t.dataset.id); w.on = t.checked;
+      document.getElementById('win-'+w.id).classList.toggle('off', !w.on);
+    } else return;
+    recalc();
+  });
+
+  recalc();
+</script>
