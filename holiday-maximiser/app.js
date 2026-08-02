@@ -253,6 +253,66 @@ const NEARBY_COUNTRIES = ALL_COUNTRIES
   .sort((a, b) => haversineKm(HK, a) - haversineKm(HK, b));
 
 // ---------------------------------------------------------------------------
+// Scenery photos. A keyword-built photo of each place, swapped for a season
+// override when one fits the chosen month. If the image can't load (e.g. inside
+// a sandbox that blocks external images), a captioned regional gradient shows.
+// ---------------------------------------------------------------------------
+
+const REGION_GRADIENTS = {
+  Asia: 'linear-gradient(135deg,#f4a259,#bc4749)',
+  'North America': 'linear-gradient(135deg,#e07a5f,#3d405b)',
+  'Central America': 'linear-gradient(135deg,#2a9d8f,#e9c46a)',
+  'South America': 'linear-gradient(135deg,#e76f51,#264653)',
+  'Central Asia': 'linear-gradient(135deg,#8367c7,#3a506b)',
+  'Middle East': 'linear-gradient(135deg,#e9c46a,#bc6c25)',
+  'Eastern Europe': 'linear-gradient(135deg,#5c8a72,#2f3e46)',
+  'Western Europe': 'linear-gradient(135deg,#4895ef,#3f37c9)',
+  Scandinavia: 'linear-gradient(135deg,#5fa8d3,#22577a)',
+  'UK & Ireland': 'linear-gradient(135deg,#52796f,#354f52)',
+  'Australia & New Zealand': 'linear-gradient(135deg,#2a9d8f,#1d3557)',
+  'Pacific Islands': 'linear-gradient(135deg,#20c4c9,#118ab2)',
+  default: 'linear-gradient(135deg,#178a7e,#0d5b53)',
+};
+
+function hashSeed(str) {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) % 100000;
+  return h;
+}
+
+function sceneFor(country, monthNum) {
+  const s = country.scene;
+  let pick = { q: s.q, caption: s.caption };
+  if (s.seasons) {
+    const hit = s.seasons.find((se) => se.months.includes(monthNum));
+    if (hit) pick = { q: hit.q, caption: hit.caption };
+  }
+  return {
+    url: `https://loremflickr.com/640/420/${pick.q}?lock=${hashSeed(country.name + pick.q)}`,
+    caption: pick.caption,
+    gradient: REGION_GRADIENTS[country.region] || REGION_GRADIENTS.default,
+  };
+}
+
+function sceneFigure(country, monthNum, cls) {
+  const sc = sceneFor(country, monthNum);
+  return `<figure class="scene ${cls || ''}" style="--fallback:${sc.gradient}">
+    <img src="${sc.url}" alt="${sc.caption}" loading="lazy" referrerpolicy="no-referrer"
+         onerror="this.closest('.scene').classList.add('scene--noimg')" />
+    <figcaption>${sc.caption}</figcaption>
+  </figure>`;
+}
+
+// Which month's scene to show for a country: the month of a break it's in,
+// else the month currently being browsed, else a pleasant spring default.
+function monthForCountry(name) {
+  const b = state.breaks.find((br) => br.countries.includes(name));
+  if (b) return b.month + 1;
+  if (state.month !== null) return state.month + 1;
+  return 4;
+}
+
+// ---------------------------------------------------------------------------
 // Order selected countries into an efficient round-the-world loop starting and
 // ending in Hong Kong. Nearest-neighbour, then 2-opt clean-up.
 // ---------------------------------------------------------------------------
@@ -494,7 +554,7 @@ function destinationsHTML(b) {
         <div class="country__body">
           <div class="country__name">${c.name} ${rec ? '<span class="tag tag--rec">in season</span>' : ''}</div>
           <div class="country__blurb">${c.blurb}</div>
-          <div class="country__meta">✈️ ${Math.round(km).toLocaleString()} km · ~${fmtHours(flightHours(km))} · 👗 ${c.dress.name} ${c.dress.emoji}</div>
+          <div class="country__meta">✈️ ${Math.round(km).toLocaleString()} km · ~${fmtHours(flightHours(km))} · 📷 ${sceneFor(c, monthNum).caption}</div>
         </div>
         <div class="country__pick">${on ? '✓' : '+'}</div>
       </div>`;
@@ -545,7 +605,10 @@ function renderPlan() {
   host.innerHTML = ordered.map((b) => {
     const chosen = b.countries.map((n) => {
       const c = countryByName.get(n);
-      return `<span class="chosen">${c.flag} ${c.name}</span>`;
+      return `<div class="postcard" data-focus="${n}">
+        ${sceneFigure(c, b.month + 1, 'scene--card')}
+        <div class="postcard__label">${c.flag} ${c.name}</div>
+      </div>`;
     }).join('');
     return `
       <div class="pbreak">
@@ -555,7 +618,7 @@ function renderPlan() {
         </div>
         ${adjusterHTML(b)}
         ${destinationsHTML(b)}
-        ${chosen ? `<div class="pbreak__chosen">Going to: ${chosen}</div>` : ''}
+        ${chosen ? `<div class="pbreak__chosen"><div class="dest__q dest__q--sub">Your postcards for ${MONTH_NAMES[b.month]}</div><div class="postcards">${chosen}</div></div>` : ''}
       </div>`;
   }).join('');
 
@@ -593,40 +656,31 @@ function renderPlan() {
       else { b.countries.push(name); focusCountry = name; }
       render('journey');
     };
-    el.onmouseenter = () => { focusCountry = name; renderAvatar(); };
+    el.onmouseenter = () => { focusCountry = name; renderHero(); };
+  });
+
+  host.querySelectorAll('[data-focus]').forEach((el) => {
+    el.onmouseenter = () => { focusCountry = el.dataset.focus; renderHero(); };
   });
 }
 
-function renderAvatar() {
-  const host = $('#avatar');
+function renderHero() {
+  const host = $('#hero-scene');
   const names = allSelectedCountries();
   const focus = focusCountry && countryByName.get(focusCountry)
     ? countryByName.get(focusCountry)
     : (names.length ? countryByName.get(names[names.length - 1]) : null);
 
-  const dress = focus ? focus.dress : { name: 'travel pyjamas', emoji: '🧳' };
-  const flag = focus ? focus.flag : '🌏';
-  const caption = focus
-    ? `Dressed for <b>${focus.name}</b> — ${dress.name} ${dress.emoji}`
-    : "Pick a country and I'll try on the outfit!";
-
-  host.innerHTML = `
-    <div class="pet">
-      <div class="pet__flag">${flag}</div>
-      <div class="pet__body">
-        <div class="pet__ear pet__ear--l"></div>
-        <div class="pet__ear pet__ear--r"></div>
-        <div class="pet__face">
-          <span class="pet__eye"></span><span class="pet__eye"></span>
-          <span class="pet__cheek pet__cheek--l"></span><span class="pet__cheek pet__cheek--r"></span>
-          <span class="pet__mouth"></span>
-        </div>
-        <div class="pet__dress">${dress.emoji}</div>
-        <div class="pet__arm pet__arm--l"></div>
-        <div class="pet__arm pet__arm--r"></div>
-      </div>
-    </div>
-    <div class="pet__caption">${caption}</div>`;
+  if (!focus) {
+    host.innerHTML = `
+      <figure class="scene scene--hero" style="--fallback:${REGION_GRADIENTS.default}">
+        <img src="https://loremflickr.com/720/440/${HK_SCENE.q}?lock=7" alt="${HK_SCENE.caption}"
+             referrerpolicy="no-referrer" onerror="this.closest('.scene').classList.add('scene--noimg')" />
+        <figcaption>${HK_SCENE.caption} · your starting point</figcaption>
+      </figure>`;
+    return;
+  }
+  host.innerHTML = sceneFigure(focus, monthForCountry(focus.name), 'scene--hero');
 }
 
 function renderJourney() {
@@ -734,7 +788,7 @@ function render(scrollTo) {
   renderMonthPicker();
   renderOpportunities();
   renderPlan();
-  renderAvatar();
+  renderHero();
   renderJourney();
   renderSummary();
   updateFlow(scrollTo);
