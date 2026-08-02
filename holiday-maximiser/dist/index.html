@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HK Holiday Maximiser 2027 🌏</title>
+  <style>
+:root {
+  --bg: #fff7fb;
+  --ink: #3a2f45;
+  --muted: #8a7f96;
+  --card: #ffffff;
+  --pink: #ff9ec6;
+  --pink-deep: #ff5fa2;
+  --mint: #9be7d3;
+  --lav: #c9b8ff;
+  --sun: #ffd479;
+  --line: #f0e6ef;
+  --shadow: 0 10px 30px rgba(255, 95, 162, 0.12);
+  --radius: 20px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", "Nunito", system-ui, -apple-system, sans-serif;
+  background:
+    radial-gradient(1200px 500px at 10% -10%, #ffe6f2 0, transparent 60%),
+    radial-gradient(1000px 500px at 110% 0%, #e7f7ff 0, transparent 55%),
+    var(--bg);
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+h1, h2, h3, h4 { margin: 0 0 0.5rem; }
+.muted { color: var(--muted); }
+.muted-h { color: var(--muted); font-weight: 600; }
+
+/* ---------- Hero + avatar ---------- */
+.hero {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  max-width: 960px;
+  margin: 2rem auto 1rem;
+  padding: 0 1.25rem;
+  flex-wrap: wrap;
+}
+.hero__text { flex: 1 1 320px; }
+.hero h1 { font-size: clamp(1.6rem, 4vw, 2.4rem); }
+.hero .year {
+  background: linear-gradient(90deg, var(--pink-deep), var(--lav));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.hero p { color: var(--muted); margin: 0; }
+
+.hero__avatar { display: flex; flex-direction: column; align-items: center; }
+
+.pet {
+  position: relative;
+  width: 140px; height: 140px;
+  animation: bob 3s ease-in-out infinite;
+}
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+.pet__flag {
+  position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+  font-size: 1.6rem; animation: wave 2.5s ease-in-out infinite; z-index: 3;
+}
+@keyframes wave { 0%, 100% { transform: translateX(-50%) rotate(-8deg); } 50% { transform: translateX(-50%) rotate(8deg); } }
+
+.pet__body {
+  position: absolute; inset: 12px;
+  background: linear-gradient(160deg, #fff, #ffe9f3);
+  border: 3px solid var(--pink);
+  border-radius: 50% 50% 46% 46%;
+  box-shadow: var(--shadow);
+}
+.pet__ear {
+  position: absolute; top: -10px; width: 34px; height: 34px;
+  background: var(--pink); border-radius: 50% 50% 50% 0;
+}
+.pet__ear--l { left: 6px; transform: rotate(-20deg); }
+.pet__ear--r { right: 6px; transform: rotate(20deg) scaleX(-1); }
+
+.pet__face { position: absolute; inset: 0; }
+.pet__eye {
+  position: absolute; top: 42px; width: 11px; height: 13px;
+  background: #3a2f45; border-radius: 50%;
+  animation: blink 4s infinite;
+}
+.pet__eye:nth-child(1) { left: 36px; }
+.pet__eye:nth-child(2) { right: 36px; }
+@keyframes blink { 0%, 92%, 100% { transform: scaleY(1); } 96% { transform: scaleY(0.1); } }
+.pet__cheek {
+  position: absolute; top: 58px; width: 16px; height: 10px;
+  background: #ffbcd8; border-radius: 50%; opacity: 0.8;
+}
+.pet__cheek--l { left: 24px; }
+.pet__cheek--r { right: 24px; }
+.pet__mouth {
+  position: absolute; top: 60px; left: 50%; transform: translateX(-50%);
+  width: 18px; height: 9px;
+  border: 2.5px solid #3a2f45; border-top: none;
+  border-radius: 0 0 12px 12px;
+}
+.pet__dress {
+  position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
+  font-size: 2rem; z-index: 2;
+  animation: pop 0.4s ease;
+}
+@keyframes pop { 0% { transform: translateX(-50%) scale(0.2); } 70% { transform: translateX(-50%) scale(1.2); } 100% { transform: translateX(-50%) scale(1); } }
+.pet__arm {
+  position: absolute; top: 74px; width: 12px; height: 30px;
+  background: var(--pink); border-radius: 8px;
+}
+.pet__arm--l { left: -2px; transform-origin: top; animation: waveArm 2.5s ease-in-out infinite; }
+.pet__arm--r { right: -2px; transform: rotate(10deg); }
+@keyframes waveArm { 0%, 100% { transform: rotate(20deg); } 50% { transform: rotate(-30deg); } }
+
+.pet__caption {
+  margin-top: 0.75rem; font-size: 0.85rem; color: var(--muted);
+  text-align: center; max-width: 160px;
+}
+
+/* ---------- Layout / step flow ---------- */
+main { max-width: 960px; margin: 0 auto; padding: 0 1.25rem 3rem; }
+.step {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.25rem 1.4rem;
+  margin: 1rem 0;
+  scroll-margin-top: 1rem;
+  animation: reveal 0.45s ease;
+}
+.step--hidden { display: none; }
+@keyframes reveal { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.step__q {
+  font-size: 1.15rem; font-weight: 800; color: var(--pink-deep);
+  margin-bottom: 0.7rem;
+}
+.step__q--sub { font-size: 1rem; color: var(--ink); margin-top: 0.8rem; }
+
+.quickwins {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem;
+  margin-top: 0.9rem; padding-top: 0.8rem; border-top: 1px dashed var(--line);
+}
+.quickwins__label { font-size: 0.85rem; font-weight: 700; color: var(--muted); }
+.chip--win { border-color: var(--sun); background: #fff9ec; font-size: 0.8rem; }
+.chip--win:hover { border-color: #e0a83a; }
+
+/* ---------- Chips ---------- */
+.chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
+.chip {
+  border: 2px solid var(--line); background: #fff;
+  border-radius: 999px; padding: 0.45rem 0.9rem;
+  font-size: 0.9rem; font-weight: 700; color: var(--ink);
+  cursor: pointer; transition: transform 0.12s, background 0.2s, border-color 0.2s;
+}
+.chip:hover { transform: translateY(-2px); border-color: var(--pink); }
+.chip--active { background: var(--pink-deep); border-color: var(--pink-deep); color: #fff; }
+.chip--planned { border-color: var(--mint); box-shadow: inset 0 -3px 0 var(--mint); }
+
+/* ---------- Opportunities ---------- */
+.opp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 0.8rem; margin: 0.6rem 0 1rem; }
+.opp {
+  border: 1.5px solid var(--line); border-radius: 16px;
+  padding: 0.9rem; background: #fffdfe;
+  display: flex; flex-direction: column; gap: 0.45rem;
+}
+.opp--planned { border-color: var(--mint); background: #f5fffb; }
+.opp__range { font-weight: 800; }
+.opp__pills { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.opp__leave { font-size: 0.8rem; color: var(--muted); }
+
+.pill {
+  background: #fff0f7; color: var(--pink-deep);
+  border-radius: 999px; padding: 0.2rem 0.6rem;
+  font-size: 0.78rem; font-weight: 700; white-space: nowrap;
+}
+.pill--ratio { background: #efe9ff; color: #6b52c9; }
+.pill--free { background: #e6fbf2; color: #16a97a; }
+
+/* ---------- Planned-break cards ---------- */
+.pbreak {
+  border: 2px solid var(--lav); border-radius: 18px;
+  padding: 1rem; margin: 0.8rem 0; background: #fdfcff;
+}
+.pbreak__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.4rem; }
+.pbreak__month {
+  font-weight: 900; color: #6b52c9; text-transform: uppercase;
+  letter-spacing: 0.04em; font-size: 0.9rem;
+}
+.pbreak__chosen { margin-top: 0.7rem; font-size: 0.85rem; }
+.chosen {
+  display: inline-block; background: #f5fffb; border: 1.5px solid var(--mint);
+  border-radius: 999px; padding: 0.15rem 0.55rem; margin: 0.15rem; font-weight: 700;
+}
+.dest { margin-top: 0.9rem; padding-top: 0.8rem; border-top: 1px dashed var(--line); }
+.dest__q { font-weight: 800; margin-bottom: 0.5rem; }
+.dest__q--sub { color: var(--muted); }
+
+/* ---------- Buttons ---------- */
+.btn {
+  border: none; cursor: pointer; font-weight: 800;
+  border-radius: 12px; padding: 0.5rem 0.8rem;
+  background: var(--pink-deep); color: #fff; font-size: 0.85rem;
+  transition: transform 0.12s, filter 0.2s;
+}
+.btn:hover { transform: translateY(-1px); filter: brightness(1.05); }
+.btn--on { background: var(--mint); color: #0c6a4c; }
+.btn--ghost { background: #fff; color: var(--muted); border: 1.5px solid var(--line); margin-top: 0.6rem; }
+.btn--round { width: 34px; height: 34px; padding: 0; border-radius: 50%; font-size: 1.1rem; }
+.btn--sm { padding: 0.3rem 0.6rem; font-size: 0.78rem; }
+
+/* ---------- Adjuster ---------- */
+.adjuster {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem; flex-wrap: wrap; background: #fff8fc;
+  border: 1.5px solid var(--line); border-radius: 16px; padding: 1rem; margin-top: 0.5rem;
+}
+.adjuster__side { text-align: center; display: flex; flex-direction: column; gap: 0.35rem; }
+.adjuster__side > div { display: flex; gap: 0.35rem; }
+.adjuster__mid { text-align: center; flex: 1 1 220px; }
+.adjuster__range { font-weight: 800; font-size: 1.05rem; }
+.adjuster__stats { display: flex; gap: 0.35rem; justify-content: center; flex-wrap: wrap; margin-top: 0.4rem; }
+.adjuster__leave { font-size: 0.78rem; color: var(--muted); margin-top: 0.4rem; }
+
+/* ---------- Countries ---------- */
+.country-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 0.7rem; margin: 0.5rem 0 1rem; }
+.country {
+  display: flex; align-items: center; gap: 0.7rem;
+  border: 1.5px solid var(--line); border-radius: 16px;
+  padding: 0.7rem 0.8rem; background: #fff; cursor: pointer;
+  transition: transform 0.12s, border-color 0.2s;
+}
+.country:hover { transform: translateY(-2px); border-color: var(--pink); }
+.country--on { border-color: var(--mint); background: #f5fffb; }
+.country__flag { font-size: 2rem; }
+.country__body { flex: 1; }
+.country__name { font-weight: 800; }
+.country__blurb { font-size: 0.82rem; color: var(--muted); }
+.country__meta { font-size: 0.75rem; color: var(--muted); margin-top: 0.25rem; }
+.country__pick {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: #fff0f7; color: var(--pink-deep);
+  display: grid; place-items: center; font-weight: 900;
+}
+.country--on .country__pick { background: var(--mint); color: #0c6a4c; }
+.tag { font-size: 0.65rem; font-weight: 800; padding: 0.1rem 0.4rem; border-radius: 6px; background: #eee; color: #777; vertical-align: middle; }
+.tag--rec { background: #e6fbf2; color: #16a97a; }
+
+/* ---------- Route ---------- */
+.legs { list-style: none; padding: 0; margin: 0.5rem 0; display: flex; flex-direction: column; gap: 0.4rem; }
+.legs li {
+  display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;
+  background: #fff8fc; border: 1.5px solid var(--line); border-radius: 12px; padding: 0.5rem 0.7rem;
+  font-weight: 700; font-size: 0.9rem;
+}
+.leg__arrow { color: var(--pink-deep); }
+.leg__meta { margin-left: auto; font-size: 0.75rem; color: var(--muted); font-weight: 600; }
+.rtw__totals { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.6rem; }
+
+/* ---------- Wins ---------- */
+.win-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.7rem; margin: 0.5rem 0; }
+.win {
+  border: 1.5px solid var(--sun); border-radius: 16px; padding: 0.8rem;
+  background: linear-gradient(160deg, #fffdf5, #fff6e0);
+}
+.win__day { font-weight: 900; color: #c9962b; }
+.win__name { font-weight: 700; margin: 0.15rem 0; }
+.win__tip { font-size: 0.82rem; color: var(--muted); }
+
+/* ---------- Summary ---------- */
+.summary-table { width: 100%; border-collapse: collapse; margin: 0.5rem 0 1rem; font-size: 0.9rem; }
+.summary-table th, .summary-table td { text-align: left; padding: 0.5rem 0.6rem; border-bottom: 1px solid var(--line); }
+.summary-table th { color: var(--muted); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.03em; }
+.summary-table td.num, .summary-table th:nth-child(3), .summary-table th:nth-child(4) { text-align: center; }
+.totals { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.7rem; }
+.total { border-radius: 16px; padding: 1rem; text-align: center; }
+.total--leave { background: #fff0f7; }
+.total--off { background: #e6fbf2; }
+.total--ratio { background: #efe9ff; }
+.total__num { font-size: 2rem; font-weight: 900; }
+.total--leave .total__num { color: var(--pink-deep); }
+.total--off .total__num { color: #16a97a; }
+.total--ratio .total__num { color: #6b52c9; }
+.total__lbl { font-size: 0.78rem; color: var(--muted); }
+
+footer { text-align: center; color: var(--muted); font-size: 0.78rem; padding: 1rem; }
+
+@media (max-width: 560px) {
+  .hero { justify-content: center; text-align: center; }
+  .leg__meta { margin-left: 0; width: 100%; }
+}
+
+</style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero__avatar" id="avatar"></div>
+    <div class="hero__text">
+      <h1>Hong Kong Holiday Maximiser <span class="year">2027</span></h1>
+      <p>Answer one step at a time and turn your annual leave into the longest, best-timed adventures. 🧳✨</p>
+    </div>
+  </header>
+
+  <main>
+    <section class="step" id="step-month">
+      <div class="step__q">🗓️ Which month in 2027 are you dreaming about?</div>
+      <div class="chips" id="month-picker"></div>
+      <div class="quickwins" id="quickwins"></div>
+    </section>
+
+    <section class="step step--hidden" id="step-breaks">
+      <div id="opportunities"></div>
+    </section>
+
+    <section class="step step--hidden" id="step-plan">
+      <div class="step__q">🧳 Your planned breaks — tweak each one and pick where to go.</div>
+      <div id="plan-list"></div>
+    </section>
+
+    <section class="step step--hidden" id="step-journey">
+      <div id="rtw"></div>
+    </section>
+
+    <section class="step step--hidden" id="step-summary">
+      <div id="summary"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Built for fun · Holiday data: GovHK 2027 General Holidays (17 days, validated) · Distances are great-circle estimates.</p>
+  </footer>
+
+  <script>
+// Hong Kong 2027 holiday-maximiser data.
+// Holidays: the 17 gazetted 2027 Hong Kong General Holidays.
+// Countries: grouped by region with coordinates (for great-circle distance from
+// Hong Kong), ideal travel months, and a traditional-dress descriptor for the avatar.
+
+const YEAR = 2027;
+
+// Hong Kong reference point (city centre) for all distance/flight-time maths.
+const HK = { lat: 22.3193, lng: 114.1694 };
+
+// Source: GovHK "General holidays for 2027". `lunar` flags festivals whose date
+// follows the Chinese lunar calendar (kept here so the UI can label them).
+const HOLIDAYS = [
+  { date: '2027-01-01', name: "New Year's Day" },
+  { date: '2027-02-06', name: 'Lunar New Year (1st day)', lunar: true },
+  { date: '2027-02-08', name: 'Lunar New Year (3rd day)', lunar: true },
+  { date: '2027-02-09', name: 'Lunar New Year (4th day, in lieu)', lunar: true },
+  { date: '2027-03-26', name: 'Good Friday' },
+  { date: '2027-03-27', name: 'Day after Good Friday' },
+  { date: '2027-03-29', name: 'Easter Monday' },
+  { date: '2027-04-05', name: 'Ching Ming Festival', lunar: true },
+  { date: '2027-05-01', name: 'Labour Day' },
+  { date: '2027-05-13', name: "Buddha's Birthday", lunar: true },
+  { date: '2027-06-09', name: 'Tuen Ng (Dragon Boat) Festival', lunar: true },
+  { date: '2027-07-01', name: 'HKSAR Establishment Day' },
+  { date: '2027-09-16', name: 'Day after Mid-Autumn Festival', lunar: true },
+  { date: '2027-10-01', name: 'National Day' },
+  { date: '2027-10-08', name: 'Chung Yeung Festival', lunar: true },
+  { date: '2027-12-25', name: 'Christmas Day' },
+  { date: '2027-12-27', name: 'First weekday after Christmas' },
+];
+
+// Each country: flag, coordinates, ideal travel months (1-12), traditional dress
+// (name + emoji) worn by the avatar, and a one-line "why now" blurb keyed to season.
+const REGIONS = {
+  Asia: [
+    { name: 'Japan', flag: '🇯🇵', lat: 35.68, lng: 139.69, months: [3, 4, 5, 10, 11], dress: { name: 'Kimono', emoji: '👘' }, blurb: 'Cherry blossoms in spring, fiery maples in autumn.' },
+    { name: 'South Korea', flag: '🇰🇷', lat: 37.57, lng: 126.98, months: [4, 5, 9, 10, 11], dress: { name: 'Hanbok', emoji: '👘' }, blurb: 'Mild shoulder seasons and golden ginkgo streets.' },
+    { name: 'Thailand', flag: '🇹🇭', lat: 13.75, lng: 100.5, months: [11, 12, 1, 2], dress: { name: 'Chut Thai', emoji: '🩷' }, blurb: 'Cool, dry season — perfect for temples and beaches.' },
+    { name: 'Vietnam', flag: '🇻🇳', lat: 21.03, lng: 105.85, months: [2, 3, 4, 11, 12], dress: { name: 'Áo dài', emoji: '👗' }, blurb: 'Dry and pleasant north-to-south.' },
+    { name: 'Taiwan', flag: '🇹🇼', lat: 25.03, lng: 121.56, months: [3, 4, 10, 11, 12], dress: { name: 'Qipao', emoji: '🏮' }, blurb: 'Night markets and mountains in mild, dry months.' },
+    { name: 'Cambodia', flag: '🇰🇭', lat: 11.55, lng: 104.92, months: [11, 12, 1, 2], dress: { name: 'Sampot', emoji: '🛕' }, blurb: "Cool, dry season for Angkor's temples." },
+    { name: 'Indonesia (Bali)', flag: '🇮🇩', lat: -8.65, lng: 115.13, months: [4, 5, 6, 9, 10], dress: { name: 'Kebaya', emoji: '🌺' }, blurb: 'Dry season sunshine before the crowds.' },
+    { name: 'India', flag: '🇮🇳', lat: 28.61, lng: 77.21, months: [10, 11, 12, 1, 2, 3], dress: { name: 'Sari', emoji: '🥻' }, blurb: 'Cool, comfortable months for the north and Rajasthan.' },
+    { name: 'Nepal', flag: '🇳🇵', lat: 27.7, lng: 85.32, months: [3, 4, 10, 11], dress: { name: 'Daura-Suruwal', emoji: '🏔️' }, blurb: 'Clear Himalayan trekking skies.' },
+    { name: 'Philippines', flag: '🇵🇭', lat: 14.6, lng: 120.98, months: [1, 2, 3, 4], dress: { name: 'Barong / Terno', emoji: '🌴' }, blurb: 'Dry season island-hopping weather.' },
+    { name: 'Singapore', flag: '🇸🇬', lat: 1.35, lng: 103.82, months: [2, 3, 4, 7], dress: { name: 'Baju Kurung', emoji: '🦁' }, blurb: 'Slightly drier windows in a year-round city break.' },
+  ],
+  'North America': [
+    { name: 'USA', flag: '🇺🇸', lat: 38.9, lng: -77.04, months: [4, 5, 6, 9, 10], dress: { name: 'Denim & Stetson', emoji: '🤠' }, blurb: 'Spring blooms and crisp autumn colour.' },
+    { name: 'Canada', flag: '🇨🇦', lat: 45.42, lng: -75.7, months: [6, 7, 8, 9], dress: { name: 'Flannel & toque', emoji: '🍁' }, blurb: 'Warm summers and blazing maple autumns.' },
+    { name: 'Mexico', flag: '🇲🇽', lat: 19.43, lng: -99.13, months: [3, 4, 10, 11], dress: { name: 'China Poblana', emoji: '💃' }, blurb: 'Dry, sunny and festival-rich.' },
+  ],
+  'Central America': [
+    { name: 'Costa Rica', flag: '🇨🇷', lat: 9.93, lng: -84.08, months: [12, 1, 2, 3, 4], dress: { name: 'Traje típico', emoji: '🦥' }, blurb: 'Dry season rainforest and beaches.' },
+    { name: 'Guatemala', flag: '🇬🇹', lat: 14.63, lng: -90.51, months: [11, 12, 1, 2, 3], dress: { name: 'Huipil', emoji: '🌋' }, blurb: 'Sunny highlands and Mayan ruins.' },
+    { name: 'Panama', flag: '🇵🇦', lat: 8.98, lng: -79.52, months: [12, 1, 2, 3, 4], dress: { name: 'Pollera', emoji: '🚢' }, blurb: 'Dry season city-and-canal weather.' },
+    { name: 'Belize', flag: '🇧🇿', lat: 17.5, lng: -88.2, months: [12, 1, 2, 3, 4], dress: { name: 'Traditional dress', emoji: '🐠' }, blurb: 'Reef-diving dry season.' },
+  ],
+  'South America': [
+    { name: 'Peru', flag: '🇵🇪', lat: -12.05, lng: -77.04, months: [5, 6, 7, 8, 9], dress: { name: 'Pollera & poncho', emoji: '🦙' }, blurb: 'Dry Andean trekking season for Machu Picchu.' },
+    { name: 'Argentina', flag: '🇦🇷', lat: -34.6, lng: -58.38, months: [10, 11, 3, 4], dress: { name: 'Gaucho', emoji: '🐎' }, blurb: 'Mild spring and autumn in Buenos Aires and Patagonia.' },
+    { name: 'Brazil', flag: '🇧🇷', lat: -22.9, lng: -43.17, months: [2, 3, 9, 10, 11, 12], dress: { name: 'Carnaval', emoji: '🎭' }, blurb: 'Warm beaches and Carnaval energy.' },
+    { name: 'Chile', flag: '🇨🇱', lat: -33.45, lng: -70.66, months: [10, 11, 12, 1, 2, 3], dress: { name: 'Huaso', emoji: '🍇' }, blurb: 'Southern-hemisphere summer, deserts to fjords.' },
+    { name: 'Colombia', flag: '🇨🇴', lat: 4.71, lng: -74.07, months: [12, 1, 2, 3, 7, 8], dress: { name: 'Traje típico', emoji: '☕' }, blurb: 'Drier windows for coffee country and coast.' },
+  ],
+  'Central Asia': [
+    { name: 'Kazakhstan', flag: '🇰🇿', lat: 51.16, lng: 71.47, months: [5, 6, 7, 8, 9], dress: { name: 'Chapan', emoji: '🦅' }, blurb: 'Warm steppe-and-mountain summers.' },
+    { name: 'Uzbekistan', flag: '🇺🇿', lat: 41.3, lng: 69.24, months: [4, 5, 9, 10], dress: { name: 'Atlas & chapan', emoji: '🕌' }, blurb: 'Mild Silk Road spring and autumn.' },
+    { name: 'Kyrgyzstan', flag: '🇰🇬', lat: 42.87, lng: 74.6, months: [6, 7, 8, 9], dress: { name: 'Kalpak & chapan', emoji: '🏔️' }, blurb: 'Alpine lakes and yurt-stay summers.' },
+    { name: 'Tajikistan', flag: '🇹🇯', lat: 38.56, lng: 68.79, months: [6, 7, 8, 9], dress: { name: 'Kurta & toqi', emoji: '⛰️' }, blurb: 'Pamir Highway season.' },
+  ],
+  'Middle East': [
+    { name: 'UAE', flag: '🇦🇪', lat: 25.2, lng: 55.27, months: [11, 12, 1, 2, 3], dress: { name: 'Kandura / Abaya', emoji: '🕌' }, blurb: 'Cooler desert-and-city season.' },
+    { name: 'Jordan', flag: '🇯🇴', lat: 31.95, lng: 35.93, months: [3, 4, 5, 10, 11], dress: { name: 'Thobe & keffiyeh', emoji: '🏜️' }, blurb: 'Comfortable Petra and Wadi Rum weather.' },
+    { name: 'Oman', flag: '🇴🇲', lat: 23.58, lng: 58.4, months: [11, 12, 1, 2, 3], dress: { name: 'Dishdasha', emoji: '🐫' }, blurb: 'Mild wadis, forts and dunes.' },
+    { name: 'Turkey', flag: '🇹🇷', lat: 41.01, lng: 28.98, months: [4, 5, 6, 9, 10], dress: { name: 'Ottoman kaftan', emoji: '🎈' }, blurb: 'Balmy Istanbul and Cappadocia shoulder seasons.' },
+    { name: 'Israel', flag: '🇮🇱', lat: 31.77, lng: 35.21, months: [4, 5, 9, 10], dress: { name: 'Traditional dress', emoji: '🕎' }, blurb: 'Warm-but-not-scorching spring and autumn.' },
+  ],
+  'Eastern Europe': [
+    { name: 'Poland', flag: '🇵🇱', lat: 52.23, lng: 21.01, months: [5, 6, 9], dress: { name: 'Kraków folk dress', emoji: '🏰' }, blurb: 'Green, mild and uncrowded.' },
+    { name: 'Czechia', flag: '🇨🇿', lat: 50.08, lng: 14.44, months: [5, 6, 9, 10], dress: { name: 'Kroj', emoji: '🍺' }, blurb: 'Fairy-tale Prague in gentle weather.' },
+    { name: 'Hungary', flag: '🇭🇺', lat: 47.5, lng: 19.04, months: [4, 5, 6, 9, 10], dress: { name: 'Matyó embroidery', emoji: '♨️' }, blurb: 'Thermal baths and mild sightseeing.' },
+    { name: 'Croatia', flag: '🇭🇷', lat: 45.81, lng: 15.98, months: [6, 7, 8, 9], dress: { name: 'Narodna nošnja', emoji: '⛵' }, blurb: 'Adriatic summer sailing weather.' },
+    { name: 'Romania', flag: '🇷🇴', lat: 44.43, lng: 26.1, months: [5, 6, 9], dress: { name: 'Ie blouse', emoji: '🧛' }, blurb: 'Lush Transylvania in shoulder season.' },
+  ],
+  'Western Europe': [
+    { name: 'France', flag: '🇫🇷', lat: 48.85, lng: 2.35, months: [4, 5, 6, 9, 10], dress: { name: 'Regional folk dress', emoji: '🥐' }, blurb: 'Warm days, thinner crowds than midsummer.' },
+    { name: 'Italy', flag: '🇮🇹', lat: 41.9, lng: 12.5, months: [4, 5, 6, 9, 10], dress: { name: 'Regional costume', emoji: '🍝' }, blurb: 'Ideal light for Rome, Tuscany and the coast.' },
+    { name: 'Spain', flag: '🇪🇸', lat: 40.42, lng: -3.7, months: [4, 5, 6, 9, 10], dress: { name: 'Flamenco traje', emoji: '💃' }, blurb: 'Warm, festive and comfortable to walk.' },
+    { name: 'Germany', flag: '🇩🇪', lat: 52.52, lng: 13.4, months: [5, 6, 7, 8, 9, 12], dress: { name: 'Dirndl / Lederhosen', emoji: '🥨' }, blurb: 'Beer gardens in summer, markets in December.' },
+    { name: 'Netherlands', flag: '🇳🇱', lat: 52.37, lng: 4.9, months: [4, 5, 6, 9], dress: { name: 'Klederdracht', emoji: '🌷' }, blurb: 'Tulip season and canal-side sun.' },
+    { name: 'Switzerland', flag: '🇨🇭', lat: 46.95, lng: 7.45, months: [6, 7, 8, 9, 12, 1, 2], dress: { name: 'Tracht', emoji: '🏔️' }, blurb: 'Alpine hiking in summer, snow in winter.' },
+    { name: 'Portugal', flag: '🇵🇹', lat: 38.72, lng: -9.14, months: [4, 5, 6, 9, 10], dress: { name: 'Traje regional', emoji: '🚋' }, blurb: 'Sunny, breezy and easy-going.' },
+  ],
+  Scandinavia: [
+    { name: 'Iceland', flag: '🇮🇸', lat: 64.15, lng: -21.94, months: [6, 7, 8, 2, 3], dress: { name: 'Þjóðbúningur', emoji: '🌋' }, blurb: 'Midnight sun in summer, auroras in late winter.' },
+    { name: 'Norway', flag: '🇳🇴', lat: 59.91, lng: 10.75, months: [6, 7, 8, 1, 2, 3], dress: { name: 'Bunad', emoji: '🏔️' }, blurb: 'Fjord cruising in summer, northern lights in winter.' },
+    { name: 'Sweden', flag: '🇸🇪', lat: 59.33, lng: 18.07, months: [6, 7, 8, 12], dress: { name: 'Sverigedräkten', emoji: '🦌' }, blurb: 'Long light summers and cosy December.' },
+    { name: 'Finland', flag: '🇫🇮', lat: 60.17, lng: 24.94, months: [6, 7, 8, 12, 1, 2], dress: { name: 'Kansallispuku', emoji: '🦉' }, blurb: 'Lakeland summers and Lapland winters.' },
+    { name: 'Denmark', flag: '🇩🇰', lat: 55.68, lng: 12.57, months: [5, 6, 7, 8], dress: { name: 'Folkedragt', emoji: '🚲' }, blurb: 'Bright, bike-friendly Scandinavian summer.' },
+  ],
+  'UK & Ireland': [
+    { name: 'England', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', lat: 51.51, lng: -0.13, months: [5, 6, 7, 8, 9], dress: { name: 'Morris / Beefeater', emoji: '🎡' }, blurb: 'Longest, warmest days of the year.' },
+    { name: 'Scotland', flag: '🏴󠁧󠁢󠁳󠁣󠁴󠁿', lat: 55.95, lng: -3.19, months: [5, 6, 7, 8, 9], dress: { name: 'Kilt & tartan', emoji: '🎻' }, blurb: 'Highlands at their greenest and driest.' },
+    { name: 'Ireland', flag: '🇮🇪', lat: 53.35, lng: -6.26, months: [5, 6, 7, 8, 9], dress: { name: 'Léine & brat', emoji: '☘️' }, blurb: 'Mild, blooming and festival-filled.' },
+    { name: 'Wales', flag: '🏴󠁧󠁢󠁷󠁬󠁳󠁿', lat: 51.48, lng: -3.18, months: [5, 6, 7, 8, 9], dress: { name: 'Welsh costume', emoji: '🐉' }, blurb: 'Coast paths and castles in the sun.' },
+  ],
+  'Australia & New Zealand': [
+    { name: 'Australia', flag: '🇦🇺', lat: -33.87, lng: 151.21, months: [3, 4, 5, 9, 10, 11], dress: { name: 'Akubra & Driza-Bone', emoji: '🦘' }, blurb: 'Warm, mild shoulder seasons across the country.' },
+    { name: 'New Zealand', flag: '🇳🇿', lat: -41.29, lng: 174.78, months: [12, 1, 2, 3, 11], dress: { name: 'Māori korowai', emoji: '🥝' }, blurb: 'Southern-hemisphere summer for the great outdoors.' },
+  ],
+  'Pacific Islands': [
+    { name: 'Fiji', flag: '🇫🇯', lat: -18.14, lng: 178.44, months: [5, 6, 7, 8, 9, 10], dress: { name: 'Sulu & masi', emoji: '🏝️' }, blurb: 'Dry season sunshine and calm seas.' },
+    { name: 'French Polynesia', flag: '🇵🇫', lat: -17.68, lng: -149.4, months: [5, 6, 7, 8, 9], dress: { name: 'Pāreu', emoji: '🐚' }, blurb: 'Dry, breezy over-water-bungalow weather.' },
+    { name: 'Samoa', flag: '🇼🇸', lat: -13.83, lng: -171.77, months: [5, 6, 7, 8, 9, 10], dress: { name: 'Puletasi & lavalava', emoji: '🌺' }, blurb: 'Cooler dry season across the islands.' },
+    { name: 'Palau', flag: '🇵🇼', lat: 7.5, lng: 134.62, months: [11, 12, 1, 2, 3, 4], dress: { name: 'Traditional dress', emoji: '🪸' }, blurb: 'Calmest seas for diving the rock islands.' },
+  ],
+};
+
+</script>
+  <script>
+'use strict';
+
+// ---------------------------------------------------------------------------
+// Date helpers (all local-time; ISO strings built by hand to avoid UTC drift)
+// ---------------------------------------------------------------------------
+
+const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'];
+const DOW_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+const holidaySet = new Set(HOLIDAYS.map((h) => h.date));
+
+function isoOf(d) {
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${d.getFullYear()}-${m}-${day}`;
+}
+
+function dateOf(iso) {
+  const [y, m, d] = iso.split('-').map(Number);
+  return new Date(y, m - 1, d);
+}
+
+function addDays(d, n) {
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
+}
+
+function isWeekend(d) {
+  const g = d.getDay();
+  return g === 0 || g === 6;
+}
+
+function isHoliday(d) {
+  return holidaySet.has(isoOf(d));
+}
+
+// A working day is a weekday that is not a public holiday — the only kind of day
+// that costs an annual-leave day.
+function isWorkday(d) {
+  return !isWeekend(d) && !isHoliday(d);
+}
+
+function isDayOff(d) {
+  return !isWorkday(d);
+}
+
+function daysBetween(a, b) {
+  return Math.round((dateOf(isoOf(b)) - dateOf(isoOf(a))) / 86400000);
+}
+
+function prettyDate(d) {
+  return `${DOW_NAMES[d.getDay()]} ${d.getDate()} ${MONTH_NAMES[d.getMonth()].slice(0, 3)}`;
+}
+
+// ---------------------------------------------------------------------------
+// Runs: maximal stretches of consecutive days off across the whole year.
+// A "bridge" between two runs is the set of working days separating them, which
+// is exactly the annual leave you would spend to join them into one long break.
+// ---------------------------------------------------------------------------
+
+function computeRuns() {
+  const runs = [];
+  const start = new Date(YEAR, 0, 1);
+  const end = new Date(YEAR, 11, 31);
+  let cur = null;
+  for (let d = start; d <= end; d = addDays(d, 1)) {
+    if (isDayOff(d)) {
+      if (!cur) cur = { start: new Date(d), end: new Date(d) };
+      else cur.end = new Date(d);
+    } else if (cur) {
+      runs.push(cur);
+      cur = null;
+    }
+  }
+  if (cur) runs.push(cur);
+  return runs;
+}
+
+const RUNS = computeRuns();
+
+function bridgeCost(runA, runB) {
+  return daysBetween(runA.end, runB.start) - 1;
+}
+
+function runContainsHoliday(run) {
+  for (let d = new Date(run.start); d <= run.end; d = addDays(d, 1)) {
+    if (isHoliday(d)) return true;
+  }
+  return false;
+}
+
+// ---------------------------------------------------------------------------
+// Maximiser opportunities for a month. Every candidate spans from the start of
+// its leftmost run to the end of its rightmost run, so both ends already fall on
+// a day off — no leave is ever wasted on the boundaries.
+// ---------------------------------------------------------------------------
+
+const MAX_LEAVE_PER_TRIP = 6;
+
+function opportunitiesForMonth(month /* 0-indexed */) {
+  const anchors = RUNS.map((r, i) => ({ r, i }))
+    .filter(({ r }) => runContainsHoliday(r)
+      && (r.start.getMonth() === month || r.end.getMonth() === month));
+
+  const seen = new Set();
+  const candidates = [];
+
+  for (const { i } of anchors) {
+    for (let left = 0; left <= 3; left++) {
+      for (let right = 0; right <= 3; right++) {
+        const lo = i - left;
+        const hi = i + right;
+        if (lo < 0 || hi >= RUNS.length) continue;
+
+        let leave = 0;
+        for (let k = lo; k < hi; k++) leave += bridgeCost(RUNS[k], RUNS[k + 1]);
+        if (leave > MAX_LEAVE_PER_TRIP) continue;
+
+        const startD = RUNS[lo].start;
+        const endD = RUNS[hi].end;
+        const span = daysBetween(startD, endD) + 1;
+        const key = `${isoOf(startD)}_${isoOf(endD)}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+
+        candidates.push({
+          start: isoOf(startD),
+          end: isoOf(endD),
+          leave,
+          span,
+          ratio: leave === 0 ? Infinity : span / leave,
+        });
+      }
+    }
+  }
+
+  candidates.sort((a, b) => {
+    if (b.ratio !== a.ratio) return b.ratio - a.ratio;
+    if (b.span !== a.span) return b.span - a.span;
+    return a.leave - b.leave;
+  });
+
+  const kept = [];
+  for (const c of candidates) {
+    const cs = dateOf(c.start), ce = dateOf(c.end);
+    const covered = kept.some((k) => dateOf(k.start) <= cs && dateOf(k.end) >= ce);
+    if (!covered) kept.push(c);
+  }
+  return kept.slice(0, 5);
+}
+
+function leaveDaysInRange(startIso, endIso) {
+  const out = [];
+  for (let d = dateOf(startIso); d <= dateOf(endIso); d = addDays(d, 1)) {
+    if (isWorkday(d)) out.push(isoOf(d));
+  }
+  return out;
+}
+
+// A break is a "free long weekend" while it costs no annual leave.
+function isFreeBreak(b) {
+  return leaveDaysInRange(b.start, b.end).length === 0;
+}
+
+// ---------------------------------------------------------------------------
+// One-leave long-weekend wins. A holiday on Thursday becomes a four-day weekend
+// by taking the Friday; a Tuesday holiday by taking the Monday.
+// ---------------------------------------------------------------------------
+
+function longWeekendWins() {
+  const wins = [];
+  for (const h of HOLIDAYS) {
+    const d = dateOf(h.date);
+    const dow = d.getDay();
+    if (dow === 4 && isWorkday(addDays(d, 1))) {
+      wins.push({ ...h, take: isoOf(addDays(d, 1)), takeLabel: 'Friday', kind: 'thursday' });
+    } else if (dow === 2 && isWorkday(addDays(d, -1))) {
+      wins.push({ ...h, take: isoOf(addDays(d, -1)), takeLabel: 'Monday', kind: 'tuesday' });
+    }
+  }
+  return wins;
+}
+
+// ---------------------------------------------------------------------------
+// Geography: great-circle distance and a rough non-stop flight-time estimate.
+// ---------------------------------------------------------------------------
+
+function haversineKm(a, b) {
+  const R = 6371;
+  const toRad = (x) => (x * Math.PI) / 180;
+  const dLat = toRad(b.lat - a.lat);
+  const dLng = toRad(b.lng - a.lng);
+  const s = Math.sin(dLat / 2) ** 2
+    + Math.cos(toRad(a.lat)) * Math.cos(toRad(b.lat)) * Math.sin(dLng / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(s));
+}
+
+// Cruise ~850 km/h plus ~1.5h for taxi/climb/descent; a friendly estimate.
+function flightHours(km) {
+  return km / 850 + 1.5;
+}
+
+function fmtHours(h) {
+  const whole = Math.floor(h);
+  const mins = Math.round((h - whole) * 60);
+  return mins ? `${whole}h ${mins}m` : `${whole}h`;
+}
+
+const ALL_COUNTRIES = [];
+const countryByName = new Map();
+for (const region of Object.keys(REGIONS)) {
+  for (const c of REGIONS[region]) {
+    const withRegion = { ...c, region };
+    ALL_COUNTRIES.push(withRegion);
+    countryByName.set(c.name, withRegion);
+  }
+}
+
+// Short-haul destinations reachable in about four hours or less from Hong Kong —
+// the only ones offered for a free long weekend, where time is too tight to fly far.
+const NEARBY_HOURS = 4;
+const NEARBY_COUNTRIES = ALL_COUNTRIES
+  .filter((c) => flightHours(haversineKm(HK, c)) <= NEARBY_HOURS)
+  .sort((a, b) => haversineKm(HK, a) - haversineKm(HK, b));
+
+// ---------------------------------------------------------------------------
+// Order selected countries into an efficient round-the-world loop starting and
+// ending in Hong Kong. Nearest-neighbour, then 2-opt clean-up.
+// ---------------------------------------------------------------------------
+
+function nodesFor(names) {
+  return [{ name: 'Hong Kong', flag: '🇭🇰', lat: HK.lat, lng: HK.lng, hk: true }]
+    .concat(names.map((n) => countryByName.get(n)));
+}
+
+function routeDistance(order) {
+  let total = 0;
+  for (let i = 0; i < order.length - 1; i++) total += haversineKm(order[i], order[i + 1]);
+  return total;
+}
+
+function optimiseRoute(names) {
+  const nodes = nodesFor(names);
+  if (nodes.length <= 2) {
+    const loop = nodes.concat([nodes[0]]);
+    return { order: loop, km: routeDistance(loop) };
+  }
+
+  const remaining = nodes.slice(1);
+  const tour = [nodes[0]];
+  while (remaining.length) {
+    const last = tour[tour.length - 1];
+    let best = 0;
+    let bestD = Infinity;
+    remaining.forEach((n, idx) => {
+      const d = haversineKm(last, n);
+      if (d < bestD) { bestD = d; best = idx; }
+    });
+    tour.push(remaining.splice(best, 1)[0]);
+  }
+  tour.push(nodes[0]);
+
+  let improved = true;
+  while (improved) {
+    improved = false;
+    for (let i = 1; i < tour.length - 2; i++) {
+      for (let j = i + 1; j < tour.length - 1; j++) {
+        const before = haversineKm(tour[i - 1], tour[i]) + haversineKm(tour[j], tour[j + 1]);
+        const after = haversineKm(tour[i - 1], tour[j]) + haversineKm(tour[i], tour[j + 1]);
+        if (after + 1e-6 < before) {
+          let lo = i, hi = j;
+          while (lo < hi) { [tour[lo], tour[hi]] = [tour[hi], tour[lo]]; lo++; hi--; }
+          improved = true;
+        }
+      }
+    }
+  }
+  return { order: tour, km: routeDistance(tour) };
+}
+
+// ---------------------------------------------------------------------------
+// State
+// ---------------------------------------------------------------------------
+
+const state = { month: null, breaks: [], seq: 0 };
+let focusCountry = null;
+
+function addBreak(o) {
+  if (state.breaks.some((b) => b.start === o.start && b.end === o.end)) return;
+  state.breaks.push({
+    id: ++state.seq,
+    month: state.month,
+    start: o.start,
+    end: o.end,
+    region: null,
+    countries: [],
+  });
+}
+
+function removeBreak(id) {
+  const i = state.breaks.findIndex((b) => b.id === id);
+  if (i >= 0) state.breaks.splice(i, 1);
+}
+
+function breakByRange(start, end) {
+  return state.breaks.find((b) => b.start === start && b.end === end);
+}
+
+function allSelectedCountries() {
+  const names = [];
+  for (const b of state.breaks) {
+    for (const n of b.countries) if (!names.includes(n)) names.push(n);
+  }
+  return names;
+}
+
+// ---------------------------------------------------------------------------
+// Rendering
+// ---------------------------------------------------------------------------
+
+const $ = (sel) => document.querySelector(sel);
+const prevVisible = {};
+
+function renderMonthPicker() {
+  const wrap = $('#month-picker');
+  const plannedMonths = new Set(state.breaks.map((b) => b.month));
+  wrap.innerHTML = '';
+  for (let m = 0; m < 12; m++) {
+    const btn = document.createElement('button');
+    btn.className = 'chip' + (state.month === m ? ' chip--active' : '')
+      + (plannedMonths.has(m) ? ' chip--planned' : '');
+    btn.textContent = MONTH_NAMES[m].slice(0, 3);
+    btn.onclick = () => { state.month = m; render('breaks'); };
+    wrap.appendChild(btn);
+  }
+
+  const wins = longWeekendWins().filter((w) => w.kind === 'thursday');
+  const host = $('#quickwins');
+  host.innerHTML = '<span class="quickwins__label">⚡ Or grab a quick win:</span>'
+    + wins.map((w) => {
+      const d = dateOf(w.date);
+      return `<button class="chip chip--win" data-win="${d.getMonth()}">${w.name} (${prettyDate(d)}) →</button>`;
+    }).join('');
+  host.querySelectorAll('[data-win]').forEach((b) => {
+    b.onclick = () => { state.month = Number(b.dataset.win); render('breaks'); };
+  });
+}
+
+function renderOpportunities() {
+  const host = $('#opportunities');
+  if (state.month === null) { host.innerHTML = ''; return; }
+  const opps = opportunitiesForMonth(state.month);
+  const bridges = opps.filter((o) => o.leave > 0);
+  const freebies = opps.filter((o) => o.leave === 0);
+
+  let html = `<div class="step__q">✨ Best breaks in <b>${MONTH_NAMES[state.month]} 2027</b> — add the ones you like.</div>`;
+  if (!opps.length) {
+    html += '<p class="muted">No public holidays anchor this month — a plain leave day here buys exactly one day off. Pick another month above.</p>';
+  }
+
+  const card = (o) => {
+    const s = dateOf(o.start), e = dateOf(o.end);
+    const added = !!breakByRange(o.start, o.end);
+    const pill = o.leave === 0
+      ? `<span class="pill pill--free">Free! ${o.span} days off, 0 leave</span>`
+      : `<span class="pill">Take ${o.leave} → get ${o.span} days off</span>
+         <span class="pill pill--ratio">1 leave buys ${(o.span / o.leave).toFixed(1)} days</span>`;
+    return `
+      <div class="opp ${added ? 'opp--planned' : ''}">
+        <div class="opp__range">${prettyDate(s)} → ${prettyDate(e)}</div>
+        <div class="opp__pills">${pill}</div>
+        <button class="btn ${added ? 'btn--on' : ''}" data-range="${o.start}_${o.end}">
+          ${added ? '✓ Added to plan' : '➕ Add to plan'}
+        </button>
+      </div>`;
+  };
+
+  if (bridges.length) html += '<div class="opp-grid">' + bridges.map(card).join('') + '</div>';
+  if (freebies.length) {
+    html += '<h4>Free long weekends (0 leave)</h4>'
+      + '<div class="opp-grid">' + freebies.map(card).join('') + '</div>';
+  }
+  host.innerHTML = html;
+
+  host.querySelectorAll('[data-range]').forEach((b) => {
+    b.onclick = () => {
+      const [start, end] = b.dataset.range.split('_');
+      const existing = breakByRange(start, end);
+      if (existing) removeBreak(existing.id);
+      else addBreak(opps.find((o) => o.start === start && o.end === end));
+      render('plan');
+    };
+  });
+}
+
+function adjusterHTML(b) {
+  const s = dateOf(b.start), e = dateOf(b.end);
+  const leave = leaveDaysInRange(b.start, b.end);
+  const span = daysBetween(s, e) + 1;
+  const ratio = leave.length ? (span / leave.length).toFixed(1) : null;
+  return `
+    <div class="adjuster">
+      <div class="adjuster__side">
+        <span class="muted">Start earlier</span>
+        <div><button class="btn btn--round" data-adj="${b.id}:start+1">＋</button>
+        <button class="btn btn--round" data-adj="${b.id}:start-1">－</button></div>
+      </div>
+      <div class="adjuster__mid">
+        <div class="adjuster__range">${prettyDate(s)} → ${prettyDate(e)}</div>
+        <div class="adjuster__stats">
+          <span class="pill">${span} days off</span>
+          <span class="pill">${leave.length} leave day${leave.length === 1 ? '' : 's'}</span>
+          ${ratio ? `<span class="pill pill--ratio">1 leave buys ${ratio} days</span>` : '<span class="pill pill--free">Free long weekend</span>'}
+        </div>
+        <div class="adjuster__leave">${leave.length ? 'Leave: ' + leave.map((d) => prettyDate(dateOf(d))).join(', ') : 'No leave needed 🎉'}</div>
+      </div>
+      <div class="adjuster__side">
+        <span class="muted">End later</span>
+        <div><button class="btn btn--round" data-adj="${b.id}:end+1">＋</button>
+        <button class="btn btn--round" data-adj="${b.id}:end-1">－</button></div>
+      </div>
+    </div>`;
+}
+
+function destinationsHTML(b) {
+  const monthNum = b.month + 1;
+  const free = isFreeBreak(b);
+
+  const countryCard = (c, rec) => {
+    const km = haversineKm(HK, c);
+    const on = b.countries.includes(c.name);
+    return `
+      <div class="country ${on ? 'country--on' : ''}" data-pick="${b.id}:${c.name}">
+        <div class="country__flag">${c.flag}</div>
+        <div class="country__body">
+          <div class="country__name">${c.name} ${rec ? '<span class="tag tag--rec">in season</span>' : ''}</div>
+          <div class="country__blurb">${c.blurb}</div>
+          <div class="country__meta">✈️ ${Math.round(km).toLocaleString()} km · ~${fmtHours(flightHours(km))} · 👗 ${c.dress.name} ${c.dress.emoji}</div>
+        </div>
+        <div class="country__pick">${on ? '✓' : '+'}</div>
+      </div>`;
+  };
+
+  if (free) {
+    // Free long weekend: only short-haul escapes, no region step.
+    const list = NEARBY_COUNTRIES.slice().sort((a, b2) => {
+      const ra = a.months.includes(monthNum), rb = b2.months.includes(monthNum);
+      if (ra !== rb) return ra ? -1 : 1;
+      return haversineKm(HK, a) - haversineKm(HK, b2);
+    });
+    return `
+      <div class="dest">
+        <div class="dest__q">✈️ It's a short break — here's everywhere within ~${NEARBY_HOURS} hours of Hong Kong.</div>
+        <div class="country-grid">${list.map((c) => countryCard(c, c.months.includes(monthNum))).join('')}</div>
+      </div>`;
+  }
+
+  // Longer break: choose a region, then a country.
+  let html = '<div class="dest"><div class="dest__q">🌏 Where to? Pick a region.</div><div class="chips">';
+  html += Object.keys(REGIONS).map((r) =>
+    `<button class="chip ${b.region === r ? 'chip--active' : ''}" data-region="${b.id}:${r}">${r}</button>`).join('');
+  html += '</div>';
+
+  if (b.region) {
+    const inList = REGIONS[b.region];
+    const rec = inList.filter((c) => c.months.includes(monthNum));
+    const other = inList.filter((c) => !c.months.includes(monthNum));
+    html += `<div class="dest__q dest__q--sub">${b.region} in ${MONTH_NAMES[b.month]}</div>`;
+    html += rec.length
+      ? '<h4>Recommended right now</h4><div class="country-grid">' + rec.map((c) => countryCard(c, true)).join('') + '</div>'
+      : '<p class="muted">Nothing is peak-season here this month, but these are still open:</p>';
+    if (other.length) {
+      html += '<h4 class="muted-h">Also possible</h4><div class="country-grid">' + other.map((c) => countryCard(c, false)).join('') + '</div>';
+    }
+  }
+  html += '</div>';
+  return html;
+}
+
+function renderPlan() {
+  const host = $('#plan-list');
+  if (!state.breaks.length) { host.innerHTML = ''; return; }
+  const ordered = state.breaks.slice().sort((a, b) =>
+    dateOf(a.start) - dateOf(b.start));
+
+  host.innerHTML = ordered.map((b) => {
+    const chosen = b.countries.map((n) => {
+      const c = countryByName.get(n);
+      return `<span class="chosen">${c.flag} ${c.name}</span>`;
+    }).join('');
+    return `
+      <div class="pbreak">
+        <div class="pbreak__head">
+          <span class="pbreak__month">${MONTH_NAMES[b.month]}</span>
+          <button class="btn btn--ghost btn--sm" data-remove="${b.id}">🗑️ Remove</button>
+        </div>
+        ${adjusterHTML(b)}
+        ${destinationsHTML(b)}
+        ${chosen ? `<div class="pbreak__chosen">Going to: ${chosen}</div>` : ''}
+      </div>`;
+  }).join('');
+
+  host.querySelectorAll('[data-remove]').forEach((el) => {
+    el.onclick = () => { removeBreak(Number(el.dataset.remove)); render('plan'); };
+  });
+  host.querySelectorAll('[data-adj]').forEach((el) => {
+    el.onclick = () => {
+      const [id, op] = el.dataset.adj.split(':');
+      const b = state.breaks.find((x) => x.id === Number(id));
+      if (!b) return;
+      if (op === 'start+1') b.start = isoOf(addDays(dateOf(b.start), -1));
+      if (op === 'start-1') b.start = isoOf(addDays(dateOf(b.start), 1));
+      if (op === 'end+1') b.end = isoOf(addDays(dateOf(b.end), 1));
+      if (op === 'end-1') b.end = isoOf(addDays(dateOf(b.end), -1));
+      if (dateOf(b.start) > dateOf(b.end)) b.start = b.end;
+      render('plan');
+    };
+  });
+  host.querySelectorAll('[data-region]').forEach((el) => {
+    el.onclick = () => {
+      const [id, region] = el.dataset.region.split(':');
+      const b = state.breaks.find((x) => x.id === Number(id));
+      if (b) b.region = region;
+      render('plan');
+    };
+  });
+  host.querySelectorAll('[data-pick]').forEach((el) => {
+    const [id, name] = el.dataset.pick.split(':');
+    el.onclick = () => {
+      const b = state.breaks.find((x) => x.id === Number(id));
+      if (!b) return;
+      const i = b.countries.indexOf(name);
+      if (i >= 0) b.countries.splice(i, 1);
+      else { b.countries.push(name); focusCountry = name; }
+      render('journey');
+    };
+    el.onmouseenter = () => { focusCountry = name; renderAvatar(); };
+  });
+}
+
+function renderAvatar() {
+  const host = $('#avatar');
+  const names = allSelectedCountries();
+  const focus = focusCountry && countryByName.get(focusCountry)
+    ? countryByName.get(focusCountry)
+    : (names.length ? countryByName.get(names[names.length - 1]) : null);
+
+  const dress = focus ? focus.dress : { name: 'travel pyjamas', emoji: '🧳' };
+  const flag = focus ? focus.flag : '🌏';
+  const caption = focus
+    ? `Dressed for <b>${focus.name}</b> — ${dress.name} ${dress.emoji}`
+    : "Pick a country and I'll try on the outfit!";
+
+  host.innerHTML = `
+    <div class="pet">
+      <div class="pet__flag">${flag}</div>
+      <div class="pet__body">
+        <div class="pet__ear pet__ear--l"></div>
+        <div class="pet__ear pet__ear--r"></div>
+        <div class="pet__face">
+          <span class="pet__eye"></span><span class="pet__eye"></span>
+          <span class="pet__cheek pet__cheek--l"></span><span class="pet__cheek pet__cheek--r"></span>
+          <span class="pet__mouth"></span>
+        </div>
+        <div class="pet__dress">${dress.emoji}</div>
+        <div class="pet__arm pet__arm--l"></div>
+        <div class="pet__arm pet__arm--r"></div>
+      </div>
+    </div>
+    <div class="pet__caption">${caption}</div>`;
+}
+
+function renderJourney() {
+  const host = $('#rtw');
+  const names = allSelectedCountries();
+  if (!names.length) { host.innerHTML = ''; return; }
+  const { order, km } = optimiseRoute(names);
+  let legs = '';
+  let totalHours = 0;
+  for (let i = 0; i < order.length - 1; i++) {
+    const legKm = haversineKm(order[i], order[i + 1]);
+    totalHours += flightHours(legKm);
+    legs += `<li><span>${order[i].flag} ${order[i].name}</span><span class="leg__arrow">→</span>
+             <span>${order[i + 1].flag} ${order[i + 1].name}</span>
+             <span class="leg__meta">${Math.round(legKm).toLocaleString()} km · ~${fmtHours(flightHours(legKm))}</span></li>`;
+  }
+  const multiRegion = new Set(names.map((n) => countryByName.get(n).region)).size > 1;
+  host.innerHTML = `
+    <div class="step__q">${multiRegion ? '🌐 Optimised round-the-world route' : '🧭 Your route'}</div>
+    <p class="muted">Reordered to minimise total flying, looping back to Hong Kong.</p>
+    <ol class="legs">${legs}</ol>
+    <div class="rtw__totals">
+      <span class="pill">${Math.round(km).toLocaleString()} km total</span>
+      <span class="pill">~${fmtHours(totalHours)} in the air</span>
+      <span class="pill">${names.length} countr${names.length === 1 ? 'y' : 'ies'}</span>
+    </div>`;
+}
+
+function renderSummary() {
+  const host = $('#summary');
+  if (!state.breaks.length) {
+    host.innerHTML = '<div class="step__q">📊 Year summary</div><p class="muted">Add a break above and your yearly totals will appear here.</p>';
+    return;
+  }
+  const ordered = state.breaks.slice().sort((a, b) => dateOf(a.start) - dateOf(b.start));
+  const leaveSet = new Set();
+  const offSet = new Set();
+
+  const rows = ordered.map((b) => {
+    const leave = leaveDaysInRange(b.start, b.end);
+    leave.forEach((d) => leaveSet.add(d));
+    for (let d = dateOf(b.start); d <= dateOf(b.end); d = addDays(d, 1)) offSet.add(isoOf(d));
+    const span = daysBetween(dateOf(b.start), dateOf(b.end)) + 1;
+    const countries = b.countries.map((n) => countryByName.get(n).flag).join(' ') || '—';
+    return `<tr>
+      <td>${MONTH_NAMES[b.month]}</td>
+      <td>${prettyDate(dateOf(b.start))} → ${prettyDate(dateOf(b.end))}</td>
+      <td class="num">${leave.length}</td>
+      <td class="num">${span}</td>
+      <td>${countries}</td>
+    </tr>`;
+  }).join('');
+
+  const totalLeave = leaveSet.size;
+  const totalOff = offSet.size;
+  const ratio = totalLeave ? (totalOff / totalLeave).toFixed(2) : '∞';
+
+  host.innerHTML = `
+    <div class="step__q">📊 Year summary — 2027</div>
+    <table class="summary-table">
+      <thead><tr><th>Month</th><th>Break</th><th>Leave</th><th>Days off</th><th>Countries</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div class="totals">
+      <div class="total total--leave"><div class="total__num">${totalLeave}</div><div class="total__lbl">leave days used all year</div></div>
+      <div class="total total--off"><div class="total__num">${totalOff}</div><div class="total__lbl">total days off gained</div></div>
+      <div class="total total--ratio"><div class="total__num">${ratio}×</div><div class="total__lbl">every 1 leave day buys ${ratio} days off</div></div>
+    </div>`;
+}
+
+// ---------------------------------------------------------------------------
+// Flow: reveal each step as its prerequisite is met, and gently scroll to a
+// step the moment it unlocks so the app feels like a guided conversation.
+// ---------------------------------------------------------------------------
+
+function visibility() {
+  const anyCountry = state.breaks.some((b) => b.countries.length);
+  return {
+    'step-month': true,
+    'step-breaks': state.month !== null,
+    'step-plan': state.breaks.length > 0,
+    'step-journey': anyCountry,
+    'step-summary': state.breaks.length > 0,
+  };
+}
+
+function updateFlow(scrollTo) {
+  const vis = visibility();
+  let unlocked = null;
+  for (const id of Object.keys(vis)) {
+    const el = document.getElementById(id);
+    el.classList.toggle('step--hidden', !vis[id]);
+    if (vis[id] && !prevVisible[id]) unlocked = id;
+    prevVisible[id] = vis[id];
+  }
+  const targetId = { breaks: 'step-breaks', plan: 'step-plan', journey: 'step-journey' }[scrollTo];
+  const target = targetId && vis[targetId] ? targetId : unlocked;
+  if (target) {
+    const el = document.getElementById(target);
+    requestAnimationFrame(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+  }
+}
+
+function render(scrollTo) {
+  renderMonthPicker();
+  renderOpportunities();
+  renderPlan();
+  renderAvatar();
+  renderJourney();
+  renderSummary();
+  updateFlow(scrollTo);
+}
+
+document.addEventListener('DOMContentLoaded', () => render());
+
+</script>
+</body>
+</html>

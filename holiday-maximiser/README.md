@@ -12,6 +12,30 @@ python3 -m http.server -d holiday-maximiser 8000
 # then visit http://localhost:8000
 ```
 
+## Deploy to Netlify
+
+`dist/` contains a fully self-contained, single-file build (CSS and JS inlined,
+no external requests) — the easiest thing to host.
+
+- **Drag-and-drop:** go to <https://app.netlify.com/drop> and drop the `dist`
+  folder (its `index.html` is the whole app). Or drop the single file
+  `dist/holiday-maximiser.html`.
+- **Git-based deploy:** point Netlify at this repo and set the publish directory
+  to `holiday-maximiser/dist` (see `dist/netlify.toml`). There is no build
+  command.
+
+To rebuild `dist/` after editing the source files:
+
+```bash
+cd holiday-maximiser && node -e '
+const fs=require("fs");
+let h=fs.readFileSync("index.html","utf8")
+ .replace("<link rel=\"stylesheet\" href=\"styles.css\" />","<style>\n"+fs.readFileSync("styles.css","utf8")+"\n</style>")
+ .replace("<script src=\"data.js\"></script>","<script>\n"+fs.readFileSync("data.js","utf8")+"\n</script>")
+ .replace("<script src=\"app.js\"></script>","<script>\n"+fs.readFileSync("app.js","utf8")+"\n</script>");
+fs.writeFileSync("dist/index.html",h); fs.writeFileSync("dist/holiday-maximiser.html",h);'
+```
+
 The UI is a guided, one-question-at-a-time flow: each step reveals the next as
 you answer it (month → breaks → plan & destinations → journey → summary).
 
