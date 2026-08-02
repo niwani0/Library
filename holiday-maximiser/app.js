@@ -288,10 +288,10 @@ function sceneFor(country, monthNum) {
   return { wiki: pick.wiki, caption: pick.caption, gradient: REGION_GRADIENTS[country.region] || REGION_GRADIENTS.default };
 }
 
-function sceneFigureFromTitle(title, caption, gradient, cls) {
+function sceneFigureFromParts(wiki, caption, gradient, cls) {
   return `<figure class="scene ${cls || ''}" style="--fallback:${gradient}">
     <img alt="${escapeAttr(caption)}" loading="lazy" referrerpolicy="no-referrer"
-         data-scene-title="${escapeAttr(title)}"
+         data-scene-title="${escapeAttr(wiki)}"
          onerror="this.closest('.scene').classList.add('scene--noimg')" />
     <figcaption>${caption}</figcaption>
   </figure>`;
@@ -299,13 +299,13 @@ function sceneFigureFromTitle(title, caption, gradient, cls) {
 
 function sceneFigure(country, monthNum, cls) {
   const sc = sceneFor(country, monthNum);
-  return sceneFigureFromTitle(sc.wiki, sc.caption, sc.gradient, cls);
+  return sceneFigureFromParts(sc.wiki, sc.caption, sc.gradient, cls);
 }
 
 // Photos are the lead image of each landmark's Wikipedia article (PageImages API,
-// CORS-enabled via origin=*). Results are cached; while a title loads — or if it
-// can't be reached, e.g. inside a sandbox that blocks external requests — the
-// captioned regional gradient shows instead.
+// CORS-enabled via origin=*), cached. While a title loads — or if it can't be
+// reached, e.g. inside a sandbox that blocks external requests — the captioned
+// regional gradient shows instead.
 const sceneCache = new Map();
 const sceneFetching = new Set();
 
@@ -339,6 +339,21 @@ function hydrateScenes() {
         });
       });
   });
+}
+
+// The hero photo rotates through the destinations you've picked — a slideshow of
+// your trip — and pauses on the one you're hovering.
+let heroHover = false;
+let heroIdx = 0;
+let heroTimer = null;
+function startHeroRotation() {
+  if (heroTimer || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
+  heroTimer = setInterval(() => {
+    if (document.hidden || heroHover) return;
+    if (allSelectedCountries().length < 2) return;
+    heroIdx += 1;
+    renderHero();
+  }, 5000);
 }
 
 // Which month's scene to show for a country: the month of a break it's in,
@@ -694,23 +709,25 @@ function renderPlan() {
       else { b.countries.push(name); focusCountry = name; }
       render('journey');
     };
-    el.onmouseenter = () => { focusCountry = name; renderHero(); };
+    el.onmouseenter = () => { heroHover = true; focusCountry = name; renderHero(); };
+    el.onmouseleave = () => { heroHover = false; };
   });
 
   host.querySelectorAll('[data-focus]').forEach((el) => {
-    el.onmouseenter = () => { focusCountry = el.dataset.focus; renderHero(); };
+    el.onmouseenter = () => { heroHover = true; focusCountry = el.dataset.focus; renderHero(); };
+    el.onmouseleave = () => { heroHover = false; };
   });
 }
 
 function renderHero() {
   const host = $('#hero-scene');
   const names = allSelectedCountries();
-  const focus = focusCountry && countryByName.get(focusCountry)
-    ? countryByName.get(focusCountry)
-    : (names.length ? countryByName.get(names[names.length - 1]) : null);
+  let focus = null;
+  if (heroHover && focusCountry && countryByName.get(focusCountry)) focus = countryByName.get(focusCountry);
+  else if (names.length) focus = countryByName.get(names[heroIdx % names.length]);
 
   if (!focus) {
-    host.innerHTML = sceneFigureFromTitle(HK_SCENE.wiki, `${HK_SCENE.caption} · your starting point`, REGION_GRADIENTS.default, 'scene--hero');
+    host.innerHTML = sceneFigureFromParts(HK_SCENE.wiki, `${HK_SCENE.caption} · your starting point`, REGION_GRADIENTS.default, 'scene--hero');
   } else {
     host.innerHTML = sceneFigure(focus, monthForCountry(focus.name), 'scene--hero');
   }
@@ -827,6 +844,7 @@ function render(scrollTo) {
   renderSummary();
   updateFlow(scrollTo);
   hydrateScenes();
+  startHeroRotation();
 }
 
 document.addEventListener('DOMContentLoaded', () => render());
