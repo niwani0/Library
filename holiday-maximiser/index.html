@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HK Holiday Maximiser 2027 🌏</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <div class="hero__avatar" id="avatar"></div>
+    <div class="hero__text">
+      <h1>Hong Kong Holiday Maximiser <span class="year">2027</span></h1>
+      <p>Turn your annual leave into the longest, best-timed adventures. Pick a month, bridge the public holidays, and let your travel buddy dress for the trip. 🧳✨</p>
+    </div>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>1 · Choose a month</h2>
+      <div class="chips" id="month-picker"></div>
+    </section>
+
+    <section class="card" id="opportunities-card">
+      <h2>2 · Best leave-maximising breaks</h2>
+      <div id="opportunities"></div>
+      <div id="adjuster"></div>
+    </section>
+
+    <section class="card" id="region-card">
+      <h2>3 · Pick a region &amp; countries</h2>
+      <div id="region-picker"></div>
+      <div id="countries"></div>
+    </section>
+
+    <section class="card" id="rtw-card">
+      <h2>4 · Your journey</h2>
+      <div id="rtw"></div>
+    </section>
+
+    <section class="card" id="wins-card">
+      <h2>5 · Quick wins</h2>
+      <div id="wins"></div>
+    </section>
+
+    <section class="card" id="summary-card">
+      <h2>6 · Year summary</h2>
+      <div id="summary"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Built for fun · Holiday data: GovHK 2027 General Holidays · Distances are great-circle estimates.</p>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
