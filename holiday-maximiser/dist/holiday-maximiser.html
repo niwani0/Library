@@ -619,6 +619,35 @@ function leaveDaysInRange(startIso, endIso) {
   return out;
 }
 
+// For months with no public holiday to bridge, build breaks from leave alone:
+// a three-day long weekend anchored to each weekend, plus one full week away.
+function leaveOnlyOptionsForMonth(month /* 0-indexed */) {
+  const opts = [];
+  const first = new Date(YEAR, month, 1);
+  const last = new Date(YEAR, month + 1, 0);
+
+  for (let d = new Date(first); d <= last; d = addDays(d, 1)) {
+    if (d.getDay() !== 6) continue; // Saturdays only
+    const fri = addDays(d, -1);
+    const sun = addDays(d, 1);
+    if (!isWorkday(fri)) continue;
+    opts.push({ start: isoOf(fri), end: isoOf(sun), leave: 1, span: 3, ratio: 3, kind: 'leave' });
+  }
+
+  for (let d = new Date(first); d <= last; d = addDays(d, 1)) {
+    if (d.getDay() !== 1) continue; // first Monday whose whole week is workdays
+    let allWork = true;
+    for (let k = 0; k < 5; k++) if (!isWorkday(addDays(d, k))) { allWork = false; break; }
+    if (!allWork) continue;
+    const from = addDays(d, -2), to = addDays(d, 6); // Sat before → Sun after
+    const span = daysBetween(from, to) + 1;
+    opts.push({ start: isoOf(from), end: isoOf(to), leave: 5, span, ratio: span / 5, kind: 'week' });
+    break;
+  }
+
+  return opts;
+}
+
 // A break is a "free long weekend" while it costs no annual leave.
 function isFreeBreak(b) {
   return leaveDaysInRange(b.start, b.end).length === 0;
@@ -811,14 +840,16 @@ function renderMonthPicker() {
 function renderOpportunities() {
   const host = $('#opportunities');
   if (state.month === null) { host.innerHTML = ''; return; }
-  const opps = opportunitiesForMonth(state.month);
-  const bridges = opps.filter((o) => o.leave > 0);
-  const freebies = opps.filter((o) => o.leave === 0);
+  const holidayOpps = opportunitiesForMonth(state.month);
+  const noHoliday = holidayOpps.length === 0;
+  const pool = noHoliday ? leaveOnlyOptionsForMonth(state.month) : holidayOpps;
+  const bridges = pool.filter((o) => o.leave > 0);
+  const freebies = pool.filter((o) => o.leave === 0);
+  const monthName = MONTH_NAMES[state.month];
 
-  let html = `<div class="step__q">✨ Best breaks in <b>${MONTH_NAMES[state.month]} 2027</b> — add the ones you like.</div>`;
-  if (!opps.length) {
-    html += '<p class="muted">No public holidays anchor this month — a plain leave day here buys exactly one day off. Pick another month above.</p>';
-  }
+  let html = noHoliday
+    ? `<div class="step__q">✨ No public holidays in <b>${monthName} 2027</b> — carve out a break from your own leave.</div>`
+    : `<div class="step__q">✨ Best breaks in <b>${monthName} 2027</b> — add the ones you like.</div>`;
 
   const card = (o) => {
     const s = dateOf(o.start), e = dateOf(o.end);
@@ -842,6 +873,9 @@ function renderOpportunities() {
     html += '<h4>Free long weekends (0 leave)</h4>'
       + '<div class="opp-grid">' + freebies.map(card).join('') + '</div>';
   }
+  if (noHoliday) {
+    html += `<p class="muted">Add one, then pick where to go — I'll recommend the best countries to visit in ${monthName}.</p>`;
+  }
   host.innerHTML = html;
 
   host.querySelectorAll('[data-range]').forEach((b) => {
@@ -849,7 +883,7 @@ function renderOpportunities() {
       const [start, end] = b.dataset.range.split('_');
       const existing = breakByRange(start, end);
       if (existing) removeBreak(existing.id);
-      else addBreak(opps.find((o) => o.start === start && o.end === end));
+      else addBreak(pool.find((o) => o.start === start && o.end === end));
       render('plan');
     };
   });
