@@ -76,6 +76,15 @@ you answer it (month → breaks → plan & destinations → journey → summary)
     weekend), the destination picker only offers places reachable in ~4 hours or
     less from Hong Kong — the sensible range for a short escape. Extending it
     into a leave day unlocks the full region picker again.
+12. **Add any country or city.** Type a place that isn't listed and it's resolved
+    and added: a known country (or alias like "UK", "USA") switches the break to
+    that country's correct region automatically; any other place is geocoded
+    (Open-Meteo, keyless) so a city lands under its country and region — e.g.
+    *Fukuoka → Japan → Asia*, *Jakarta → Indonesia → Asia*. Add as many cities in
+    the same country as you like. (Geocoding needs network, so this works on the
+    live site, not in the sandboxed Artifact preview.)
+13. **Edit the route.** In the journey view, each stop is a chip you can tap to
+    drop it from the whole plan; the route and totals recompute instantly.
 
 ## Data notes
 

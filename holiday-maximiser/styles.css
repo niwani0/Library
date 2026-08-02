@@ -176,6 +176,29 @@ main { max-width: 960px; margin: 0 auto; padding: 0 1.25rem 3rem; }
 .custom-dates input[type="date"]:focus-visible { outline: 2px solid var(--accent-deep); outline-offset: 1px; }
 .custom-dates__hint { font-size: 0.8rem; color: var(--accent-deep); margin-top: 0.5rem; min-height: 1em; }
 
+.addplace {
+  margin-top: 1rem; padding: 0.9rem 1rem;
+  border: 1.5px dashed var(--accent); border-radius: 16px; background: #f3faf8;
+}
+.addplace__row { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.5rem; }
+.addplace input {
+  flex: 1 1 200px; border: 1.5px solid var(--line); border-radius: 10px;
+  padding: 0.5rem 0.7rem; font: inherit; font-weight: 600; color: var(--ink); background: #fff;
+}
+.addplace input:focus-visible { outline: 2px solid var(--accent-deep); outline-offset: 1px; }
+.addplace__hint { font-size: 0.8rem; color: var(--accent-deep); margin-top: 0.5rem; min-height: 1em; }
+
+.stops { display: flex; flex-wrap: wrap; gap: 0.45rem; margin: 0.4rem 0 0.7rem; }
+.stop {
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  border: 1.5px solid var(--sky); background: #fff; color: var(--ink);
+  border-radius: 999px; padding: 0.3rem 0.7rem; font-weight: 700; font-size: 0.85rem; cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.stop:hover { border-color: #d9534f; background: #fdf2f1; }
+.stop__x { color: var(--muted); font-weight: 900; }
+.stop:hover .stop__x { color: #c0392b; }
+
 .dest { margin-top: 0.9rem; padding-top: 0.8rem; border-top: 1px dashed var(--line); }
 .dest__q { font-weight: 800; margin-bottom: 0.5rem; }
 .dest__q--sub { color: var(--muted); }

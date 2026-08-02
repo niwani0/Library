@@ -183,6 +183,29 @@ main { max-width: 960px; margin: 0 auto; padding: 0 1.25rem 3rem; }
 .custom-dates input[type="date"]:focus-visible { outline: 2px solid var(--accent-deep); outline-offset: 1px; }
 .custom-dates__hint { font-size: 0.8rem; color: var(--accent-deep); margin-top: 0.5rem; min-height: 1em; }
 
+.addplace {
+  margin-top: 1rem; padding: 0.9rem 1rem;
+  border: 1.5px dashed var(--accent); border-radius: 16px; background: #f3faf8;
+}
+.addplace__row { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.5rem; }
+.addplace input {
+  flex: 1 1 200px; border: 1.5px solid var(--line); border-radius: 10px;
+  padding: 0.5rem 0.7rem; font: inherit; font-weight: 600; color: var(--ink); background: #fff;
+}
+.addplace input:focus-visible { outline: 2px solid var(--accent-deep); outline-offset: 1px; }
+.addplace__hint { font-size: 0.8rem; color: var(--accent-deep); margin-top: 0.5rem; min-height: 1em; }
+
+.stops { display: flex; flex-wrap: wrap; gap: 0.45rem; margin: 0.4rem 0 0.7rem; }
+.stop {
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  border: 1.5px solid var(--sky); background: #fff; color: var(--ink);
+  border-radius: 999px; padding: 0.3rem 0.7rem; font-weight: 700; font-size: 0.85rem; cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.stop:hover { border-color: #d9534f; background: #fdf2f1; }
+.stop__x { color: var(--muted); font-weight: 900; }
+.stop:hover .stop__x { color: #c0392b; }
+
 .dest { margin-top: 0.9rem; padding-top: 0.8rem; border-top: 1px dashed var(--line); }
 .dest__q { font-weight: 800; margin-bottom: 0.5rem; }
 .dest__q--sub { color: var(--muted); }
@@ -749,6 +772,140 @@ const NEARBY_COUNTRIES = ALL_COUNTRIES
   .sort((a, b) => haversineKm(HK, a) - haversineKm(HK, b));
 
 // ---------------------------------------------------------------------------
+// User-typed places. A typed country or city is resolved — matched to an existing
+// entry, or geocoded (Open-Meteo, keyless + CORS) — so it lands in the right
+// country and region no matter which region picker was open when it was typed.
+// ---------------------------------------------------------------------------
+
+const customPlaces = new Map();
+
+function flagFromCode(cc) {
+  if (!cc || cc.length !== 2) return '📍';
+  return cc.toUpperCase().replace(/./g, (ch) => String.fromCodePoint(127397 + ch.charCodeAt(0)));
+}
+
+// Geocoded country name (lowercased) -> our travel region.
+const COUNTRY_REGION = {
+  japan: 'Asia', 'south korea': 'Asia', thailand: 'Asia', vietnam: 'Asia', taiwan: 'Asia',
+  cambodia: 'Asia', indonesia: 'Asia', india: 'Asia', nepal: 'Asia', philippines: 'Asia',
+  singapore: 'Asia', china: 'Asia', malaysia: 'Asia', laos: 'Asia', myanmar: 'Asia',
+  'sri lanka': 'Asia', bangladesh: 'Asia', mongolia: 'Asia', bhutan: 'Asia', brunei: 'Asia',
+  maldives: 'Asia', pakistan: 'Asia',
+  'united states': 'North America', canada: 'North America', mexico: 'North America',
+  'costa rica': 'Central America', guatemala: 'Central America', panama: 'Central America',
+  belize: 'Central America', nicaragua: 'Central America', honduras: 'Central America',
+  'el salvador': 'Central America',
+  peru: 'South America', argentina: 'South America', brazil: 'South America', chile: 'South America',
+  colombia: 'South America', bolivia: 'South America', ecuador: 'South America', uruguay: 'South America',
+  paraguay: 'South America', venezuela: 'South America', guyana: 'South America', suriname: 'South America',
+  kazakhstan: 'Central Asia', uzbekistan: 'Central Asia', kyrgyzstan: 'Central Asia',
+  tajikistan: 'Central Asia', turkmenistan: 'Central Asia',
+  'united arab emirates': 'Middle East', jordan: 'Middle East', oman: 'Middle East', turkey: 'Middle East',
+  israel: 'Middle East', qatar: 'Middle East', 'saudi arabia': 'Middle East', kuwait: 'Middle East',
+  bahrain: 'Middle East', lebanon: 'Middle East', iran: 'Middle East',
+  poland: 'Eastern Europe', czechia: 'Eastern Europe', 'czech republic': 'Eastern Europe',
+  hungary: 'Eastern Europe', croatia: 'Eastern Europe', romania: 'Eastern Europe', russia: 'Eastern Europe',
+  ukraine: 'Eastern Europe', bulgaria: 'Eastern Europe', serbia: 'Eastern Europe', slovakia: 'Eastern Europe',
+  slovenia: 'Eastern Europe', estonia: 'Eastern Europe', latvia: 'Eastern Europe', lithuania: 'Eastern Europe',
+  greece: 'Eastern Europe', 'bosnia and herzegovina': 'Eastern Europe', montenegro: 'Eastern Europe',
+  albania: 'Eastern Europe', 'north macedonia': 'Eastern Europe',
+  france: 'Western Europe', italy: 'Western Europe', spain: 'Western Europe', germany: 'Western Europe',
+  netherlands: 'Western Europe', switzerland: 'Western Europe', portugal: 'Western Europe',
+  austria: 'Western Europe', belgium: 'Western Europe', luxembourg: 'Western Europe', monaco: 'Western Europe',
+  iceland: 'Scandinavia', norway: 'Scandinavia', sweden: 'Scandinavia', finland: 'Scandinavia',
+  denmark: 'Scandinavia',
+  'united kingdom': 'UK & Ireland', ireland: 'UK & Ireland',
+  australia: 'Australia & New Zealand', 'new zealand': 'Australia & New Zealand',
+  fiji: 'Pacific Islands', 'french polynesia': 'Pacific Islands', samoa: 'Pacific Islands',
+  palau: 'Pacific Islands', tonga: 'Pacific Islands', vanuatu: 'Pacific Islands',
+  'papua new guinea': 'Pacific Islands', 'solomon islands': 'Pacific Islands', 'new caledonia': 'Pacific Islands',
+};
+
+const COUNTRY_ALIASES = {
+  usa: 'USA', us: 'USA', 'united states': 'USA', america: 'USA',
+  uk: 'England', 'united kingdom': 'England', britain: 'England', 'great britain': 'England',
+  korea: 'South Korea', 'south korea': 'South Korea',
+  uae: 'UAE', 'united arab emirates': 'UAE', emirates: 'UAE',
+  'czech republic': 'Czechia', holland: 'Netherlands', bali: 'Indonesia (Bali)', indonesia: 'Indonesia (Bali)',
+};
+
+function matchExistingCountry(query) {
+  const q = query.trim().toLowerCase();
+  if (COUNTRY_ALIASES[q] && countryByName.get(COUNTRY_ALIASES[q])) return countryByName.get(COUNTRY_ALIASES[q]);
+  for (const c of ALL_COUNTRIES) if (c.name.toLowerCase() === q) return c;
+  for (const c of ALL_COUNTRIES) if (c.name.toLowerCase().replace(/\s*\(.*\)/, '') === q) return c;
+  return null;
+}
+
+function regionForCountryName(name) {
+  return COUNTRY_REGION[(name || '').trim().toLowerCase()] || 'Elsewhere';
+}
+
+function geocode(query) {
+  const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=1&language=en&format=json`;
+  return fetch(url).then((r) => r.json()).then((d) => (d && d.results && d.results[0]) || null).catch(() => null);
+}
+
+function registerPlace(place) {
+  customPlaces.set(place.name, place);
+  countryByName.set(place.name, place);
+}
+
+function addPlaceName(b, name) {
+  if (!b.countries.includes(name)) { b.countries.push(name); focusCountry = name; heroHover = false; }
+}
+
+// Resolve a typed query and add it to break b; returns { ok, msg }.
+async function addTypedPlace(b, query) {
+  const trimmed = query.trim();
+  if (!trimmed) return { ok: false, msg: 'Type a country or city first.' };
+
+  const known = matchExistingCountry(trimmed);
+  if (known) {
+    addPlaceName(b, known.name);
+    if (REGIONS[known.region]) b.region = known.region;
+    return { ok: true };
+  }
+
+  const res = await geocode(trimmed);
+  if (!res) return { ok: false, msg: `Couldn't find “${trimmed}” — try the country name or check the spelling.` };
+
+  const isCountry = !!(res.feature_code && res.feature_code.startsWith('PCL'));
+  const asKnown = matchExistingCountry(res.country || res.name);
+  if (isCountry && asKnown) {
+    addPlaceName(b, asKnown.name);
+    if (REGIONS[asKnown.region]) b.region = asKnown.region;
+    return { ok: true };
+  }
+
+  const region = regionForCountryName(res.country || res.name);
+  const displayName = isCountry ? res.name : `${res.name}, ${res.country}`;
+  const place = {
+    name: displayName,
+    flag: flagFromCode(res.country_code),
+    lat: res.latitude,
+    lng: res.longitude,
+    region,
+    country: res.country || res.name,
+    months: [],
+    blurb: isCountry ? `In ${region}` : `City in ${res.country}`,
+    scene: { wiki: res.name, caption: displayName },
+    custom: true,
+  };
+  registerPlace(place);
+  addPlaceName(b, place.name);
+  if (REGIONS[region]) b.region = region;
+  return { ok: true };
+}
+
+function removeCountryEverywhere(name) {
+  state.breaks.forEach((b) => {
+    const i = b.countries.indexOf(name);
+    if (i >= 0) b.countries.splice(i, 1);
+  });
+}
+
+// ---------------------------------------------------------------------------
 // Scenery photos. A keyword-built photo of each place, swapped for a season
 // override when one fits the chosen month. If the image can't load (e.g. inside
 // a sandbox that blocks external images), a captioned regional gradient shows.
@@ -1109,6 +1266,16 @@ function destinationsHTML(b) {
       </div>`;
   };
 
+  const addBlock = `
+    <div class="addplace">
+      <div class="dest__q dest__q--sub">Can't see it? Add any country or city</div>
+      <div class="addplace__row">
+        <input type="text" id="place-${b.id}" placeholder="e.g. Fukuoka, Jakarta, Morocco" />
+        <button class="btn" id="place-add-${b.id}">➕ Add place</button>
+      </div>
+      <div class="addplace__hint" id="place-hint-${b.id}"></div>
+    </div>`;
+
   if (free) {
     // Free long weekend: only short-haul escapes, no region step.
     const list = NEARBY_COUNTRIES.slice().sort((a, b2) => {
@@ -1120,6 +1287,7 @@ function destinationsHTML(b) {
       <div class="dest">
         <div class="dest__q">✈️ It's a short break — here's everywhere within ~${NEARBY_HOURS} hours of Hong Kong.</div>
         <div class="country-grid">${list.map((c) => countryCard(c, c.months.includes(monthNum))).join('')}</div>
+        ${addBlock}
       </div>`;
   }
 
@@ -1141,6 +1309,7 @@ function destinationsHTML(b) {
       html += '<h4 class="muted-h">Also possible</h4><div class="country-grid">' + other.map((c) => countryCard(c, false)).join('') + '</div>';
     }
   }
+  html += addBlock;
   html += '</div>';
   return html;
 }
@@ -1213,6 +1382,25 @@ function renderPlan() {
     el.onmouseenter = () => { heroHover = true; focusCountry = el.dataset.focus; renderHero(); };
     el.onmouseleave = () => { heroHover = false; };
   });
+
+  state.breaks.forEach((b) => {
+    const addBtn = document.getElementById(`place-add-${b.id}`);
+    if (!addBtn) return;
+    const input = document.getElementById(`place-${b.id}`);
+    const hint = document.getElementById(`place-hint-${b.id}`);
+    const submit = async () => {
+      const q = input.value;
+      if (!q.trim()) { hint.textContent = 'Type a country or city first.'; return; }
+      hint.textContent = 'Searching…';
+      addBtn.disabled = true;
+      const result = await addTypedPlace(b, q);
+      addBtn.disabled = false;
+      if (result.ok) render('journey');
+      else hint.textContent = result.msg;
+    };
+    addBtn.onclick = submit;
+    input.onkeydown = (e) => { if (e.key === 'Enter') { e.preventDefault(); submit(); } };
+  });
 }
 
 function renderHero() {
@@ -1245,15 +1433,22 @@ function renderJourney() {
              <span class="leg__meta">${Math.round(legKm).toLocaleString()} km · ~${fmtHours(flightHours(legKm))}</span></li>`;
   }
   const multiRegion = new Set(names.map((n) => countryByName.get(n).region)).size > 1;
+  const stops = order.filter((n) => !n.hk).map((n) =>
+    `<button class="stop" data-del="${escapeAttr(n.name)}" title="Remove ${escapeAttr(n.name)}">${n.flag} ${n.name} <span class="stop__x">✕</span></button>`).join('');
   host.innerHTML = `
     <div class="step__q">${multiRegion ? '🌐 Optimised round-the-world route' : '🧭 Your route'}</div>
-    <p class="muted">Reordered to minimise total flying, looping back to Hong Kong.</p>
+    <p class="muted">Reordered to minimise total flying, looping back to Hong Kong. Tap a stop to drop it.</p>
+    <div class="stops">${stops}</div>
     <ol class="legs">${legs}</ol>
     <div class="rtw__totals">
       <span class="pill">${Math.round(km).toLocaleString()} km total</span>
       <span class="pill">~${fmtHours(totalHours)} in the air</span>
-      <span class="pill">${names.length} countr${names.length === 1 ? 'y' : 'ies'}</span>
+      <span class="pill">${names.length} stop${names.length === 1 ? '' : 's'}</span>
     </div>`;
+
+  host.querySelectorAll('[data-del]').forEach((el) => {
+    el.onclick = () => { removeCountryEverywhere(el.dataset.del); render('journey'); };
+  });
 }
 
 function renderSummary() {
