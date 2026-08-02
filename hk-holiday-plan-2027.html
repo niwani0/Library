@@ -175,13 +175,23 @@
   .note { font-size: 13px; color: var(--muted); margin: 14px 0 0; padding-left: 14px; border-left: 2px solid var(--line); }
   .note b { color: var(--ink-soft); font-weight: 600; }
 
-  /* ---- Travel picks ---- */
-  .travel { margin-top: 18px; border-top: 1px dashed var(--line); padding-top: 16px; }
-  .travel-h { font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
-  .pick { display: grid; grid-template-columns: 64px 1fr auto; gap: 10px; align-items: baseline; padding: 9px 0; border-top: 1px solid var(--line); }
-  .pick:first-of-type { border-top: none; }
-  .pick .reg { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--jade); padding-top: 2px; }
-  .pick .dest { }
+  /* ---- Region filter ---- */
+  .regfilter { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 0 0 22px; }
+  .regfilter .lab { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-right: 2px; }
+  .rf { font-family: var(--mono); font-size: 12px; padding: 7px 13px; border-radius: 20px; border: 1px solid var(--line); background: var(--paper); color: var(--muted); cursor: pointer; }
+  .rf.on { background: var(--jade-soft); color: var(--jade); border-color: color-mix(in srgb, var(--jade) 32%, transparent); }
+  .rf:focus-visible { outline: 3px solid var(--coral); outline-offset: 2px; }
+
+  /* ---- Travel picks (selectable) ---- */
+  .travel { margin-top: 18px; border-top: 1px dashed var(--line); padding-top: 14px; }
+  .travel-h { font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+  .tcount { letter-spacing: .04em; text-transform: none; color: var(--jade); margin-left: 8px; }
+  .treg-h { font-family: var(--mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--jade); margin: 15px 0 3px; }
+  .pick { display: grid; grid-template-columns: 20px 1fr auto; gap: 11px; align-items: center; padding: 9px 0; border-top: 1px solid var(--line); cursor: pointer; }
+  .treg .pick:first-of-type { border-top: none; }
+  .pick.out { opacity: .38; }
+  .tpick { width: 20px; height: 20px; accent-color: var(--jade); cursor: pointer; flex: none; }
+  .tpick:focus-visible { outline: 3px solid var(--coral); outline-offset: 2px; }
   .pick .dest b { font-weight: 600; font-size: 14.5px; }
   .pick .dest span { display: block; font-size: 12.5px; color: var(--muted); margin-top: 1px; }
   .pick .fly { font-family: var(--mono); font-size: 12px; color: var(--ink-soft); text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
@@ -271,6 +281,12 @@
       <span><i class="sw l"></i> Annual leave</span>
       <span><i class="sw w"></i> Weekend</span>
     </div>
+    <div class="regfilter" role="group" aria-label="Filter destination regions">
+      <span class="lab">Regions</span>
+      <button type="button" class="rf on" data-reg="Asia">Asia</button>
+      <button type="button" class="rf on" data-reg="Europe">Europe</button>
+      <button type="button" class="rf on" data-reg="Americas">Americas</button>
+    </div>
     <div id="breaks"></div>
   </section>
 
@@ -317,9 +333,15 @@
       days:[d(6,"Sat",H),d(7,"Sun",W),d(8,"Mon",H),d(9,"Tue",H),d(10,"Wed",L),d(11,"Thu",L),d(12,"Fri",L),d(13,"Sat",W),d(14,"Sun",W)],
       note:"Three holidays (6th, 8th, 9th — the 4th day substitutes the Sunday) already give a Sat–Tue run. Book the Wed–Fri after and you sail to the next weekend: <b>9 days for 3</b>.",
       travel:[
-        {reg:"Asia", dest:"Thailand & Vietnam", why:"Dry-season beaches, peak weather", fly:"2h 50m"},
-        {reg:"Europe", dest:"Swiss & Austrian Alps", why:"Ski season at its best", fly:"~13h"},
-        {reg:"Americas", dest:"Rio & Patagonia", why:"Southern summer, pre-Carnival buzz", fly:"~30h"}
+        {reg:"Asia", dest:"Bangkok, Thailand", why:"Cool-dry season, prime beach weather", fly:"2h 50m", rec:true},
+        {reg:"Asia", dest:"Da Nang, Vietnam", why:"Dry, warm central coast", fly:"2h 30m", rec:true},
+        {reg:"Asia", dest:"Boracay, Philippines", why:"Peak dry-season islands", fly:"2h 30m", rec:false},
+        {reg:"Asia", dest:"Chiang Mai, Thailand", why:"Cool, clear, festival season", fly:"3h 10m", rec:false},
+        {reg:"Asia", dest:"Sapporo, Japan", why:"Hokkaido powder-snow ski season", fly:"~5h", rec:true},
+        {reg:"Europe", dest:"Swiss & Austrian Alps", why:"Ski season at its peak", fly:"~13h", rec:true},
+        {reg:"Europe", dest:"Finnish Lapland", why:"Northern lights and snow", fly:"~14h", rec:false},
+        {reg:"Americas", dest:"Rio de Janeiro, Brazil", why:"Southern summer, pre-Carnival buzz", fly:"~30h", rec:true},
+        {reg:"Americas", dest:"Patagonia, Chile", why:"Peak trekking season, long days", fly:"~25h", rec:false}
       ]
     },
     {
@@ -327,9 +349,15 @@
       days:[d(26,"Fri",H),d(27,"Sat",H),d(28,"Sun",W),d(29,"Mon",H),d(30,"Tue",L),d(31,"Wed",L),d(1,"Thu",L,"APR"),d(2,"Fri",L),d(3,"Sat",W),d(4,"Sun",W),d(5,"Mon",H)],
       note:"The year's best payoff. Easter's three holidays and Ching Ming sit a working week apart — <b>four leave days bridge them into 11</b>, landing exactly on Japan's cherry blossom.",
       travel:[
-        {reg:"Asia", dest:"Japan — Kyoto & Tokyo", why:"Cherry blossom peak, perfect timing", fly:"4h 15m"},
-        {reg:"Europe", dest:"Andalusia & Sicily", why:"Warm, uncrowded spring shoulder", fly:"~13h"},
-        {reg:"Americas", dest:"Mendoza & Patagonia", why:"Wine harvest, golden autumn", fly:"~30h"}
+        {reg:"Asia", dest:"Kyoto & Osaka, Japan", why:"Cherry blossom peak, perfect timing", fly:"4h 15m", rec:true},
+        {reg:"Asia", dest:"Tokyo, Japan", why:"Sakura in full bloom", fly:"4h 30m", rec:true},
+        {reg:"Asia", dest:"Seoul, South Korea", why:"Blossoms and mild spring", fly:"3h 40m", rec:true},
+        {reg:"Asia", dest:"Taipei, Taiwan", why:"Warm spring, quick hop", fly:"1h 50m", rec:false},
+        {reg:"Asia", dest:"Hanoi, Vietnam", why:"Dry and pleasant before summer", fly:"2h 00m", rec:false},
+        {reg:"Europe", dest:"Seville, Spain", why:"Warm, uncrowded, Semana Santa", fly:"~14h", rec:true},
+        {reg:"Europe", dest:"Sicily & Rome, Italy", why:"Mild spring shoulder", fly:"~13h", rec:false},
+        {reg:"Americas", dest:"Mendoza, Argentina", why:"Autumn wine harvest", fly:"~30h", rec:true},
+        {reg:"Americas", dest:"Patagonia, Chile", why:"Golden autumn colours", fly:"~25h", rec:false}
       ]
     },
     {
@@ -337,9 +365,14 @@
       days:[d(9,"Wed",H),d(10,"Thu",L),d(11,"Fri",L),d(12,"Sat",W),d(13,"Sun",W)],
       note:"A Wednesday holiday. Take the Thu–Fri after for a <b>5-day break on 2 leave days</b>. Add the Mon–Tue before as well and it stretches to nine.",
       travel:[
-        {reg:"Asia", dest:"Bali", why:"Dry season begins, best months ahead", fly:"~5h"},
-        {reg:"Europe", dest:"Barcelona & the Med", why:"Warm and green before July crowds", fly:"~14h"},
-        {reg:"Americas", dest:"Peru — Cusco & Machu Picchu", why:"Dry season opens, clear Andes skies", fly:"~26h"}
+        {reg:"Asia", dest:"Bali, Indonesia", why:"Dry season begins — best months ahead", fly:"~5h", rec:true},
+        {reg:"Asia", dest:"Taipei, Taiwan", why:"Warm, green, quick weekend hop", fly:"1h 50m", rec:false},
+        {reg:"Asia", dest:"Cebu & Palawan, Philippines", why:"Island-hopping weather", fly:"2h 30m", rec:false},
+        {reg:"Asia", dest:"Tokyo, Japan", why:"Early summer before the rains", fly:"4h 30m", rec:false},
+        {reg:"Europe", dest:"Barcelona, Spain", why:"Warm Med before July crowds", fly:"~14h", rec:true},
+        {reg:"Europe", dest:"Nice & Provence, France", why:"Early summer, lavender begins", fly:"~13h", rec:false},
+        {reg:"Americas", dest:"Cusco & Machu Picchu, Peru", why:"Dry season opens, clear Andes skies", fly:"~28h", rec:true},
+        {reg:"Americas", dest:"Quito & Galápagos, Ecuador", why:"Dry, prime wildlife season", fly:"~30h", rec:false}
       ]
     },
     {
@@ -347,9 +380,14 @@
       days:[d(1,"Fri",H),d(2,"Sat",W),d(3,"Sun",W),d(4,"Mon",L),d(5,"Tue",L),d(6,"Wed",L),d(7,"Thu",L),d(8,"Fri",H),d(9,"Sat",W),d(10,"Sun",W)],
       note:"National Day (Fri 1st) and Chung Yeung (Fri 8th) each anchor a weekend. Fill the four workdays between and you get a <b>clean 10-day run</b> — long enough for a proper long-haul trip.",
       travel:[
-        {reg:"Asia", dest:"Vietnam & Japan", why:"Cool, dry, first autumn colour", fly:"2h"},
-        {reg:"Europe", dest:"Tuscany & Portugal", why:"Golden autumn, harvest season", fly:"~15h"},
-        {reg:"Americas", dest:"Patagonia & Atacama", why:"Southern spring reopening", fly:"~25h"}
+        {reg:"Asia", dest:"Hanoi & Ha Long, Vietnam", why:"Cool, dry, clear skies", fly:"2h 00m", rec:true},
+        {reg:"Asia", dest:"Kyoto & Tokyo, Japan", why:"Comfortable, first autumn colour", fly:"4h 30m", rec:true},
+        {reg:"Asia", dest:"Seoul, South Korea", why:"Crisp autumn, early foliage", fly:"3h 40m", rec:false},
+        {reg:"Asia", dest:"Chiang Mai, Thailand", why:"Rains easing, green hills", fly:"3h 10m", rec:false},
+        {reg:"Europe", dest:"Tuscany & Florence, Italy", why:"Golden autumn, harvest season", fly:"~13h", rec:true},
+        {reg:"Europe", dest:"Lisbon, Portugal", why:"Warm, mild, fewer crowds", fly:"~15h", rec:false},
+        {reg:"Americas", dest:"Patagonia, Argentina & Chile", why:"Southern spring reopening", fly:"~25h", rec:true},
+        {reg:"Americas", dest:"Atacama Desert, Chile", why:"Clear desert spring", fly:"~26h", rec:false}
       ]
     },
     {
@@ -357,9 +395,14 @@
       days:[d(25,"Sat",H),d(26,"Sun",W),d(27,"Mon",H),d(28,"Tue",L),d(29,"Wed",L),d(30,"Thu",L),d(31,"Fri",L),d(1,"Sat",H,"JAN"),d(2,"Sun",W)],
       note:"Christmas Day (Sat) and its Monday substitute open the run; four leave days carry you across to New Year's Day 2028 (itself a holiday): <b>9 days for 4</b>.",
       travel:[
-        {reg:"Asia", dest:"Cambodia & Thailand", why:"Peak dry season, Angkor at its best", fly:"2h 40m"},
-        {reg:"Europe", dest:"Vienna & the Alps", why:"Christmas markets, fresh ski snow", fly:"~12h"},
-        {reg:"Americas", dest:"Buenos Aires & Rio", why:"Southern summer in full swing", fly:"~30h"}
+        {reg:"Asia", dest:"Siem Reap, Cambodia", why:"Peak dry season, Angkor at its best", fly:"2h 40m", rec:true},
+        {reg:"Asia", dest:"Krabi & Bangkok, Thailand", why:"Best beach weather of the year", fly:"2h 50m", rec:true},
+        {reg:"Asia", dest:"Hoi An, Vietnam", why:"Dry, warm central coast", fly:"2h 30m", rec:false},
+        {reg:"Asia", dest:"Palawan, Philippines", why:"Peak dry-season islands", fly:"2h 30m", rec:false},
+        {reg:"Europe", dest:"Vienna, Austria", why:"Christmas markets, fresh snow", fly:"~12h", rec:true},
+        {reg:"Europe", dest:"Swiss & French Alps", why:"Peak ski season", fly:"~13h", rec:false},
+        {reg:"Americas", dest:"Buenos Aires, Argentina", why:"Southern summer city buzz", fly:"~30h", rec:true},
+        {reg:"Americas", dest:"Rio de Janeiro, Brazil", why:"New Year on Copacabana", fly:"~30h", rec:false}
       ]
     }
   ];
@@ -402,12 +445,24 @@
     return html + '</div></div>';
   }
 
-  function travelRows(t){
-    return t.map(p => `<div class="pick"><div class="reg">${p.reg}</div><div class="dest"><b>${p.dest}</b><span>${p.why}</span></div><div class="fly">${p.fly}<small>from HKG</small></div></div>`).join('');
+  const REGIONS = ["Asia", "Europe", "Americas"];
+
+  function travelBlock(picks, idx){
+    let html = `<div class="travel"><div class="travel-h">In season · shortlist destinations<span class="tcount" data-count="${idx}"></span></div>`;
+    REGIONS.forEach(r => {
+      const list = picks.filter(p => p.reg === r);
+      if(!list.length) return;
+      html += `<div class="treg" data-reg="${r}"><div class="treg-h">${r}</div>`;
+      list.forEach(p => {
+        html += `<label class="pick${p.rec?'':' out'}"><input type="checkbox" class="tpick" data-card="${idx}" ${p.rec?'checked':''} aria-label="Shortlist ${p.dest}"><span class="dest"><b>${p.dest}</b><span>${p.why}</span></span><span class="fly">${p.fly}<small>from HKG</small></span></label>`;
+      });
+      html += `</div>`;
+    });
+    return html + `</div>`;
   }
 
   const bEl = document.getElementById('breaks');
-  bEl.innerHTML = breaks.map(b => `
+  bEl.innerHTML = breaks.map((b, idx) => `
     <article class="card${b.on?'':' off'}" id="card-${b.id}">
       <div class="card-top">
         <input class="toggle" type="checkbox" ${b.on?'checked':''} data-kind="break" data-id="${b.id}" aria-label="Include ${b.title}">
@@ -416,7 +471,7 @@
       </div>
       ${strip(b.days)}
       <p class="note">${b.note}</p>
-      <div class="travel"><div class="travel-h">In season · where to go</div>${travelRows(b.travel)}</div>
+      ${travelBlock(b.travel, idx)}
     </article>`).join('');
 
   const wEl = document.getElementById('wins');
@@ -485,8 +540,40 @@
   document.getElementById('bRange').addEventListener('input', e => setBudget(+e.target.value));
   document.getElementById('bAuto').addEventListener('click', optimise);
 
+  function visibleRegions(){
+    return new Set([...document.querySelectorAll('.rf.on')].map(b => b.dataset.reg));
+  }
+  function updateTravelCounts(){
+    const vis = visibleRegions();
+    document.querySelectorAll('.tcount').forEach(el => {
+      let n = 0;
+      document.querySelectorAll(`.tpick[data-card="${el.dataset.count}"]`).forEach(cb => {
+        if(cb.checked && vis.has(cb.closest('.treg').dataset.reg)) n++;
+      });
+      el.textContent = n ? ` · ${n} shortlisted` : ' · none shortlisted';
+    });
+  }
+  function applyRegionFilter(){
+    const vis = visibleRegions();
+    document.querySelectorAll('.treg').forEach(el => { el.style.display = vis.has(el.dataset.reg) ? '' : 'none'; });
+    updateTravelCounts();
+  }
+  document.querySelectorAll('.rf').forEach(btn => {
+    btn.setAttribute('aria-pressed', 'true');
+    btn.addEventListener('click', () => {
+      btn.classList.toggle('on');
+      btn.setAttribute('aria-pressed', btn.classList.contains('on'));
+      applyRegionFilter();
+    });
+  });
+
   document.addEventListener('change', e => {
     const t = e.target;
+    if(t.classList.contains('tpick')){
+      t.closest('.pick').classList.toggle('out', !t.checked);
+      updateTravelCounts();
+      return;
+    }
     if(t.dataset.kind === 'break'){
       const b = breaks.find(x => x.id === t.dataset.id); b.on = t.checked;
       document.getElementById('card-'+b.id).classList.toggle('off', !b.on);
@@ -498,4 +585,5 @@
   });
 
   recalc();
+  applyRegionFilter();
 </script>
