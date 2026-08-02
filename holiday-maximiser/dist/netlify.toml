@@ -1,0 +1,3 @@
+# Static single-page site — nothing to build, just publish this folder.
+[build]
+  publish = "."

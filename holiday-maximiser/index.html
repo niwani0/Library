@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HK Holiday Maximiser 2027 🌏</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <div class="hero__scene" id="hero-scene"></div>
+    <div class="hero__text">
+      <h1>Hong Kong Holiday Maximiser <span class="year">2027</span></h1>
+      <p>Answer one step at a time and turn your annual leave into the longest, best-timed adventures — each destination shown in its best season. 🧳</p>
+    </div>
+  </header>
+
+  <main>
+    <section class="step" id="step-month">
+      <div class="step__q">🗓️ Which month in 2027 are you dreaming about?</div>
+      <div class="chips" id="month-picker"></div>
+      <div class="quickwins" id="quickwins"></div>
+    </section>
+
+    <section class="step step--hidden" id="step-breaks">
+      <div id="opportunities"></div>
+    </section>
+
+    <section class="step step--hidden" id="step-plan">
+      <div class="step__q">🧳 Your planned breaks — tweak each one and pick where to go.</div>
+      <div id="plan-list"></div>
+    </section>
+
+    <section class="step step--hidden" id="step-journey">
+      <div id="rtw"></div>
+    </section>
+
+    <section class="step step--hidden" id="step-summary">
+      <div id="summary"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Built for fun · Holiday data: GovHK 2027 General Holidays (17 days, validated) · Distances are great-circle estimates.</p>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
