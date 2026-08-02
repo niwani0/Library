@@ -20,7 +20,8 @@ python3 -m http.server -d holiday-maximiser 8000
 2. **Fine-tune.** Nudge any break earlier or later a day at a time; leave count
    and length recompute live.
 3. **Regions.** Choose from Asia, North/Central/South America, Central Asia,
-   Middle East, Eastern/Western Europe, Nordic, UK, Australasian, Oceania.
+   Middle East, Eastern/Western Europe, Scandinavia, UK & Ireland,
+   Australia & New Zealand, Pacific Islands.
 4. **In-season country picks.** Countries whose ideal travel months include the
    chosen month are surfaced as "in season".
 5. **Distance & flight time.** Great-circle distance and a friendly non-stop

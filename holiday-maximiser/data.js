@@ -91,24 +91,24 @@ const REGIONS = {
     { name: 'Switzerland', flag: '🇨🇭', lat: 46.95, lng: 7.45, months: [6, 7, 8, 9, 12, 1, 2], dress: { name: 'Tracht', emoji: '🏔️' }, blurb: 'Alpine hiking in summer, snow in winter.' },
     { name: 'Portugal', flag: '🇵🇹', lat: 38.72, lng: -9.14, months: [4, 5, 6, 9, 10], dress: { name: 'Traje regional', emoji: '🚋' }, blurb: 'Sunny, breezy and easy-going.' },
   ],
-  Nordic: [
+  Scandinavia: [
     { name: 'Iceland', flag: '🇮🇸', lat: 64.15, lng: -21.94, months: [6, 7, 8, 2, 3], dress: { name: 'Þjóðbúningur', emoji: '🌋' }, blurb: 'Midnight sun in summer, auroras in late winter.' },
     { name: 'Norway', flag: '🇳🇴', lat: 59.91, lng: 10.75, months: [6, 7, 8, 1, 2, 3], dress: { name: 'Bunad', emoji: '🏔️' }, blurb: 'Fjord cruising in summer, northern lights in winter.' },
     { name: 'Sweden', flag: '🇸🇪', lat: 59.33, lng: 18.07, months: [6, 7, 8, 12], dress: { name: 'Sverigedräkten', emoji: '🦌' }, blurb: 'Long light summers and cosy December.' },
     { name: 'Finland', flag: '🇫🇮', lat: 60.17, lng: 24.94, months: [6, 7, 8, 12, 1, 2], dress: { name: 'Kansallispuku', emoji: '🦉' }, blurb: 'Lakeland summers and Lapland winters.' },
     { name: 'Denmark', flag: '🇩🇰', lat: 55.68, lng: 12.57, months: [5, 6, 7, 8], dress: { name: 'Folkedragt', emoji: '🚲' }, blurb: 'Bright, bike-friendly Scandinavian summer.' },
   ],
-  UK: [
+  'UK & Ireland': [
     { name: 'England', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', lat: 51.51, lng: -0.13, months: [5, 6, 7, 8, 9], dress: { name: 'Morris / Beefeater', emoji: '🎡' }, blurb: 'Longest, warmest days of the year.' },
     { name: 'Scotland', flag: '🏴󠁧󠁢󠁳󠁣󠁴󠁿', lat: 55.95, lng: -3.19, months: [5, 6, 7, 8, 9], dress: { name: 'Kilt & tartan', emoji: '🎻' }, blurb: 'Highlands at their greenest and driest.' },
     { name: 'Ireland', flag: '🇮🇪', lat: 53.35, lng: -6.26, months: [5, 6, 7, 8, 9], dress: { name: 'Léine & brat', emoji: '☘️' }, blurb: 'Mild, blooming and festival-filled.' },
     { name: 'Wales', flag: '🏴󠁧󠁢󠁷󠁬󠁳󠁿', lat: 51.48, lng: -3.18, months: [5, 6, 7, 8, 9], dress: { name: 'Welsh costume', emoji: '🐉' }, blurb: 'Coast paths and castles in the sun.' },
   ],
-  Australasian: [
+  'Australia & New Zealand': [
     { name: 'Australia', flag: '🇦🇺', lat: -33.87, lng: 151.21, months: [3, 4, 5, 9, 10, 11], dress: { name: 'Akubra & Driza-Bone', emoji: '🦘' }, blurb: 'Warm, mild shoulder seasons across the country.' },
     { name: 'New Zealand', flag: '🇳🇿', lat: -41.29, lng: 174.78, months: [12, 1, 2, 3, 11], dress: { name: 'Māori korowai', emoji: '🥝' }, blurb: 'Southern-hemisphere summer for the great outdoors.' },
   ],
-  Oceania: [
+  'Pacific Islands': [
     { name: 'Fiji', flag: '🇫🇯', lat: -18.14, lng: 178.44, months: [5, 6, 7, 8, 9, 10], dress: { name: 'Sulu & masi', emoji: '🏝️' }, blurb: 'Dry season sunshine and calm seas.' },
     { name: 'French Polynesia', flag: '🇵🇫', lat: -17.68, lng: -149.4, months: [5, 6, 7, 8, 9], dress: { name: 'Pāreu', emoji: '🐚' }, blurb: 'Dry, breezy over-water-bungalow weather.' },
     { name: 'Samoa', flag: '🇼🇸', lat: -13.83, lng: -171.77, months: [5, 6, 7, 8, 9, 10], dress: { name: 'Puletasi & lavalava', emoji: '🌺' }, blurb: 'Cooler dry season across the islands.' },
