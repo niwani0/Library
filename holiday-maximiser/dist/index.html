@@ -309,7 +309,7 @@ const YEAR = 2027;
 
 // Hong Kong reference point (city centre) for all distance/flight-time maths.
 const HK = { lat: 22.3193, lng: 114.1694 };
-const HK_SCENE = { q: 'hongkong,victoriaharbour,skyline', caption: 'Victoria Harbour, Hong Kong' };
+const HK_SCENE = { wiki: 'Victoria Harbour', caption: 'Victoria Harbour, Hong Kong' };
 
 // Source: GovHK "General holidays for 2027". `lunar` flags festivals whose date
 // follows the Chinese lunar calendar (kept here so the UI can label them).
@@ -334,165 +334,159 @@ const HOLIDAYS = [
 ];
 
 // Each country: flag, coordinates, ideal travel months (1-12), a one-line "why
-// now" blurb, and `scene` — a default famous view plus optional season overrides
-// (`months` in 1-12) so the photo matches when the traveller is going.
+// now" blurb, and `scene` — an iconic landmark (by Wikipedia article title, whose
+// lead photo is fetched) plus optional season overrides (`months` in 1-12) so the
+// shot matches when the traveller is going.
 const REGIONS = {
   Asia: [
     { name: 'Japan', flag: '🇯🇵', lat: 35.68, lng: 139.69, months: [3, 4, 5, 10, 11], blurb: 'Cherry blossoms in spring, fiery maples in autumn.',
-      scene: { q: 'kyoto,temple,japan', caption: "Kyoto's temples", seasons: [
-        { months: [3, 4], q: 'kyoto,cherryblossom', caption: 'Cherry blossoms in Kyoto' },
-        { months: [10, 11], q: 'kyoto,autumn,maple', caption: 'Autumn maples in Kyoto' }] } },
+      scene: { wiki: 'Fushimi Inari-taisha', caption: "Kyoto's torii gates", seasons: [
+        { months: [3, 4], wiki: 'Cherry blossom', caption: 'Cherry blossoms in Japan' },
+        { months: [10, 11], wiki: 'Kiyomizu-dera', caption: 'Autumn temples of Kyoto' }] } },
     { name: 'South Korea', flag: '🇰🇷', lat: 37.57, lng: 126.98, months: [4, 5, 9, 10, 11], blurb: 'Mild shoulder seasons and golden ginkgo streets.',
-      scene: { q: 'seoul,palace,korea', caption: 'Gyeongbokgung, Seoul', seasons: [
-        { months: [4], q: 'korea,cherryblossom', caption: 'Spring blossoms in Korea' },
-        { months: [10, 11], q: 'korea,autumn,foliage', caption: 'Autumn foliage in Korea' }] } },
+      scene: { wiki: 'Gyeongbokgung', caption: 'Gyeongbokgung Palace, Seoul' } },
     { name: 'Thailand', flag: '🇹🇭', lat: 13.75, lng: 100.5, months: [11, 12, 1, 2], blurb: 'Cool, dry season — perfect for temples and beaches.',
-      scene: { q: 'thailand,temple,beach', caption: 'Thai temples & islands' } },
+      scene: { wiki: 'Wat Arun', caption: 'Wat Arun, Bangkok' } },
     { name: 'Vietnam', flag: '🇻🇳', lat: 21.03, lng: 105.85, months: [2, 3, 4, 11, 12], blurb: 'Dry and pleasant north-to-south.',
-      scene: { q: 'halongbay,vietnam', caption: 'Ha Long Bay' } },
+      scene: { wiki: 'Hạ Long Bay', caption: 'Ha Long Bay' } },
     { name: 'Taiwan', flag: '🇹🇼', lat: 25.03, lng: 121.56, months: [3, 4, 10, 11, 12], blurb: 'Night markets and mountains in mild, dry months.',
-      scene: { q: 'taiwan,taipei,mountain', caption: 'Taipei & the mountains' } },
+      scene: { wiki: 'Taipei 101', caption: 'Taipei 101' } },
     { name: 'Cambodia', flag: '🇰🇭', lat: 11.55, lng: 104.92, months: [11, 12, 1, 2], blurb: "Cool, dry season for Angkor's temples.",
-      scene: { q: 'angkorwat,cambodia', caption: 'Angkor Wat at dawn' } },
+      scene: { wiki: 'Angkor Wat', caption: 'Angkor Wat at dawn' } },
     { name: 'Indonesia (Bali)', flag: '🇮🇩', lat: -8.65, lng: 115.13, months: [4, 5, 6, 9, 10], blurb: 'Dry season sunshine before the crowds.',
-      scene: { q: 'bali,rice,terrace', caption: 'Bali rice terraces' } },
+      scene: { wiki: 'Tanah Lot', caption: 'Tanah Lot, Bali' } },
     { name: 'India', flag: '🇮🇳', lat: 28.61, lng: 77.21, months: [10, 11, 12, 1, 2, 3], blurb: 'Cool, comfortable months for the north and Rajasthan.',
-      scene: { q: 'tajmahal,india', caption: 'The Taj Mahal' } },
+      scene: { wiki: 'Taj Mahal', caption: 'The Taj Mahal' } },
     { name: 'Nepal', flag: '🇳🇵', lat: 27.7, lng: 85.32, months: [3, 4, 10, 11], blurb: 'Clear Himalayan trekking skies.',
-      scene: { q: 'himalaya,nepal,mountain', caption: 'Himalayan peaks' } },
+      scene: { wiki: 'Machapuchare', caption: 'Himalayan peaks' } },
     { name: 'Philippines', flag: '🇵🇭', lat: 14.6, lng: 120.98, months: [1, 2, 3, 4], blurb: 'Dry season island-hopping weather.',
-      scene: { q: 'palawan,philippines,beach', caption: 'Palawan lagoons' } },
+      scene: { wiki: 'El Nido, Palawan', caption: 'Palawan lagoons' } },
     { name: 'Singapore', flag: '🇸🇬', lat: 1.35, lng: 103.82, months: [2, 3, 4, 7], blurb: 'Slightly drier windows in a year-round city break.',
-      scene: { q: 'singapore,marinabay,skyline', caption: 'Marina Bay skyline' } },
+      scene: { wiki: 'Gardens by the Bay', caption: 'Gardens by the Bay' } },
   ],
   'North America': [
     { name: 'USA', flag: '🇺🇸', lat: 38.9, lng: -77.04, months: [4, 5, 6, 9, 10], blurb: 'Spring blooms and crisp autumn colour.',
-      scene: { q: 'grandcanyon,usa', caption: 'The Grand Canyon', seasons: [
-        { months: [9, 10], q: 'newengland,autumn,foliage', caption: 'New England in the fall' }] } },
+      scene: { wiki: 'Grand Canyon', caption: 'The Grand Canyon' } },
     { name: 'Canada', flag: '🇨🇦', lat: 45.42, lng: -75.7, months: [6, 7, 8, 9], blurb: 'Warm summers and blazing maple autumns.',
-      scene: { q: 'banff,canada,rockies', caption: 'Banff & the Rockies', seasons: [
-        { months: [9, 10], q: 'canada,autumn,maple', caption: 'Maple country in autumn' }] } },
+      scene: { wiki: 'Moraine Lake', caption: 'Moraine Lake, Banff' } },
     { name: 'Mexico', flag: '🇲🇽', lat: 19.43, lng: -99.13, months: [3, 4, 10, 11], blurb: 'Dry, sunny and festival-rich.',
-      scene: { q: 'chichenitza,mexico', caption: 'Chichén Itzá' } },
+      scene: { wiki: 'Chichen Itza', caption: 'Chichén Itzá' } },
   ],
   'Central America': [
     { name: 'Costa Rica', flag: '🇨🇷', lat: 9.93, lng: -84.08, months: [12, 1, 2, 3, 4], blurb: 'Dry season rainforest and beaches.',
-      scene: { q: 'costarica,volcano,rainforest', caption: 'Rainforests & volcanoes' } },
+      scene: { wiki: 'Arenal Volcano', caption: 'Arenal Volcano' } },
     { name: 'Guatemala', flag: '🇬🇹', lat: 14.63, lng: -90.51, months: [11, 12, 1, 2, 3], blurb: 'Sunny highlands and Mayan ruins.',
-      scene: { q: 'guatemala,antigua,volcano', caption: 'Antigua & its volcanoes' } },
+      scene: { wiki: 'Lake Atitlán', caption: 'Lake Atitlán' } },
     { name: 'Panama', flag: '🇵🇦', lat: 8.98, lng: -79.52, months: [12, 1, 2, 3, 4], blurb: 'Dry season city-and-canal weather.',
-      scene: { q: 'panama,canal,city', caption: 'Panama Canal & skyline' } },
+      scene: { wiki: 'Guna Yala', caption: 'The San Blas Islands' } },
     { name: 'Belize', flag: '🇧🇿', lat: 17.5, lng: -88.2, months: [12, 1, 2, 3, 4], blurb: 'Reef-diving dry season.',
-      scene: { q: 'belize,reef,caye', caption: 'Belize barrier reef' } },
+      scene: { wiki: 'Great Blue Hole', caption: 'The Great Blue Hole' } },
   ],
   'South America': [
     { name: 'Peru', flag: '🇵🇪', lat: -12.05, lng: -77.04, months: [5, 6, 7, 8, 9], blurb: 'Dry Andean trekking season for Machu Picchu.',
-      scene: { q: 'machupicchu,peru', caption: 'Machu Picchu' } },
+      scene: { wiki: 'Machu Picchu', caption: 'Machu Picchu' } },
     { name: 'Argentina', flag: '🇦🇷', lat: -34.6, lng: -58.38, months: [10, 11, 3, 4], blurb: 'Mild spring and autumn in Buenos Aires and Patagonia.',
-      scene: { q: 'patagonia,argentina', caption: 'Patagonia' } },
+      scene: { wiki: 'Fitz Roy', caption: "Patagonia's Mount Fitz Roy" } },
     { name: 'Brazil', flag: '🇧🇷', lat: -22.9, lng: -43.17, months: [2, 3, 9, 10, 11, 12], blurb: 'Warm beaches and Carnaval energy.',
-      scene: { q: 'riodejaneiro,brazil', caption: 'Rio de Janeiro' } },
+      scene: { wiki: 'Christ the Redeemer (statue)', caption: 'Rio de Janeiro' } },
     { name: 'Chile', flag: '🇨🇱', lat: -33.45, lng: -70.66, months: [10, 11, 12, 1, 2, 3], blurb: 'Southern-hemisphere summer, deserts to fjords.',
-      scene: { q: 'atacama,chile,andes', caption: 'Atacama & the Andes' } },
+      scene: { wiki: 'Torres del Paine', caption: 'Torres del Paine' } },
     { name: 'Colombia', flag: '🇨🇴', lat: 4.71, lng: -74.07, months: [12, 1, 2, 3, 7, 8], blurb: 'Drier windows for coffee country and coast.',
-      scene: { q: 'cartagena,colombia', caption: "Cartagena's old town" } },
+      scene: { wiki: 'Cartagena, Colombia', caption: 'Cartagena' } },
   ],
   'Central Asia': [
     { name: 'Kazakhstan', flag: '🇰🇿', lat: 51.16, lng: 71.47, months: [5, 6, 7, 8, 9], blurb: 'Warm steppe-and-mountain summers.',
-      scene: { q: 'kazakhstan,almaty,mountains', caption: 'Almaty mountains' } },
+      scene: { wiki: 'Big Almaty Lake', caption: 'Big Almaty Lake' } },
     { name: 'Uzbekistan', flag: '🇺🇿', lat: 41.3, lng: 69.24, months: [4, 5, 9, 10], blurb: 'Mild Silk Road spring and autumn.',
-      scene: { q: 'samarkand,uzbekistan', caption: "Samarkand's blue domes" } },
+      scene: { wiki: 'Registan', caption: 'The Registan, Samarkand' } },
     { name: 'Kyrgyzstan', flag: '🇰🇬', lat: 42.87, lng: 74.6, months: [6, 7, 8, 9], blurb: 'Alpine lakes and yurt-stay summers.',
-      scene: { q: 'kyrgyzstan,lake,mountains', caption: 'Alpine lakes' } },
+      scene: { wiki: 'Song-Köl Lake', caption: 'Lake Song-Köl' } },
     { name: 'Tajikistan', flag: '🇹🇯', lat: 38.56, lng: 68.79, months: [6, 7, 8, 9], blurb: 'Pamir Highway season.',
-      scene: { q: 'pamir,tajikistan,mountains', caption: 'The Pamirs' } },
+      scene: { wiki: 'Iskanderkul', caption: 'Iskanderkul lake' } },
   ],
   'Middle East': [
     { name: 'UAE', flag: '🇦🇪', lat: 25.2, lng: 55.27, months: [11, 12, 1, 2, 3], blurb: 'Cooler desert-and-city season.',
-      scene: { q: 'dubai,skyline,desert', caption: 'Dubai skyline & dunes' } },
+      scene: { wiki: 'Burj Khalifa', caption: 'Dubai & the Burj Khalifa' } },
     { name: 'Jordan', flag: '🇯🇴', lat: 31.95, lng: 35.93, months: [3, 4, 5, 10, 11], blurb: 'Comfortable Petra and Wadi Rum weather.',
-      scene: { q: 'petra,jordan', caption: 'Petra' } },
+      scene: { wiki: 'Petra', caption: 'Petra' } },
     { name: 'Oman', flag: '🇴🇲', lat: 23.58, lng: 58.4, months: [11, 12, 1, 2, 3], blurb: 'Mild wadis, forts and dunes.',
-      scene: { q: 'oman,wadi,desert', caption: 'Wadis & dunes' } },
+      scene: { wiki: 'Wadi Shab', caption: 'Wadi Shab' } },
     { name: 'Turkey', flag: '🇹🇷', lat: 41.01, lng: 28.98, months: [4, 5, 6, 9, 10], blurb: 'Balmy Istanbul and Cappadocia shoulder seasons.',
-      scene: { q: 'cappadocia,turkey,balloon', caption: 'Cappadocia balloons' } },
+      scene: { wiki: 'Cappadocia', caption: 'Cappadocia balloons' } },
     { name: 'Israel', flag: '🇮🇱', lat: 31.77, lng: 35.21, months: [4, 5, 9, 10], blurb: 'Warm-but-not-scorching spring and autumn.',
-      scene: { q: 'jerusalem,israel,oldcity', caption: 'Jerusalem old city' } },
+      scene: { wiki: 'Old City (Jerusalem)', caption: "Jerusalem's Old City" } },
   ],
   'Eastern Europe': [
     { name: 'Poland', flag: '🇵🇱', lat: 52.23, lng: 21.01, months: [5, 6, 9], blurb: 'Green, mild and uncrowded.',
-      scene: { q: 'krakow,poland,oldtown', caption: 'Kraków old town' } },
+      scene: { wiki: 'Wawel Castle', caption: 'Wawel Castle, Kraków' } },
     { name: 'Czechia', flag: '🇨🇿', lat: 50.08, lng: 14.44, months: [5, 6, 9, 10], blurb: 'Fairy-tale Prague in gentle weather.',
-      scene: { q: 'prague,czech,castle', caption: 'Prague castle & bridge' } },
+      scene: { wiki: 'Charles Bridge', caption: 'Charles Bridge, Prague' } },
     { name: 'Hungary', flag: '🇭🇺', lat: 47.5, lng: 19.04, months: [4, 5, 6, 9, 10], blurb: 'Thermal baths and mild sightseeing.',
-      scene: { q: 'budapest,hungary,parliament', caption: 'Budapest parliament' } },
+      scene: { wiki: 'Hungarian Parliament Building', caption: "Budapest's Parliament" } },
     { name: 'Croatia', flag: '🇭🇷', lat: 45.81, lng: 15.98, months: [6, 7, 8, 9], blurb: 'Adriatic summer sailing weather.',
-      scene: { q: 'dubrovnik,croatia', caption: 'Dubrovnik walls' } },
+      scene: { wiki: 'Plitvice Lakes National Park', caption: 'Plitvice Lakes' } },
     { name: 'Romania', flag: '🇷🇴', lat: 44.43, lng: 26.1, months: [5, 6, 9], blurb: 'Lush Transylvania in shoulder season.',
-      scene: { q: 'transylvania,romania,castle', caption: 'Transylvanian castles' } },
+      scene: { wiki: 'Transfăgărășan', caption: 'The Transfăgărășan road' } },
   ],
   'Western Europe': [
     { name: 'France', flag: '🇫🇷', lat: 48.85, lng: 2.35, months: [4, 5, 6, 9, 10], blurb: 'Warm days, thinner crowds than midsummer.',
-      scene: { q: 'paris,eiffeltower,france', caption: 'Paris & the Eiffel Tower', seasons: [
-        { months: [6, 7], q: 'provence,lavender,france', caption: 'Provence lavender fields' }] } },
+      scene: { wiki: 'Eiffel Tower', caption: 'Paris & the Eiffel Tower', seasons: [
+        { months: [6, 7], wiki: 'Lavandula', caption: 'Provence lavender fields' }] } },
     { name: 'Italy', flag: '🇮🇹', lat: 41.9, lng: 12.5, months: [4, 5, 6, 9, 10], blurb: 'Ideal light for Rome, Tuscany and the coast.',
-      scene: { q: 'rome,colosseum,italy', caption: 'Rome & the Colosseum' } },
+      scene: { wiki: 'Amalfi Coast', caption: 'The Amalfi Coast' } },
     { name: 'Spain', flag: '🇪🇸', lat: 40.42, lng: -3.7, months: [4, 5, 6, 9, 10], blurb: 'Warm, festive and comfortable to walk.',
-      scene: { q: 'barcelona,sagradafamilia,spain', caption: 'Barcelona' } },
+      scene: { wiki: 'Sagrada Família', caption: "Barcelona's Sagrada Família" } },
     { name: 'Germany', flag: '🇩🇪', lat: 52.52, lng: 13.4, months: [5, 6, 7, 8, 9, 12], blurb: 'Beer gardens in summer, markets in December.',
-      scene: { q: 'neuschwanstein,germany,castle', caption: 'Bavarian castles', seasons: [
-        { months: [12], q: 'germany,christmas,market', caption: 'Christmas markets' }] } },
+      scene: { wiki: 'Neuschwanstein Castle', caption: 'Neuschwanstein Castle', seasons: [
+        { months: [12], wiki: 'Christmas market', caption: 'German Christmas markets' }] } },
     { name: 'Netherlands', flag: '🇳🇱', lat: 52.37, lng: 4.9, months: [4, 5, 6, 9], blurb: 'Tulip season and canal-side sun.',
-      scene: { q: 'amsterdam,canal,netherlands', caption: 'Amsterdam canals', seasons: [
-        { months: [4], q: 'netherlands,tulip,field', caption: 'Tulip fields in bloom' }] } },
+      scene: { wiki: 'Canals of Amsterdam', caption: "Amsterdam's canals", seasons: [
+        { months: [4], wiki: 'Keukenhof', caption: 'Keukenhof tulip gardens' }] } },
     { name: 'Switzerland', flag: '🇨🇭', lat: 46.95, lng: 7.45, months: [6, 7, 8, 9, 12, 1, 2], blurb: 'Alpine hiking in summer, snow in winter.',
-      scene: { q: 'switzerland,matterhorn,alps', caption: 'The Matterhorn', seasons: [
-        { months: [12, 1, 2], q: 'switzerland,alps,snow', caption: 'The snowy Alps' }] } },
+      scene: { wiki: 'Matterhorn', caption: 'The Matterhorn' } },
     { name: 'Portugal', flag: '🇵🇹', lat: 38.72, lng: -9.14, months: [4, 5, 6, 9, 10], blurb: 'Sunny, breezy and easy-going.',
-      scene: { q: 'lisbon,portugal,tram', caption: "Lisbon's trams & tiles" } },
+      scene: { wiki: 'Pena Palace', caption: "Sintra's Pena Palace" } },
   ],
   Scandinavia: [
     { name: 'Iceland', flag: '🇮🇸', lat: 64.15, lng: -21.94, months: [6, 7, 8, 2, 3], blurb: 'Midnight sun in summer, auroras in late winter.',
-      scene: { q: 'iceland,waterfall,landscape', caption: "Iceland's waterfalls", seasons: [
-        { months: [2, 3], q: 'iceland,auroraborealis', caption: 'Northern lights over Iceland' },
-        { months: [6, 7, 8], q: 'iceland,midnightsun,landscape', caption: 'Midnight-sun landscapes' }] } },
+      scene: { wiki: 'Skógafoss', caption: "Iceland's waterfalls", seasons: [
+        { months: [2, 3], wiki: 'Aurora', caption: 'Northern lights over Iceland' }] } },
     { name: 'Norway', flag: '🇳🇴', lat: 59.91, lng: 10.75, months: [6, 7, 8, 1, 2, 3], blurb: 'Fjord cruising in summer, northern lights in winter.',
-      scene: { q: 'norway,fjord', caption: 'The fjords', seasons: [
-        { months: [1, 2, 3], q: 'norway,auroraborealis', caption: 'Northern lights over Norway' }] } },
+      scene: { wiki: 'Geirangerfjord', caption: 'The Norwegian fjords', seasons: [
+        { months: [1, 2, 3], wiki: 'Aurora', caption: 'Northern lights over Norway' }] } },
     { name: 'Sweden', flag: '🇸🇪', lat: 59.33, lng: 18.07, months: [6, 7, 8, 12], blurb: 'Long light summers and cosy December.',
-      scene: { q: 'stockholm,sweden,oldtown', caption: "Stockholm's old town", seasons: [
-        { months: [12], q: 'sweden,winter,snow', caption: 'Snowy Sweden' }] } },
+      scene: { wiki: 'Gamla stan', caption: "Stockholm's old town" } },
     { name: 'Finland', flag: '🇫🇮', lat: 60.17, lng: 24.94, months: [6, 7, 8, 12, 1, 2], blurb: 'Lakeland summers and Lapland winters.',
-      scene: { q: 'finland,lake,forest', caption: 'Lakeland Finland', seasons: [
-        { months: [12, 1, 2], q: 'lapland,finland,snow,aurora', caption: 'Lapland in winter' }] } },
+      scene: { wiki: 'Helsinki Cathedral', caption: 'Helsinki', seasons: [
+        { months: [12, 1, 2], wiki: 'Aurora', caption: "Lapland's northern lights" }] } },
     { name: 'Denmark', flag: '🇩🇰', lat: 55.68, lng: 12.57, months: [5, 6, 7, 8], blurb: 'Bright, bike-friendly Scandinavian summer.',
-      scene: { q: 'copenhagen,nyhavn,denmark', caption: "Copenhagen's Nyhavn" } },
+      scene: { wiki: 'Nyhavn', caption: "Copenhagen's Nyhavn" } },
   ],
   'UK & Ireland': [
     { name: 'England', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', lat: 51.51, lng: -0.13, months: [5, 6, 7, 8, 9], blurb: 'Longest, warmest days of the year.',
-      scene: { q: 'london,bigben,england', caption: 'London' } },
+      scene: { wiki: 'Tower Bridge', caption: 'London' } },
     { name: 'Scotland', flag: '🏴󠁧󠁢󠁳󠁣󠁴󠁿', lat: 55.95, lng: -3.19, months: [5, 6, 7, 8, 9], blurb: 'Highlands at their greenest and driest.',
-      scene: { q: 'scotland,highlands,castle', caption: 'The Highlands' } },
+      scene: { wiki: 'Glenfinnan Viaduct', caption: 'The Scottish Highlands' } },
     { name: 'Ireland', flag: '🇮🇪', lat: 53.35, lng: -6.26, months: [5, 6, 7, 8, 9], blurb: 'Mild, blooming and festival-filled.',
-      scene: { q: 'ireland,cliffsofmoher', caption: 'Cliffs of Moher' } },
+      scene: { wiki: 'Cliffs of Moher', caption: 'Cliffs of Moher' } },
     { name: 'Wales', flag: '🏴󠁧󠁢󠁷󠁬󠁳󠁿', lat: 51.48, lng: -3.18, months: [5, 6, 7, 8, 9], blurb: 'Coast paths and castles in the sun.',
-      scene: { q: 'wales,castle,mountains', caption: 'Welsh castles & peaks' } },
+      scene: { wiki: 'Snowdon', caption: 'Snowdon, Wales' } },
   ],
   'Australia & New Zealand': [
     { name: 'Australia', flag: '🇦🇺', lat: -33.87, lng: 151.21, months: [3, 4, 5, 9, 10, 11], blurb: 'Warm, mild shoulder seasons across the country.',
-      scene: { q: 'sydney,operahouse,australia', caption: 'Sydney Harbour' } },
+      scene: { wiki: 'Sydney Opera House', caption: 'Sydney Harbour' } },
     { name: 'New Zealand', flag: '🇳🇿', lat: -41.29, lng: 174.78, months: [12, 1, 2, 3, 11], blurb: 'Southern-hemisphere summer for the great outdoors.',
-      scene: { q: 'newzealand,mountains,lake', caption: 'Southern Alps & lakes' } },
+      scene: { wiki: 'Milford Sound', caption: 'Milford Sound' } },
   ],
   'Pacific Islands': [
     { name: 'Fiji', flag: '🇫🇯', lat: -18.14, lng: 178.44, months: [5, 6, 7, 8, 9, 10], blurb: 'Dry season sunshine and calm seas.',
-      scene: { q: 'fiji,beach,island', caption: "Fiji's beaches" } },
+      scene: { wiki: 'Mamanuca Islands', caption: "Fiji's islands" } },
     { name: 'French Polynesia', flag: '🇵🇫', lat: -17.68, lng: -149.4, months: [5, 6, 7, 8, 9], blurb: 'Dry, breezy over-water-bungalow weather.',
-      scene: { q: 'borabora,tahiti,lagoon', caption: 'Bora Bora lagoon' } },
+      scene: { wiki: 'Bora Bora', caption: 'Bora Bora' } },
     { name: 'Samoa', flag: '🇼🇸', lat: -13.83, lng: -171.77, months: [5, 6, 7, 8, 9, 10], blurb: 'Cooler dry season across the islands.',
-      scene: { q: 'samoa,beach,waterfall', caption: "Samoa's shores" } },
+      scene: { wiki: 'To Sua Ocean Trench', caption: 'To Sua Ocean Trench' } },
     { name: 'Palau', flag: '🇵🇼', lat: 7.5, lng: 134.62, months: [11, 12, 1, 2, 3, 4], blurb: 'Calmest seas for diving the rock islands.',
-      scene: { q: 'palau,rockislands,lagoon', caption: "Palau's Rock Islands" } },
+      scene: { wiki: 'Rock Islands', caption: "Palau's Rock Islands" } },
   ],
 };
 
@@ -774,33 +768,71 @@ const REGION_GRADIENTS = {
   default: 'linear-gradient(135deg,#178a7e,#0d5b53)',
 };
 
-function hashSeed(str) {
-  let h = 0;
-  for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) % 100000;
-  return h;
+function escapeAttr(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
 function sceneFor(country, monthNum) {
   const s = country.scene;
-  let pick = { q: s.q, caption: s.caption };
+  let pick = { wiki: s.wiki, caption: s.caption };
   if (s.seasons) {
     const hit = s.seasons.find((se) => se.months.includes(monthNum));
-    if (hit) pick = { q: hit.q, caption: hit.caption };
+    if (hit) pick = { wiki: hit.wiki, caption: hit.caption };
   }
-  return {
-    url: `https://loremflickr.com/640/420/${pick.q}?lock=${hashSeed(country.name + pick.q)}`,
-    caption: pick.caption,
-    gradient: REGION_GRADIENTS[country.region] || REGION_GRADIENTS.default,
-  };
+  return { wiki: pick.wiki, caption: pick.caption, gradient: REGION_GRADIENTS[country.region] || REGION_GRADIENTS.default };
+}
+
+function sceneFigureFromTitle(title, caption, gradient, cls) {
+  return `<figure class="scene ${cls || ''}" style="--fallback:${gradient}">
+    <img alt="${escapeAttr(caption)}" loading="lazy" referrerpolicy="no-referrer"
+         data-scene-title="${escapeAttr(title)}"
+         onerror="this.closest('.scene').classList.add('scene--noimg')" />
+    <figcaption>${caption}</figcaption>
+  </figure>`;
 }
 
 function sceneFigure(country, monthNum, cls) {
   const sc = sceneFor(country, monthNum);
-  return `<figure class="scene ${cls || ''}" style="--fallback:${sc.gradient}">
-    <img src="${sc.url}" alt="${sc.caption}" loading="lazy" referrerpolicy="no-referrer"
-         onerror="this.closest('.scene').classList.add('scene--noimg')" />
-    <figcaption>${sc.caption}</figcaption>
-  </figure>`;
+  return sceneFigureFromTitle(sc.wiki, sc.caption, sc.gradient, cls);
+}
+
+// Photos are the lead image of each landmark's Wikipedia article (PageImages API,
+// CORS-enabled via origin=*). Results are cached; while a title loads — or if it
+// can't be reached, e.g. inside a sandbox that blocks external requests — the
+// captioned regional gradient shows instead.
+const sceneCache = new Map();
+const sceneFetching = new Set();
+
+function applyScene(img, url) {
+  if (url) img.src = url;
+  else img.closest('.scene').classList.add('scene--noimg');
+}
+
+function hydrateScenes() {
+  document.querySelectorAll('img[data-scene-title]').forEach((img) => {
+    if (img.dataset.hydrated) return;
+    const title = img.dataset.sceneTitle;
+    if (sceneCache.has(title)) { img.dataset.hydrated = '1'; applyScene(img, sceneCache.get(title)); return; }
+    if (sceneFetching.has(title)) return;
+    sceneFetching.add(title);
+    const api = 'https://en.wikipedia.org/w/api.php?action=query&format=json&formatversion=2'
+      + '&prop=pageimages&piprop=thumbnail&pithumbsize=800&redirects=1&origin=*'
+      + `&titles=${encodeURIComponent(title)}`;
+    fetch(api)
+      .then((r) => r.json())
+      .then((d) => {
+        const page = d && d.query && d.query.pages && d.query.pages[0];
+        sceneCache.set(title, page && page.thumbnail ? page.thumbnail.source : null);
+      })
+      .catch(() => sceneCache.set(title, null))
+      .finally(() => {
+        sceneFetching.delete(title);
+        const url = sceneCache.get(title);
+        document.querySelectorAll('img[data-scene-title]').forEach((im) => {
+          if (im.dataset.sceneTitle === title && !im.dataset.hydrated) { im.dataset.hydrated = '1'; applyScene(im, url); }
+        });
+      });
+  });
 }
 
 // Which month's scene to show for a country: the month of a break it's in,
@@ -1172,15 +1204,11 @@ function renderHero() {
     : (names.length ? countryByName.get(names[names.length - 1]) : null);
 
   if (!focus) {
-    host.innerHTML = `
-      <figure class="scene scene--hero" style="--fallback:${REGION_GRADIENTS.default}">
-        <img src="https://loremflickr.com/720/440/${HK_SCENE.q}?lock=7" alt="${HK_SCENE.caption}"
-             referrerpolicy="no-referrer" onerror="this.closest('.scene').classList.add('scene--noimg')" />
-        <figcaption>${HK_SCENE.caption} · your starting point</figcaption>
-      </figure>`;
-    return;
+    host.innerHTML = sceneFigureFromTitle(HK_SCENE.wiki, `${HK_SCENE.caption} · your starting point`, REGION_GRADIENTS.default, 'scene--hero');
+  } else {
+    host.innerHTML = sceneFigure(focus, monthForCountry(focus.name), 'scene--hero');
   }
-  host.innerHTML = sceneFigure(focus, monthForCountry(focus.name), 'scene--hero');
+  hydrateScenes();
 }
 
 function renderJourney() {
@@ -1292,6 +1320,7 @@ function render(scrollTo) {
   renderJourney();
   renderSummary();
   updateFlow(scrollTo);
+  hydrateScenes();
 }
 
 document.addEventListener('DOMContentLoaded', () => render());

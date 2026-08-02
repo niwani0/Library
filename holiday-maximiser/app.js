@@ -274,33 +274,71 @@ const REGION_GRADIENTS = {
   default: 'linear-gradient(135deg,#178a7e,#0d5b53)',
 };
 
-function hashSeed(str) {
-  let h = 0;
-  for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) % 100000;
-  return h;
+function escapeAttr(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
 function sceneFor(country, monthNum) {
   const s = country.scene;
-  let pick = { q: s.q, caption: s.caption };
+  let pick = { wiki: s.wiki, caption: s.caption };
   if (s.seasons) {
     const hit = s.seasons.find((se) => se.months.includes(monthNum));
-    if (hit) pick = { q: hit.q, caption: hit.caption };
+    if (hit) pick = { wiki: hit.wiki, caption: hit.caption };
   }
-  return {
-    url: `https://loremflickr.com/640/420/${pick.q}?lock=${hashSeed(country.name + pick.q)}`,
-    caption: pick.caption,
-    gradient: REGION_GRADIENTS[country.region] || REGION_GRADIENTS.default,
-  };
+  return { wiki: pick.wiki, caption: pick.caption, gradient: REGION_GRADIENTS[country.region] || REGION_GRADIENTS.default };
+}
+
+function sceneFigureFromTitle(title, caption, gradient, cls) {
+  return `<figure class="scene ${cls || ''}" style="--fallback:${gradient}">
+    <img alt="${escapeAttr(caption)}" loading="lazy" referrerpolicy="no-referrer"
+         data-scene-title="${escapeAttr(title)}"
+         onerror="this.closest('.scene').classList.add('scene--noimg')" />
+    <figcaption>${caption}</figcaption>
+  </figure>`;
 }
 
 function sceneFigure(country, monthNum, cls) {
   const sc = sceneFor(country, monthNum);
-  return `<figure class="scene ${cls || ''}" style="--fallback:${sc.gradient}">
-    <img src="${sc.url}" alt="${sc.caption}" loading="lazy" referrerpolicy="no-referrer"
-         onerror="this.closest('.scene').classList.add('scene--noimg')" />
-    <figcaption>${sc.caption}</figcaption>
-  </figure>`;
+  return sceneFigureFromTitle(sc.wiki, sc.caption, sc.gradient, cls);
+}
+
+// Photos are the lead image of each landmark's Wikipedia article (PageImages API,
+// CORS-enabled via origin=*). Results are cached; while a title loads — or if it
+// can't be reached, e.g. inside a sandbox that blocks external requests — the
+// captioned regional gradient shows instead.
+const sceneCache = new Map();
+const sceneFetching = new Set();
+
+function applyScene(img, url) {
+  if (url) img.src = url;
+  else img.closest('.scene').classList.add('scene--noimg');
+}
+
+function hydrateScenes() {
+  document.querySelectorAll('img[data-scene-title]').forEach((img) => {
+    if (img.dataset.hydrated) return;
+    const title = img.dataset.sceneTitle;
+    if (sceneCache.has(title)) { img.dataset.hydrated = '1'; applyScene(img, sceneCache.get(title)); return; }
+    if (sceneFetching.has(title)) return;
+    sceneFetching.add(title);
+    const api = 'https://en.wikipedia.org/w/api.php?action=query&format=json&formatversion=2'
+      + '&prop=pageimages&piprop=thumbnail&pithumbsize=800&redirects=1&origin=*'
+      + `&titles=${encodeURIComponent(title)}`;
+    fetch(api)
+      .then((r) => r.json())
+      .then((d) => {
+        const page = d && d.query && d.query.pages && d.query.pages[0];
+        sceneCache.set(title, page && page.thumbnail ? page.thumbnail.source : null);
+      })
+      .catch(() => sceneCache.set(title, null))
+      .finally(() => {
+        sceneFetching.delete(title);
+        const url = sceneCache.get(title);
+        document.querySelectorAll('img[data-scene-title]').forEach((im) => {
+          if (im.dataset.sceneTitle === title && !im.dataset.hydrated) { im.dataset.hydrated = '1'; applyScene(im, url); }
+        });
+      });
+  });
 }
 
 // Which month's scene to show for a country: the month of a break it's in,
@@ -672,15 +710,11 @@ function renderHero() {
     : (names.length ? countryByName.get(names[names.length - 1]) : null);
 
   if (!focus) {
-    host.innerHTML = `
-      <figure class="scene scene--hero" style="--fallback:${REGION_GRADIENTS.default}">
-        <img src="https://loremflickr.com/720/440/${HK_SCENE.q}?lock=7" alt="${HK_SCENE.caption}"
-             referrerpolicy="no-referrer" onerror="this.closest('.scene').classList.add('scene--noimg')" />
-        <figcaption>${HK_SCENE.caption} · your starting point</figcaption>
-      </figure>`;
-    return;
+    host.innerHTML = sceneFigureFromTitle(HK_SCENE.wiki, `${HK_SCENE.caption} · your starting point`, REGION_GRADIENTS.default, 'scene--hero');
+  } else {
+    host.innerHTML = sceneFigure(focus, monthForCountry(focus.name), 'scene--hero');
   }
-  host.innerHTML = sceneFigure(focus, monthForCountry(focus.name), 'scene--hero');
+  hydrateScenes();
 }
 
 function renderJourney() {
@@ -792,6 +826,7 @@ function render(scrollTo) {
   renderJourney();
   renderSummary();
   updateFlow(scrollTo);
+  hydrateScenes();
 }
 
 document.addEventListener('DOMContentLoaded', () => render());

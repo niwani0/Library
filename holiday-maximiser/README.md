@@ -61,12 +61,14 @@ you answer it (month → breaks → plan & destinations → journey → summary)
 8. **Round-the-world optimiser.** Selecting countries across multiple regions
    reorders them into an efficient loop (nearest-neighbour + 2-opt) that starts
    and ends in Hong Kong.
-9. **Scenery photos.** Each selected country shows a photo of its famous scenery
-   for the chosen month (e.g. Japan shows cherry blossoms in April, autumn maples
-   in November), with the hero previewing whichever place you're looking at.
-   Photos are fetched by keyword; if one can't load, a captioned regional
-   gradient shows instead. (The Claude Artifact preview sandboxes external
-   images, so it shows the gradients — the live Netlify site loads real photos.)
+9. **Scenery photos.** Each selected country shows an iconic photo of its famous
+   scenery for the chosen month (e.g. Japan shows cherry blossoms in April;
+   France, the Eiffel Tower — or Provence lavender in June), with the hero
+   previewing whichever place you're looking at. Images are the lead photo of the
+   landmark's Wikipedia article (fetched via the PageImages API, cached); if one
+   can't load, a captioned regional gradient shows instead. (The Claude Artifact
+   preview sandboxes external requests, so it shows the gradients — the live
+   Netlify site loads the real photos.)
 10. **One-leave long-weekend wins.** Every 2027 holiday on a Thursday is offered
     as a quick-win shortcut that jumps you straight to planning it.
 11. **Free-weekend short-haul mode.** When a break costs zero leave (a free long
