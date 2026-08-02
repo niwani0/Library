@@ -11,6 +11,7 @@
     --muted: #6A7B79;
     --line: #D2D9D3;
     --jade: #128870;
+    --on-jade: #ffffff;
     --jade-soft: #d3ebe3;
     --coral: #D65F2C;
     --coral-soft: #f6e0d3;
@@ -31,6 +32,7 @@
       --muted: #7F9491;
       --line: #1C3B3F;
       --jade: #35BE9F;
+      --on-jade: #06231f;
       --jade-soft: #123c37;
       --coral: #F0895A;
       --coral-soft: #3a2419;
@@ -42,13 +44,13 @@
   :root[data-theme="light"] {
     --paper: #ECEFEC; --paper-2: #E2E7E2; --card: #F6F8F5; --ink: #0C2A2E;
     --ink-soft: #33484A; --muted: #6A7B79; --line: #D2D9D3; --jade: #128870;
-    --jade-soft: #d3ebe3; --coral: #D65F2C; --coral-soft: #f6e0d3; --wknd: #9AA8A5;
+    --on-jade: #ffffff; --jade-soft: #d3ebe3; --coral: #D65F2C; --coral-soft: #f6e0d3; --wknd: #9AA8A5;
     --wknd-soft: #dde3e0; --shadow: 0 1px 0 rgba(12,42,46,.04), 0 12px 30px -20px rgba(12,42,46,.35);
   }
   :root[data-theme="dark"] {
     --paper: #081F22; --paper-2: #0C282C; --card: #0F2E32; --ink: #EAF1EE;
     --ink-soft: #B7C7C4; --muted: #7F9491; --line: #1C3B3F; --jade: #35BE9F;
-    --jade-soft: #123c37; --coral: #F0895A; --coral-soft: #3a2419; --wknd: #6E8380;
+    --on-jade: #06231f; --jade-soft: #123c37; --coral: #F0895A; --coral-soft: #3a2419; --wknd: #6E8380;
     --wknd-soft: #17383b; --shadow: 0 1px 0 rgba(0,0,0,.2), 0 16px 40px -24px rgba(0,0,0,.7);
   }
 
@@ -104,6 +106,26 @@
   .sw.h { background: var(--jade); }
   .sw.l { background: var(--coral); }
   .sw.w { background: var(--wknd); }
+
+  /* ---- Budget planner ---- */
+  .budget { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px; margin-bottom: 22px; box-shadow: var(--shadow); }
+  .budget-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .budget-lab { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .stepper { display: flex; align-items: center; gap: 10px; }
+  .stepper button { width: 36px; height: 36px; border-radius: 9px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); font-size: 20px; line-height: 1; cursor: pointer; font-family: var(--mono); }
+  .stepper button:active { background: var(--jade-soft); }
+  .stepper button:focus-visible { outline: 3px solid var(--coral); outline-offset: 2px; }
+  .budget-val { font-family: var(--mono); font-size: 13px; color: var(--muted); min-width: 62px; text-align: center; }
+  .budget-val b { font-size: 21px; color: var(--ink); font-variant-numeric: tabular-nums; }
+  #bRange { width: 100%; margin: 16px 0 6px; accent-color: var(--jade); height: 24px; }
+  #bRange:focus-visible { outline: 3px solid var(--coral); outline-offset: 4px; }
+  .budget-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .budget-status { font-family: var(--mono); font-size: 12px; color: var(--ink-soft); }
+  .budget-status.over { color: var(--coral); font-weight: 600; }
+  .budget-status.fits { color: var(--jade); font-weight: 600; }
+  .auto-btn { font-family: var(--sans); font-size: 13px; font-weight: 600; color: var(--on-jade); background: var(--jade); border: none; border-radius: 10px; padding: 10px 15px; cursor: pointer; }
+  .auto-btn:active { transform: translateY(1px); }
+  .auto-btn:focus-visible { outline: 3px solid var(--coral); outline-offset: 2px; }
 
   /* ---- Break cards ---- */
   .card {
@@ -227,7 +249,22 @@
     <div class="sec-head">
       <p class="eyebrow">The plan</p>
       <h2>Five breaks to build the year around</h2>
-      <p>Tick a break to count it in. The bar at the bottom keeps a running total of leave spent against days off gained.</p>
+      <p>Set your leave allowance, then tap <b>Auto-pick</b> to fill it with the highest-payoff breaks — or tick them by hand. The bar at the bottom tracks leave spent against days off gained.</p>
+    </div>
+    <div class="budget" role="group" aria-label="Leave budget planner">
+      <div class="budget-row">
+        <div class="budget-lab">Your leave budget</div>
+        <div class="stepper">
+          <button type="button" id="bMinus" aria-label="Decrease budget by one day">&minus;</button>
+          <span class="budget-val"><b id="bVal">21</b> days</span>
+          <button type="button" id="bPlus" aria-label="Increase budget by one day">+</button>
+        </div>
+      </div>
+      <input type="range" id="bRange" min="0" max="35" value="21" step="1" aria-label="Leave budget in days">
+      <div class="budget-foot">
+        <span id="bStatus" class="budget-status fits">Using 17 of 21 · 4 to spare</span>
+        <button type="button" id="bAuto" class="auto-btn">Auto-pick best plan</button>
+      </div>
     </div>
     <div class="legend" aria-hidden="true">
       <span><i class="sw h"></i> Public holiday</span>
@@ -403,7 +440,50 @@
     document.getElementById('tTotalLeave').textContent = leave;
     document.getElementById('tTotalOff').textContent = off;
     document.getElementById('tRuns').textContent = runs;
+
+    const st = document.getElementById('bStatus'), left = budget - leave;
+    if(leave === 0){ st.textContent = `Budget ${budget} days · nothing picked yet`; st.className = 'budget-status'; }
+    else if(left >= 0){ st.textContent = `Using ${leave} of ${budget} · ${left} to spare`; st.className = 'budget-status fits'; }
+    else { st.textContent = `Using ${leave} · ${-left} over budget`; st.className = 'budget-status over'; }
   }
+
+  let budget = 21;
+
+  function syncUI(){
+    breaks.forEach(b => {
+      document.querySelector(`.toggle[data-kind="break"][data-id="${b.id}"]`).checked = b.on;
+      document.getElementById('card-'+b.id).classList.toggle('off', !b.on);
+    });
+    wins.forEach(w => {
+      document.querySelector(`.toggle[data-kind="win"][data-id="${w.id}"]`).checked = w.on;
+      document.getElementById('win-'+w.id).classList.toggle('off', !w.on);
+    });
+  }
+
+  // Exact knapsack over 9 items (2^9 = 512) — maximise days off within the leave budget.
+  function optimise(){
+    const items = breaks.concat(wins), n = items.length;
+    let best = {off:-1, leave:0, mask:0};
+    for(let m = 0; m < (1<<n); m++){
+      let lv = 0, of = 0;
+      for(let i = 0; i < n; i++) if(m & (1<<i)){ lv += items[i].leave; of += items[i].off; }
+      if(lv <= budget && (of > best.off || (of === best.off && lv < best.leave))) best = {off:of, leave:lv, mask:m};
+    }
+    items.forEach((it, i) => it.on = !!(best.mask & (1<<i)));
+    syncUI(); recalc();
+  }
+
+  function setBudget(v){
+    budget = Math.max(0, Math.min(35, Math.round(v)));
+    document.getElementById('bVal').textContent = budget;
+    document.getElementById('bRange').value = budget;
+    recalc();
+  }
+
+  document.getElementById('bMinus').addEventListener('click', () => setBudget(budget - 1));
+  document.getElementById('bPlus').addEventListener('click', () => setBudget(budget + 1));
+  document.getElementById('bRange').addEventListener('input', e => setBudget(+e.target.value));
+  document.getElementById('bAuto').addEventListener('click', optimise);
 
   document.addEventListener('change', e => {
     const t = e.target;
