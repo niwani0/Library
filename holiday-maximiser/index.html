@@ -11,46 +11,37 @@
     <div class="hero__avatar" id="avatar"></div>
     <div class="hero__text">
       <h1>Hong Kong Holiday Maximiser <span class="year">2027</span></h1>
-      <p>Turn your annual leave into the longest, best-timed adventures. Pick a month, bridge the public holidays, and let your travel buddy dress for the trip. 🧳✨</p>
+      <p>Answer one step at a time and turn your annual leave into the longest, best-timed adventures. 🧳✨</p>
     </div>
   </header>
 
   <main>
-    <section class="card">
-      <h2>1 · Choose a month</h2>
+    <section class="step" id="step-month">
+      <div class="step__q">🗓️ Which month in 2027 are you dreaming about?</div>
       <div class="chips" id="month-picker"></div>
+      <div class="quickwins" id="quickwins"></div>
     </section>
 
-    <section class="card" id="opportunities-card">
-      <h2>2 · Best leave-maximising breaks</h2>
+    <section class="step step--hidden" id="step-breaks">
       <div id="opportunities"></div>
-      <div id="adjuster"></div>
     </section>
 
-    <section class="card" id="region-card">
-      <h2>3 · Pick a region &amp; countries</h2>
-      <div id="region-picker"></div>
-      <div id="countries"></div>
+    <section class="step step--hidden" id="step-plan">
+      <div class="step__q">🧳 Your planned breaks — tweak each one and pick where to go.</div>
+      <div id="plan-list"></div>
     </section>
 
-    <section class="card" id="rtw-card">
-      <h2>4 · Your journey</h2>
+    <section class="step step--hidden" id="step-journey">
       <div id="rtw"></div>
     </section>
 
-    <section class="card" id="wins-card">
-      <h2>5 · Quick wins</h2>
-      <div id="wins"></div>
-    </section>
-
-    <section class="card" id="summary-card">
-      <h2>6 · Year summary</h2>
+    <section class="step step--hidden" id="step-summary">
       <div id="summary"></div>
     </section>
   </main>
 
   <footer>
-    <p>Built for fun · Holiday data: GovHK 2027 General Holidays · Distances are great-circle estimates.</p>
+    <p>Built for fun · Holiday data: GovHK 2027 General Holidays (17 days, validated) · Distances are great-circle estimates.</p>
   </footer>
 
   <script src="data.js"></script>

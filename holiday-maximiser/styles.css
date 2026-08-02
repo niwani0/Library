@@ -117,20 +117,33 @@ h1, h2, h3, h4 { margin: 0 0 0.5rem; }
   text-align: center; max-width: 160px;
 }
 
-/* ---------- Layout ---------- */
+/* ---------- Layout / step flow ---------- */
 main { max-width: 960px; margin: 0 auto; padding: 0 1.25rem 3rem; }
-.card {
+.step {
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   padding: 1.25rem 1.4rem;
   margin: 1rem 0;
+  scroll-margin-top: 1rem;
+  animation: reveal 0.45s ease;
 }
-.card > h2 {
-  font-size: 1.1rem; color: var(--pink-deep);
-  display: flex; align-items: center; gap: 0.4rem;
+.step--hidden { display: none; }
+@keyframes reveal { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.step__q {
+  font-size: 1.15rem; font-weight: 800; color: var(--pink-deep);
+  margin-bottom: 0.7rem;
 }
+.step__q--sub { font-size: 1rem; color: var(--ink); margin-top: 0.8rem; }
+
+.quickwins {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem;
+  margin-top: 0.9rem; padding-top: 0.8rem; border-top: 1px dashed var(--line);
+}
+.quickwins__label { font-size: 0.85rem; font-weight: 700; color: var(--muted); }
+.chip--win { border-color: var(--sun); background: #fff9ec; font-size: 0.8rem; }
+.chip--win:hover { border-color: #e0a83a; }
 
 /* ---------- Chips ---------- */
 .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
@@ -164,6 +177,25 @@ main { max-width: 960px; margin: 0 auto; padding: 0 1.25rem 3rem; }
 .pill--ratio { background: #efe9ff; color: #6b52c9; }
 .pill--free { background: #e6fbf2; color: #16a97a; }
 
+/* ---------- Planned-break cards ---------- */
+.pbreak {
+  border: 2px solid var(--lav); border-radius: 18px;
+  padding: 1rem; margin: 0.8rem 0; background: #fdfcff;
+}
+.pbreak__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.4rem; }
+.pbreak__month {
+  font-weight: 900; color: #6b52c9; text-transform: uppercase;
+  letter-spacing: 0.04em; font-size: 0.9rem;
+}
+.pbreak__chosen { margin-top: 0.7rem; font-size: 0.85rem; }
+.chosen {
+  display: inline-block; background: #f5fffb; border: 1.5px solid var(--mint);
+  border-radius: 999px; padding: 0.15rem 0.55rem; margin: 0.15rem; font-weight: 700;
+}
+.dest { margin-top: 0.9rem; padding-top: 0.8rem; border-top: 1px dashed var(--line); }
+.dest__q { font-weight: 800; margin-bottom: 0.5rem; }
+.dest__q--sub { color: var(--muted); }
+
 /* ---------- Buttons ---------- */
 .btn {
   border: none; cursor: pointer; font-weight: 800;
@@ -175,6 +207,7 @@ main { max-width: 960px; margin: 0 auto; padding: 0 1.25rem 3rem; }
 .btn--on { background: var(--mint); color: #0c6a4c; }
 .btn--ghost { background: #fff; color: var(--muted); border: 1.5px solid var(--line); margin-top: 0.6rem; }
 .btn--round { width: 34px; height: 34px; padding: 0; border-radius: 50%; font-size: 1.1rem; }
+.btn--sm { padding: 0.3rem 0.6rem; font-size: 0.78rem; }
 
 /* ---------- Adjuster ---------- */
 .adjuster {
@@ -187,6 +220,7 @@ main { max-width: 960px; margin: 0 auto; padding: 0 1.25rem 3rem; }
 .adjuster__mid { text-align: center; flex: 1 1 220px; }
 .adjuster__range { font-weight: 800; font-size: 1.05rem; }
 .adjuster__stats { display: flex; gap: 0.35rem; justify-content: center; flex-wrap: wrap; margin-top: 0.4rem; }
+.adjuster__leave { font-size: 0.78rem; color: var(--muted); margin-top: 0.4rem; }
 
 /* ---------- Countries ---------- */
 .country-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 0.7rem; margin: 0.5rem 0 1rem; }

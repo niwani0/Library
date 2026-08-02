@@ -12,13 +12,18 @@ python3 -m http.server -d holiday-maximiser 8000
 # then visit http://localhost:8000
 ```
 
+The UI is a guided, one-question-at-a-time flow: each step reveals the next as
+you answer it (month → breaks → plan & destinations → journey → summary).
+
 ## Features
 
 1. **Month → best maximisers.** Pick a 2027 month and it finds the breaks that
    bridge public holidays with the fewest leave days, ranked by efficiency
-   (days off per leave day).
-2. **Fine-tune.** Nudge any break earlier or later a day at a time; leave count
-   and length recompute live.
+   (days off per leave day). Add as many breaks as you like, in any month.
+2. **Per-break fine-tuning.** Every break you add to the plan gets its own
+   start-earlier / end-later controls, so two breaks in the same month (e.g.
+   26 Mar–5 Apr and 3–11 Apr) are tuned independently; leave and length
+   recompute live.
 3. **Regions.** Choose from Asia, North/Central/South America, Central Asia,
    Middle East, Eastern/Western Europe, Scandinavia, UK & Ireland,
    Australia & New Zealand, Pacific Islands.
@@ -34,8 +39,12 @@ python3 -m http.server -d holiday-maximiser 8000
    and ends in Hong Kong.
 9. **Dress-up avatar.** A travel buddy that "wears" the traditional dress of the
    country you're looking at.
-10. **One-leave long-weekend wins.** Every 2027 holiday on a Thursday (add the
-    Friday for a four-day weekend) plus bonus Tuesday holidays.
+10. **One-leave long-weekend wins.** Every 2027 holiday on a Thursday is offered
+    as a quick-win shortcut that jumps you straight to planning it.
+11. **Free-weekend short-haul mode.** When a break costs zero leave (a free long
+    weekend), the destination picker only offers places reachable in ~4 hours or
+    less from Hong Kong — the sensible range for a short escape. Extending it
+    into a leave day unlocks the full region picker again.
 
 ## Data notes
 

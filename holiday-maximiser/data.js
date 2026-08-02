@@ -38,6 +38,8 @@ const REGIONS = {
     { name: 'South Korea', flag: '🇰🇷', lat: 37.57, lng: 126.98, months: [4, 5, 9, 10, 11], dress: { name: 'Hanbok', emoji: '👘' }, blurb: 'Mild shoulder seasons and golden ginkgo streets.' },
     { name: 'Thailand', flag: '🇹🇭', lat: 13.75, lng: 100.5, months: [11, 12, 1, 2], dress: { name: 'Chut Thai', emoji: '🩷' }, blurb: 'Cool, dry season — perfect for temples and beaches.' },
     { name: 'Vietnam', flag: '🇻🇳', lat: 21.03, lng: 105.85, months: [2, 3, 4, 11, 12], dress: { name: 'Áo dài', emoji: '👗' }, blurb: 'Dry and pleasant north-to-south.' },
+    { name: 'Taiwan', flag: '🇹🇼', lat: 25.03, lng: 121.56, months: [3, 4, 10, 11, 12], dress: { name: 'Qipao', emoji: '🏮' }, blurb: 'Night markets and mountains in mild, dry months.' },
+    { name: 'Cambodia', flag: '🇰🇭', lat: 11.55, lng: 104.92, months: [11, 12, 1, 2], dress: { name: 'Sampot', emoji: '🛕' }, blurb: "Cool, dry season for Angkor's temples." },
     { name: 'Indonesia (Bali)', flag: '🇮🇩', lat: -8.65, lng: 115.13, months: [4, 5, 6, 9, 10], dress: { name: 'Kebaya', emoji: '🌺' }, blurb: 'Dry season sunshine before the crowds.' },
     { name: 'India', flag: '🇮🇳', lat: 28.61, lng: 77.21, months: [10, 11, 12, 1, 2, 3], dress: { name: 'Sari', emoji: '🥻' }, blurb: 'Cool, comfortable months for the north and Rajasthan.' },
     { name: 'Nepal', flag: '🇳🇵', lat: 27.7, lng: 85.32, months: [3, 4, 10, 11], dress: { name: 'Daura-Suruwal', emoji: '🏔️' }, blurb: 'Clear Himalayan trekking skies.' },

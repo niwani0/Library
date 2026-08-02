@@ -9,7 +9,6 @@ const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June',
 const DOW_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 const holidaySet = new Set(HOLIDAYS.map((h) => h.date));
-const holidayByDate = new Map(HOLIDAYS.map((h) => [h.date, h]));
 
 function isoOf(d) {
   const m = String(d.getMonth() + 1).padStart(2, '0');
@@ -79,7 +78,6 @@ function computeRuns() {
 
 const RUNS = computeRuns();
 
-// Count working days strictly between the end of one run and the start of the next.
 function bridgeCost(runA, runB) {
   return daysBetween(runA.end, runB.start) - 1;
 }
@@ -108,7 +106,6 @@ function opportunitiesForMonth(month /* 0-indexed */) {
   const candidates = [];
 
   for (const { i } of anchors) {
-    // Grow outward from the anchor run, bridging up to 3 neighbours each side.
     for (let left = 0; left <= 3; left++) {
       for (let right = 0; right <= 3; right++) {
         const lo = i - left;
@@ -137,14 +134,12 @@ function opportunitiesForMonth(month /* 0-indexed */) {
     }
   }
 
-  // Best efficiency first; for ties prefer the longer break, then fewer leaves.
   candidates.sort((a, b) => {
     if (b.ratio !== a.ratio) return b.ratio - a.ratio;
     if (b.span !== a.span) return b.span - a.span;
     return a.leave - b.leave;
   });
 
-  // Drop a candidate fully contained in an already-kept, more-efficient one.
   const kept = [];
   for (const c of candidates) {
     const cs = dateOf(c.start), ce = dateOf(c.end);
@@ -154,7 +149,6 @@ function opportunitiesForMonth(month /* 0-indexed */) {
   return kept.slice(0, 5);
 }
 
-// Return the exact working (leave) days inside an inclusive [startIso, endIso] range.
 function leaveDaysInRange(startIso, endIso) {
   const out = [];
   for (let d = dateOf(startIso); d <= dateOf(endIso); d = addDays(d, 1)) {
@@ -163,9 +157,14 @@ function leaveDaysInRange(startIso, endIso) {
   return out;
 }
 
+// A break is a "free long weekend" while it costs no annual leave.
+function isFreeBreak(b) {
+  return leaveDaysInRange(b.start, b.end).length === 0;
+}
+
 // ---------------------------------------------------------------------------
-// Feature 10: one-leave long-weekend wins. A holiday on Thursday becomes a
-// four-day weekend by taking the Friday; a Tuesday holiday by taking the Monday.
+// One-leave long-weekend wins. A holiday on Thursday becomes a four-day weekend
+// by taking the Friday; a Tuesday holiday by taking the Monday.
 // ---------------------------------------------------------------------------
 
 function longWeekendWins() {
@@ -196,7 +195,7 @@ function haversineKm(a, b) {
   return 2 * R * Math.asin(Math.sqrt(s));
 }
 
-// Cruise ~850 km/h plus ~1.5h for taxi/climb/descent; a friendly estimate, not an ETA.
+// Cruise ~850 km/h plus ~1.5h for taxi/climb/descent; a friendly estimate.
 function flightHours(km) {
   return km / 850 + 1.5;
 }
@@ -207,14 +206,26 @@ function fmtHours(h) {
   return mins ? `${whole}h ${mins}m` : `${whole}h`;
 }
 
+const ALL_COUNTRIES = [];
 const countryByName = new Map();
 for (const region of Object.keys(REGIONS)) {
-  for (const c of REGIONS[region]) countryByName.set(c.name, { ...c, region });
+  for (const c of REGIONS[region]) {
+    const withRegion = { ...c, region };
+    ALL_COUNTRIES.push(withRegion);
+    countryByName.set(c.name, withRegion);
+  }
 }
 
+// Short-haul destinations reachable in about four hours or less from Hong Kong —
+// the only ones offered for a free long weekend, where time is too tight to fly far.
+const NEARBY_HOURS = 4;
+const NEARBY_COUNTRIES = ALL_COUNTRIES
+  .filter((c) => flightHours(haversineKm(HK, c)) <= NEARBY_HOURS)
+  .sort((a, b) => haversineKm(HK, a) - haversineKm(HK, b));
+
 // ---------------------------------------------------------------------------
-// Feature 8: order selected countries into an efficient round-the-world loop
-// starting and ending in Hong Kong. Nearest-neighbour, then 2-opt clean-up.
+// Order selected countries into an efficient round-the-world loop starting and
+// ending in Hong Kong. Nearest-neighbour, then 2-opt clean-up.
 // ---------------------------------------------------------------------------
 
 function nodesFor(names) {
@@ -224,9 +235,7 @@ function nodesFor(names) {
 
 function routeDistance(order) {
   let total = 0;
-  for (let i = 0; i < order.length - 1; i++) {
-    total += haversineKm(order[i], order[i + 1]);
-  }
+  for (let i = 0; i < order.length - 1; i++) total += haversineKm(order[i], order[i + 1]);
   return total;
 }
 
@@ -237,7 +246,6 @@ function optimiseRoute(names) {
     return { order: loop, km: routeDistance(loop) };
   }
 
-  // Nearest-neighbour tour from Hong Kong.
   const remaining = nodes.slice(1);
   const tour = [nodes[0]];
   while (remaining.length) {
@@ -250,9 +258,8 @@ function optimiseRoute(names) {
     });
     tour.push(remaining.splice(best, 1)[0]);
   }
-  tour.push(nodes[0]); // close the loop back to Hong Kong
+  tour.push(nodes[0]);
 
-  // 2-opt: reverse segments while it shortens the closed loop (endpoints fixed).
   let improved = true;
   while (improved) {
     improved = false;
@@ -272,21 +279,37 @@ function optimiseRoute(names) {
 }
 
 // ---------------------------------------------------------------------------
-// Plan state. One trip per month; each trip stores its date range, leave days
-// and any selected countries.
+// State
 // ---------------------------------------------------------------------------
 
-const plan = {}; // month index -> { start, end, countries: [] }
-const ui = { month: null, region: null, focusCountry: null };
+const state = { month: null, breaks: [], seq: 0 };
+let focusCountry = null;
 
-function tripLeaveDays(trip) {
-  return leaveDaysInRange(trip.start, trip.end);
+function addBreak(o) {
+  if (state.breaks.some((b) => b.start === o.start && b.end === o.end)) return;
+  state.breaks.push({
+    id: ++state.seq,
+    month: state.month,
+    start: o.start,
+    end: o.end,
+    region: null,
+    countries: [],
+  });
+}
+
+function removeBreak(id) {
+  const i = state.breaks.findIndex((b) => b.id === id);
+  if (i >= 0) state.breaks.splice(i, 1);
+}
+
+function breakByRange(start, end) {
+  return state.breaks.find((b) => b.start === start && b.end === end);
 }
 
 function allSelectedCountries() {
   const names = [];
-  for (const m of Object.keys(plan)) {
-    for (const n of plan[m].countries) if (!names.includes(n)) names.push(n);
+  for (const b of state.breaks) {
+    for (const n of b.countries) if (!names.includes(n)) names.push(n);
   }
   return names;
 }
@@ -296,194 +319,237 @@ function allSelectedCountries() {
 // ---------------------------------------------------------------------------
 
 const $ = (sel) => document.querySelector(sel);
+const prevVisible = {};
 
 function renderMonthPicker() {
   const wrap = $('#month-picker');
+  const plannedMonths = new Set(state.breaks.map((b) => b.month));
   wrap.innerHTML = '';
   for (let m = 0; m < 12; m++) {
     const btn = document.createElement('button');
-    btn.className = 'chip' + (ui.month === m ? ' chip--active' : '') + (plan[m] ? ' chip--planned' : '');
+    btn.className = 'chip' + (state.month === m ? ' chip--active' : '')
+      + (plannedMonths.has(m) ? ' chip--planned' : '');
     btn.textContent = MONTH_NAMES[m].slice(0, 3);
-    btn.onclick = () => { ui.month = m; ui.region = null; renderAll(); };
+    btn.onclick = () => { state.month = m; render('breaks'); };
     wrap.appendChild(btn);
   }
+
+  const wins = longWeekendWins().filter((w) => w.kind === 'thursday');
+  const host = $('#quickwins');
+  host.innerHTML = '<span class="quickwins__label">⚡ Or grab a quick win:</span>'
+    + wins.map((w) => {
+      const d = dateOf(w.date);
+      return `<button class="chip chip--win" data-win="${d.getMonth()}">${w.name} (${prettyDate(d)}) →</button>`;
+    }).join('');
+  host.querySelectorAll('[data-win]').forEach((b) => {
+    b.onclick = () => { state.month = Number(b.dataset.win); render('breaks'); };
+  });
 }
 
 function renderOpportunities() {
   const host = $('#opportunities');
-  if (ui.month === null) {
-    host.innerHTML = '<p class="muted">Pick a month above to see its best leave-maximising breaks. 🗓️</p>';
-    return;
-  }
-  const opps = opportunitiesForMonth(ui.month);
+  if (state.month === null) { host.innerHTML = ''; return; }
+  const opps = opportunitiesForMonth(state.month);
   const bridges = opps.filter((o) => o.leave > 0);
   const freebies = opps.filter((o) => o.leave === 0);
 
-  let html = `<h3>Best maximisers in ${MONTH_NAMES[ui.month]} 2027</h3>`;
+  let html = `<div class="step__q">✨ Best breaks in <b>${MONTH_NAMES[state.month]} 2027</b> — add the ones you like.</div>`;
   if (!opps.length) {
-    html += '<p class="muted">No public holidays anchor this month — a plain leave day here buys exactly one day off.</p>';
+    html += '<p class="muted">No public holidays anchor this month — a plain leave day here buys exactly one day off. Pick another month above.</p>';
   }
 
-  const card = (o, i) => {
+  const card = (o) => {
     const s = dateOf(o.start), e = dateOf(o.end);
-    const leaveDays = leaveDaysInRange(o.start, o.end);
-    const planned = plan[ui.month] && plan[ui.month].start === o.start && plan[ui.month].end === o.end;
-    const ratioLabel = o.leave === 0
+    const added = !!breakByRange(o.start, o.end);
+    const pill = o.leave === 0
       ? `<span class="pill pill--free">Free! ${o.span} days off, 0 leave</span>`
       : `<span class="pill">Take ${o.leave} → get ${o.span} days off</span>
          <span class="pill pill--ratio">1 leave buys ${(o.span / o.leave).toFixed(1)} days</span>`;
     return `
-      <div class="opp ${planned ? 'opp--planned' : ''}">
+      <div class="opp ${added ? 'opp--planned' : ''}">
         <div class="opp__range">${prettyDate(s)} → ${prettyDate(e)}</div>
-        <div class="opp__pills">${ratioLabel}</div>
-        <div class="opp__leave">Leave days: ${leaveDays.length ? leaveDays.map((d) => prettyDate(dateOf(d))).join(', ') : '— none —'}</div>
-        <button class="btn ${planned ? 'btn--on' : ''}" data-add="${i}">
-          ${planned ? '✓ In your plan' : '➕ Add to plan'}
+        <div class="opp__pills">${pill}</div>
+        <button class="btn ${added ? 'btn--on' : ''}" data-range="${o.start}_${o.end}">
+          ${added ? '✓ Added to plan' : '➕ Add to plan'}
         </button>
       </div>`;
   };
 
-  if (bridges.length) {
-    html += '<div class="opp-grid">' + bridges.map((o) => card(o, opps.indexOf(o))).join('') + '</div>';
-  }
+  if (bridges.length) html += '<div class="opp-grid">' + bridges.map(card).join('') + '</div>';
   if (freebies.length) {
-    html += '<h4>Free long weekends (0 leave)</h4>';
-    html += '<div class="opp-grid">' + freebies.map((o) => card(o, opps.indexOf(o))).join('') + '</div>';
+    html += '<h4>Free long weekends (0 leave)</h4>'
+      + '<div class="opp-grid">' + freebies.map(card).join('') + '</div>';
   }
   host.innerHTML = html;
 
-  host.querySelectorAll('[data-add]').forEach((b) => {
+  host.querySelectorAll('[data-range]').forEach((b) => {
     b.onclick = () => {
-      const o = opps[Number(b.dataset.add)];
-      plan[ui.month] = { start: o.start, end: o.end, countries: plan[ui.month] ? plan[ui.month].countries : [] };
-      renderAll();
+      const [start, end] = b.dataset.range.split('_');
+      const existing = breakByRange(start, end);
+      if (existing) removeBreak(existing.id);
+      else addBreak(opps.find((o) => o.start === start && o.end === end));
+      render('plan');
     };
   });
 }
 
-function renderAdjuster() {
-  const host = $('#adjuster');
-  if (ui.month === null || !plan[ui.month]) { host.innerHTML = ''; return; }
-  const trip = plan[ui.month];
-  const s = dateOf(trip.start), e = dateOf(trip.end);
-  const leave = tripLeaveDays(trip);
+function adjusterHTML(b) {
+  const s = dateOf(b.start), e = dateOf(b.end);
+  const leave = leaveDaysInRange(b.start, b.end);
   const span = daysBetween(s, e) + 1;
-  host.innerHTML = `
-    <h3>Fine-tune your ${MONTH_NAMES[ui.month]} break</h3>
+  const ratio = leave.length ? (span / leave.length).toFixed(1) : null;
+  return `
     <div class="adjuster">
       <div class="adjuster__side">
-        <span class="muted">Before</span>
-        <div><button class="btn btn--round" data-adj="start-1">－</button>
-        <button class="btn btn--round" data-adj="start+1">＋</button></div>
+        <span class="muted">Start earlier</span>
+        <div><button class="btn btn--round" data-adj="${b.id}:start+1">＋</button>
+        <button class="btn btn--round" data-adj="${b.id}:start-1">－</button></div>
       </div>
       <div class="adjuster__mid">
         <div class="adjuster__range">${prettyDate(s)} → ${prettyDate(e)}</div>
         <div class="adjuster__stats">
           <span class="pill">${span} days off</span>
           <span class="pill">${leave.length} leave day${leave.length === 1 ? '' : 's'}</span>
-          ${leave.length ? `<span class="pill pill--ratio">1 leave buys ${(span / leave.length).toFixed(1)} days</span>` : '<span class="pill pill--free">All free</span>'}
+          ${ratio ? `<span class="pill pill--ratio">1 leave buys ${ratio} days</span>` : '<span class="pill pill--free">Free long weekend</span>'}
         </div>
+        <div class="adjuster__leave">${leave.length ? 'Leave: ' + leave.map((d) => prettyDate(dateOf(d))).join(', ') : 'No leave needed 🎉'}</div>
       </div>
       <div class="adjuster__side">
-        <span class="muted">After</span>
-        <div><button class="btn btn--round" data-adj="end-1">－</button>
-        <button class="btn btn--round" data-adj="end+1">＋</button></div>
+        <span class="muted">End later</span>
+        <div><button class="btn btn--round" data-adj="${b.id}:end+1">＋</button>
+        <button class="btn btn--round" data-adj="${b.id}:end-1">－</button></div>
       </div>
-    </div>
-    <button class="btn btn--ghost" data-adj="remove">🗑️ Remove this break</button>`;
-
-  host.querySelectorAll('[data-adj]').forEach((b) => {
-    b.onclick = () => {
-      const act = b.dataset.adj;
-      if (act === 'remove') { delete plan[ui.month]; renderAll(); return; }
-      if (act === 'start-1') trip.start = isoOf(addDays(dateOf(trip.start), 1));
-      if (act === 'start+1') trip.start = isoOf(addDays(dateOf(trip.start), -1));
-      if (act === 'end-1') trip.end = isoOf(addDays(dateOf(trip.end), -1));
-      if (act === 'end+1') trip.end = isoOf(addDays(dateOf(trip.end), 1));
-      if (dateOf(trip.start) > dateOf(trip.end)) trip.start = trip.end;
-      renderAll();
-    };
-  });
+    </div>`;
 }
 
-function renderRegions() {
-  const host = $('#region-picker');
-  if (ui.month === null) { host.innerHTML = ''; return; }
-  host.innerHTML = '<h3>Where to go? Pick a region</h3><div class="chips" id="region-chips"></div>';
-  const chips = $('#region-chips');
-  for (const region of Object.keys(REGIONS)) {
-    const btn = document.createElement('button');
-    btn.className = 'chip' + (ui.region === region ? ' chip--active' : '');
-    btn.textContent = region;
-    btn.onclick = () => { ui.region = region; renderCountries(); renderRegions(); };
-    chips.appendChild(btn);
-  }
-}
+function destinationsHTML(b) {
+  const monthNum = b.month + 1;
+  const free = isFreeBreak(b);
 
-function renderCountries() {
-  const host = $('#countries');
-  if (ui.month === null || !ui.region) { host.innerHTML = ''; return; }
-  const monthNum = ui.month + 1;
-  const list = REGIONS[ui.region];
-  const recommended = list.filter((c) => c.months.includes(monthNum));
-  const others = list.filter((c) => !c.months.includes(monthNum));
-  const selected = plan[ui.month] ? plan[ui.month].countries : [];
-
-  const card = (c, rec) => {
+  const countryCard = (c, rec) => {
     const km = haversineKm(HK, c);
-    const on = selected.includes(c.name);
+    const on = b.countries.includes(c.name);
     return `
-      <div class="country ${on ? 'country--on' : ''}" data-country="${c.name}">
+      <div class="country ${on ? 'country--on' : ''}" data-pick="${b.id}:${c.name}">
         <div class="country__flag">${c.flag}</div>
         <div class="country__body">
-          <div class="country__name">${c.name} ${rec ? '<span class="tag tag--rec">in season</span>' : '<span class="tag">off-peak</span>'}</div>
+          <div class="country__name">${c.name} ${rec ? '<span class="tag tag--rec">in season</span>' : ''}</div>
           <div class="country__blurb">${c.blurb}</div>
-          <div class="country__meta">✈️ ${Math.round(km).toLocaleString()} km from HK · ~${fmtHours(flightHours(km))} · 👗 ${c.dress.name} ${c.dress.emoji}</div>
+          <div class="country__meta">✈️ ${Math.round(km).toLocaleString()} km · ~${fmtHours(flightHours(km))} · 👗 ${c.dress.name} ${c.dress.emoji}</div>
         </div>
         <div class="country__pick">${on ? '✓' : '+'}</div>
       </div>`;
   };
 
-  let html = `<h3>${ui.region} in ${MONTH_NAMES[ui.month]}</h3>`;
-  html += recommended.length
-    ? '<h4>Recommended right now</h4><div class="country-grid">' + recommended.map((c) => card(c, true)).join('') + '</div>'
-    : '<p class="muted">Nothing is peak-season here this month — but these are still open:</p>';
-  if (others.length) {
-    html += '<h4 class="muted-h">Also possible</h4><div class="country-grid">' + others.map((c) => card(c, false)).join('') + '</div>';
+  if (free) {
+    // Free long weekend: only short-haul escapes, no region step.
+    const list = NEARBY_COUNTRIES.slice().sort((a, b2) => {
+      const ra = a.months.includes(monthNum), rb = b2.months.includes(monthNum);
+      if (ra !== rb) return ra ? -1 : 1;
+      return haversineKm(HK, a) - haversineKm(HK, b2);
+    });
+    return `
+      <div class="dest">
+        <div class="dest__q">✈️ It's a short break — here's everywhere within ~${NEARBY_HOURS} hours of Hong Kong.</div>
+        <div class="country-grid">${list.map((c) => countryCard(c, c.months.includes(monthNum))).join('')}</div>
+      </div>`;
   }
-  host.innerHTML = html;
 
-  host.querySelectorAll('[data-country]').forEach((el) => {
-    const name = el.dataset.country;
+  // Longer break: choose a region, then a country.
+  let html = '<div class="dest"><div class="dest__q">🌏 Where to? Pick a region.</div><div class="chips">';
+  html += Object.keys(REGIONS).map((r) =>
+    `<button class="chip ${b.region === r ? 'chip--active' : ''}" data-region="${b.id}:${r}">${r}</button>`).join('');
+  html += '</div>';
+
+  if (b.region) {
+    const inList = REGIONS[b.region];
+    const rec = inList.filter((c) => c.months.includes(monthNum));
+    const other = inList.filter((c) => !c.months.includes(monthNum));
+    html += `<div class="dest__q dest__q--sub">${b.region} in ${MONTH_NAMES[b.month]}</div>`;
+    html += rec.length
+      ? '<h4>Recommended right now</h4><div class="country-grid">' + rec.map((c) => countryCard(c, true)).join('') + '</div>'
+      : '<p class="muted">Nothing is peak-season here this month, but these are still open:</p>';
+    if (other.length) {
+      html += '<h4 class="muted-h">Also possible</h4><div class="country-grid">' + other.map((c) => countryCard(c, false)).join('') + '</div>';
+    }
+  }
+  html += '</div>';
+  return html;
+}
+
+function renderPlan() {
+  const host = $('#plan-list');
+  if (!state.breaks.length) { host.innerHTML = ''; return; }
+  const ordered = state.breaks.slice().sort((a, b) =>
+    dateOf(a.start) - dateOf(b.start));
+
+  host.innerHTML = ordered.map((b) => {
+    const chosen = b.countries.map((n) => {
+      const c = countryByName.get(n);
+      return `<span class="chosen">${c.flag} ${c.name}</span>`;
+    }).join('');
+    return `
+      <div class="pbreak">
+        <div class="pbreak__head">
+          <span class="pbreak__month">${MONTH_NAMES[b.month]}</span>
+          <button class="btn btn--ghost btn--sm" data-remove="${b.id}">🗑️ Remove</button>
+        </div>
+        ${adjusterHTML(b)}
+        ${destinationsHTML(b)}
+        ${chosen ? `<div class="pbreak__chosen">Going to: ${chosen}</div>` : ''}
+      </div>`;
+  }).join('');
+
+  host.querySelectorAll('[data-remove]').forEach((el) => {
+    el.onclick = () => { removeBreak(Number(el.dataset.remove)); render('plan'); };
+  });
+  host.querySelectorAll('[data-adj]').forEach((el) => {
     el.onclick = () => {
-      if (!plan[ui.month]) {
-        // Selecting a country before a break exists seeds a minimal one-day trip.
-        const seed = isoOf(new Date(YEAR, ui.month, 1));
-        plan[ui.month] = { start: seed, end: seed, countries: [] };
-      }
-      const arr = plan[ui.month].countries;
-      const idx = arr.indexOf(name);
-      if (idx >= 0) arr.splice(idx, 1);
-      else { arr.push(name); ui.focusCountry = name; }
-      renderAll();
+      const [id, op] = el.dataset.adj.split(':');
+      const b = state.breaks.find((x) => x.id === Number(id));
+      if (!b) return;
+      if (op === 'start+1') b.start = isoOf(addDays(dateOf(b.start), -1));
+      if (op === 'start-1') b.start = isoOf(addDays(dateOf(b.start), 1));
+      if (op === 'end+1') b.end = isoOf(addDays(dateOf(b.end), 1));
+      if (op === 'end-1') b.end = isoOf(addDays(dateOf(b.end), -1));
+      if (dateOf(b.start) > dateOf(b.end)) b.start = b.end;
+      render('plan');
     };
-    el.onmouseenter = () => { ui.focusCountry = name; renderAvatar(); };
+  });
+  host.querySelectorAll('[data-region]').forEach((el) => {
+    el.onclick = () => {
+      const [id, region] = el.dataset.region.split(':');
+      const b = state.breaks.find((x) => x.id === Number(id));
+      if (b) b.region = region;
+      render('plan');
+    };
+  });
+  host.querySelectorAll('[data-pick]').forEach((el) => {
+    const [id, name] = el.dataset.pick.split(':');
+    el.onclick = () => {
+      const b = state.breaks.find((x) => x.id === Number(id));
+      if (!b) return;
+      const i = b.countries.indexOf(name);
+      if (i >= 0) b.countries.splice(i, 1);
+      else { b.countries.push(name); focusCountry = name; }
+      render('journey');
+    };
+    el.onmouseenter = () => { focusCountry = name; renderAvatar(); };
   });
 }
 
-// Cute avatar that "wears" the traditional dress of the focused country.
 function renderAvatar() {
   const host = $('#avatar');
   const names = allSelectedCountries();
-  const focus = ui.focusCountry && countryByName.get(ui.focusCountry)
-    ? countryByName.get(ui.focusCountry)
+  const focus = focusCountry && countryByName.get(focusCountry)
+    ? countryByName.get(focusCountry)
     : (names.length ? countryByName.get(names[names.length - 1]) : null);
 
   const dress = focus ? focus.dress : { name: 'travel pyjamas', emoji: '🧳' };
   const flag = focus ? focus.flag : '🌏';
   const caption = focus
     ? `Dressed for <b>${focus.name}</b> — ${dress.name} ${dress.emoji}`
-    : 'Pick a country and I\'ll try on the outfit!';
+    : "Pick a country and I'll try on the outfit!";
 
   host.innerHTML = `
     <div class="pet">
@@ -504,10 +570,10 @@ function renderAvatar() {
     <div class="pet__caption">${caption}</div>`;
 }
 
-function renderRTW() {
+function renderJourney() {
   const host = $('#rtw');
   const names = allSelectedCountries();
-  if (names.length === 0) { host.innerHTML = ''; return; }
+  if (!names.length) { host.innerHTML = ''; return; }
   const { order, km } = optimiseRoute(names);
   let legs = '';
   let totalHours = 0;
@@ -520,7 +586,7 @@ function renderRTW() {
   }
   const multiRegion = new Set(names.map((n) => countryByName.get(n).region)).size > 1;
   host.innerHTML = `
-    <h3>${multiRegion ? '🌐 Optimised round-the-world route' : '🧭 Your route'}</h3>
+    <div class="step__q">${multiRegion ? '🌐 Optimised round-the-world route' : '🧭 Your route'}</div>
     <p class="muted">Reordered to minimise total flying, looping back to Hong Kong.</p>
     <ol class="legs">${legs}</ol>
     <div class="rtw__totals">
@@ -530,45 +596,25 @@ function renderRTW() {
     </div>`;
 }
 
-function renderWins() {
-  const host = $('#wins');
-  const wins = longWeekendWins();
-  const thursday = wins.filter((w) => w.kind === 'thursday');
-  const tuesday = wins.filter((w) => w.kind === 'tuesday');
-  const winCard = (w) => {
-    const d = dateOf(w.date);
-    return `<div class="win">
-      <div class="win__day">${DOW_NAMES[d.getDay()]} ${d.getDate()} ${MONTH_NAMES[d.getMonth()].slice(0, 3)}</div>
-      <div class="win__name">${w.name}</div>
-      <div class="win__tip">Take the ${w.takeLabel} (${prettyDate(dateOf(w.take))}) → <b>4-day weekend for 1 leave</b></div>
-    </div>`;
-  };
-  host.innerHTML = `
-    <h3>⚡ One-leave long-weekend wins</h3>
-    <p class="muted">${thursday.length} holiday${thursday.length === 1 ? '' : 's'} land on a Thursday in 2027 — add the Friday and each becomes a four-day weekend for a single leave day.</p>
-    <div class="win-grid">${thursday.map(winCard).join('')}</div>
-    ${tuesday.length ? `<h4>Bonus — Tuesday holidays (take the Monday)</h4><div class="win-grid">${tuesday.map(winCard).join('')}</div>` : ''}`;
-}
-
 function renderSummary() {
   const host = $('#summary');
-  const months = Object.keys(plan).map(Number).sort((a, b) => a - b);
-  if (!months.length) {
-    host.innerHTML = '<h3>📊 Year summary</h3><p class="muted">Add a break to a month and your yearly totals will appear here.</p>';
+  if (!state.breaks.length) {
+    host.innerHTML = '<div class="step__q">📊 Year summary</div><p class="muted">Add a break above and your yearly totals will appear here.</p>';
     return;
   }
+  const ordered = state.breaks.slice().sort((a, b) => dateOf(a.start) - dateOf(b.start));
   const leaveSet = new Set();
-  let totalOff = 0;
-  const rows = months.map((m) => {
-    const trip = plan[m];
-    const leave = tripLeaveDays(trip);
+  const offSet = new Set();
+
+  const rows = ordered.map((b) => {
+    const leave = leaveDaysInRange(b.start, b.end);
     leave.forEach((d) => leaveSet.add(d));
-    const span = daysBetween(dateOf(trip.start), dateOf(trip.end)) + 1;
-    totalOff += span;
-    const countries = trip.countries.map((n) => countryByName.get(n).flag).join(' ') || '—';
+    for (let d = dateOf(b.start); d <= dateOf(b.end); d = addDays(d, 1)) offSet.add(isoOf(d));
+    const span = daysBetween(dateOf(b.start), dateOf(b.end)) + 1;
+    const countries = b.countries.map((n) => countryByName.get(n).flag).join(' ') || '—';
     return `<tr>
-      <td>${MONTH_NAMES[m]}</td>
-      <td>${prettyDate(dateOf(trip.start))} → ${prettyDate(dateOf(trip.end))}</td>
+      <td>${MONTH_NAMES[b.month]}</td>
+      <td>${prettyDate(dateOf(b.start))} → ${prettyDate(dateOf(b.end))}</td>
       <td class="num">${leave.length}</td>
       <td class="num">${span}</td>
       <td>${countries}</td>
@@ -576,10 +622,11 @@ function renderSummary() {
   }).join('');
 
   const totalLeave = leaveSet.size;
+  const totalOff = offSet.size;
   const ratio = totalLeave ? (totalOff / totalLeave).toFixed(2) : '∞';
 
   host.innerHTML = `
-    <h3>📊 Year summary — 2027</h3>
+    <div class="step__q">📊 Year summary — 2027</div>
     <table class="summary-table">
       <thead><tr><th>Month</th><th>Break</th><th>Leave</th><th>Days off</th><th>Countries</th></tr></thead>
       <tbody>${rows}</tbody>
@@ -591,16 +638,47 @@ function renderSummary() {
     </div>`;
 }
 
-function renderAll() {
-  renderMonthPicker();
-  renderOpportunities();
-  renderAdjuster();
-  renderRegions();
-  renderCountries();
-  renderAvatar();
-  renderRTW();
-  renderWins();
-  renderSummary();
+// ---------------------------------------------------------------------------
+// Flow: reveal each step as its prerequisite is met, and gently scroll to a
+// step the moment it unlocks so the app feels like a guided conversation.
+// ---------------------------------------------------------------------------
+
+function visibility() {
+  const anyCountry = state.breaks.some((b) => b.countries.length);
+  return {
+    'step-month': true,
+    'step-breaks': state.month !== null,
+    'step-plan': state.breaks.length > 0,
+    'step-journey': anyCountry,
+    'step-summary': state.breaks.length > 0,
+  };
 }
 
-document.addEventListener('DOMContentLoaded', renderAll);
+function updateFlow(scrollTo) {
+  const vis = visibility();
+  let unlocked = null;
+  for (const id of Object.keys(vis)) {
+    const el = document.getElementById(id);
+    el.classList.toggle('step--hidden', !vis[id]);
+    if (vis[id] && !prevVisible[id]) unlocked = id;
+    prevVisible[id] = vis[id];
+  }
+  const targetId = { breaks: 'step-breaks', plan: 'step-plan', journey: 'step-journey' }[scrollTo];
+  const target = targetId && vis[targetId] ? targetId : unlocked;
+  if (target) {
+    const el = document.getElementById(target);
+    requestAnimationFrame(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+  }
+}
+
+function render(scrollTo) {
+  renderMonthPicker();
+  renderOpportunities();
+  renderPlan();
+  renderAvatar();
+  renderJourney();
+  renderSummary();
+  updateFlow(scrollTo);
+}
+
+document.addEventListener('DOMContentLoaded', () => render());
