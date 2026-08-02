@@ -206,6 +206,21 @@
   .pick .dest span { display: block; font-size: 12.5px; color: var(--muted); margin-top: 1px; }
   .pick .fly { font-family: var(--mono); font-size: 12px; color: var(--ink-soft); text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
   .pick .fly small { display: block; font-size: 8.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .pick.custom { grid-template-columns: 20px 1fr auto 26px; }
+  .pick .rm { background: none; border: none; color: var(--muted); font-size: 19px; line-height: 1; cursor: pointer; padding: 0; }
+  .pick .rm:hover, .pick .rm:focus-visible { color: var(--danger); outline: none; }
+
+  /* ---- Add-your-own ---- */
+  .addwrap { margin-top: 14px; }
+  .addbtn { font-family: var(--mono); font-size: 12px; color: var(--jade); background: none; border: 1px dashed color-mix(in srgb, var(--jade) 48%, transparent); border-radius: 9px; padding: 10px 12px; cursor: pointer; width: 100%; }
+  .addbtn:focus-visible { outline: 3px solid var(--coral); outline-offset: 2px; }
+  .addform { display: none; grid-template-columns: 1fr; gap: 9px; margin-top: 10px; padding: 13px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); }
+  .addform.open { display: grid; }
+  .addform input, .addform select { font-family: var(--sans); font-size: 15px; padding: 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--ink); width: 100%; }
+  .addform input:focus-visible, .addform select:focus-visible { outline: 2px solid var(--jade); outline-offset: 0; border-color: var(--jade); }
+  .addform .frow { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+  .addform .go { font-family: var(--sans); font-size: 14px; font-weight: 600; color: var(--on-jade); background: var(--jade); border: none; border-radius: 8px; padding: 11px; cursor: pointer; }
+  .addform .go:focus-visible { outline: 3px solid var(--coral); outline-offset: 2px; }
 
   /* ---- Long weekend chips ---- */
   .wins { display: grid; gap: 10px; }
@@ -477,6 +492,17 @@
       });
       html += `</div>`;
     });
+    html += `<div class="addwrap">
+      <button type="button" class="addbtn" data-add="${idx}">+ Add your own destination</button>
+      <div class="addform" data-form="${idx}">
+        <input type="text" class="af-dest" placeholder="Country or city — e.g. Reykjavík, Iceland" aria-label="Destination name">
+        <div class="frow">
+          <select class="af-reg" aria-label="Region"><option value="Europe">Europe</option><option value="Americas">Americas</option><option value="Asia">Asia</option></select>
+          <input type="text" class="af-fly" placeholder="Flight, optional — ~16h" aria-label="Flight time from Hong Kong">
+        </div>
+        <button type="button" class="go" data-go="${idx}">Add to shortlist</button>
+      </div>
+    </div>`;
     return html + `</div>`;
   }
 
@@ -575,16 +601,26 @@
     else { label = "Rushed — drop one"; cls = "bad"; }
     return {label, cls, note:`~${pf} days per stop`};
   }
+  // A break is one trip to one region, so pace the busiest shortlisted region rather
+  // than summing across continents. Picks parked in other regions are noted, not counted.
   function updatePace(){
     const vis = visibleRegions();
     document.querySelectorAll('.pace').forEach(el => {
-      let n = 0;
+      const counts = {};
       document.querySelectorAll(`.tpick[data-card="${el.dataset.pace}"]`).forEach(cb => {
-        if(cb.checked && vis.has(cb.closest('.treg').dataset.reg)) n++;
+        const reg = cb.closest('.treg').dataset.reg;
+        if(cb.checked && vis.has(reg)) counts[reg] = (counts[reg] || 0) + 1;
       });
+      let region = null, n = 0;
+      REGIONS.forEach(r => { if((counts[r] || 0) > n){ n = counts[r]; region = r; } });
+      const others = Object.values(counts).reduce((a, b) => a + b, 0) - n;
       const days = +el.dataset.off, p = pacing(days, n);
+      const notes = [];
+      if(p.note) notes.push(p.note);
+      if(others > 0) notes.push(`+${others} shortlisted in other regions`);
       el.className = 'pace ' + p.cls;
-      el.innerHTML = `${days} days · ${n} ${n === 1 ? 'stop' : 'stops'} · <b>${p.label}</b>` + (p.note ? ` <span class="pnote">${p.note}</span>` : '');
+      const head = region ? `${days} days · ${region} · ${n} ${n === 1 ? 'stop' : 'stops'}` : `${days} days`;
+      el.innerHTML = `${head} · <b>${p.label}</b>` + (notes.length ? ` <span class="pnote">${notes.join(' · ')}</span>` : '');
     });
   }
   function applyRegionFilter(){
@@ -599,6 +635,52 @@
       btn.setAttribute('aria-pressed', btn.classList.contains('on'));
       applyRegionFilter();
     });
+  });
+
+  // ---- Add-your-own destinations (persisted in the browser so they survive a reload) ----
+  const LS_KEY = 'hkplan-custom-v1';
+  const loadCustoms = () => { try { return JSON.parse(localStorage.getItem(LS_KEY)) || []; } catch(e){ return []; } };
+  const saveCustoms = arr => { try { localStorage.setItem(LS_KEY, JSON.stringify(arr)); } catch(e){} };
+  const escapeHtml = s => s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+
+  function addCustom(idx, c, persist){
+    const card = document.getElementById('card-' + breaks[idx].id);
+    const treg = card && card.querySelector(`.treg[data-reg="${c.reg}"]`);
+    if(!treg) return;
+    const label = document.createElement('label');
+    label.className = 'pick custom';
+    label.dataset.uid = c.id;
+    label.innerHTML = `<input type="checkbox" class="tpick" data-card="${idx}" checked aria-label="Shortlist ${escapeHtml(c.dest)}">`
+      + `<span class="dest"><b>${escapeHtml(c.dest)}</b><span>Your pick</span></span>`
+      + `<span class="fly">${c.fly ? escapeHtml(c.fly) : '—'}<small>from HKG</small></span>`
+      + `<button type="button" class="rm" data-rm="${c.id}" aria-label="Remove ${escapeHtml(c.dest)}">&times;</button>`;
+    treg.appendChild(label);
+    const rf = document.querySelector(`.rf[data-reg="${c.reg}"]`);
+    if(rf && !rf.classList.contains('on')){ rf.classList.add('on'); rf.setAttribute('aria-pressed', 'true'); }
+    applyRegionFilter();
+    if(persist){ const arr = loadCustoms(); arr.push({id:c.id, bid:breaks[idx].id, reg:c.reg, dest:c.dest, fly:c.fly}); saveCustoms(arr); }
+  }
+
+  document.addEventListener('click', e => {
+    const t = e.target;
+    if(t.dataset.add !== undefined){ document.querySelector(`.addform[data-form="${t.dataset.add}"]`).classList.toggle('open'); return; }
+    if(t.dataset.go !== undefined){
+      const form = document.querySelector(`.addform[data-form="${t.dataset.go}"]`);
+      const destEl = form.querySelector('.af-dest'), dest = destEl.value.trim();
+      if(!dest){ destEl.focus(); return; }
+      addCustom(+t.dataset.go, {id:'c' + Date.now() + Math.random().toString(36).slice(2,6), reg:form.querySelector('.af-reg').value, dest, fly:form.querySelector('.af-fly').value.trim()}, true);
+      destEl.value = ''; form.querySelector('.af-fly').value = '';
+      form.classList.remove('open');
+      return;
+    }
+    if(t.dataset.rm !== undefined){
+      e.preventDefault();
+      const el = document.querySelector(`.pick.custom[data-uid="${t.dataset.rm}"]`);
+      if(el) el.remove();
+      saveCustoms(loadCustoms().filter(x => x.id !== t.dataset.rm));
+      updatePace();
+      return;
+    }
   });
 
   document.addEventListener('change', e => {
@@ -619,5 +701,9 @@
   });
 
   recalc();
+  loadCustoms().forEach(c => {
+    const idx = breaks.findIndex(b => b.id === c.bid);
+    if(idx >= 0) addCustom(idx, c, false);
+  });
   applyRegionFilter();
 </script>
