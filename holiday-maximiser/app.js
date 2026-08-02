@@ -412,7 +412,19 @@ function renderOpportunities() {
       + '<div class="opp-grid">' + freebies.map(card).join('') + '</div>';
   }
   if (noHoliday) {
-    html += `<p class="muted">Add one, then pick where to go — I'll recommend the best countries to visit in ${monthName}.</p>`;
+    const mm = String(state.month + 1).padStart(2, '0');
+    const defStart = `${YEAR}-${mm}-01`;
+    html += `
+      <div class="custom-dates">
+        <div class="dest__q">📅 Or pick your own dates</div>
+        <div class="custom-dates__row">
+          <label>From <input type="date" id="cd-start" min="${YEAR}-01-01" max="${YEAR}-12-31" value="${defStart}" /></label>
+          <label>To <input type="date" id="cd-end" min="${YEAR}-01-01" max="${YEAR}-12-31" value="${defStart}" /></label>
+          <button class="btn" id="cd-add">➕ Add these dates</button>
+        </div>
+        <div class="custom-dates__hint" id="cd-hint"></div>
+      </div>
+      <p class="muted">Add a break, then pick where to go — I'll recommend the best countries to visit in ${monthName}.</p>`;
   }
   host.innerHTML = html;
 
@@ -425,6 +437,19 @@ function renderOpportunities() {
       render('plan');
     };
   });
+
+  const addBtn = host.querySelector('#cd-add');
+  if (addBtn) {
+    addBtn.onclick = () => {
+      const start = host.querySelector('#cd-start').value;
+      const end = host.querySelector('#cd-end').value;
+      const hint = host.querySelector('#cd-hint');
+      if (!start || !end) { hint.textContent = 'Please pick both a start and end date.'; return; }
+      if (dateOf(start) > dateOf(end)) { hint.textContent = 'The end date needs to be on or after the start date.'; return; }
+      addBreak({ start, end });
+      render('plan');
+    };
+  }
 }
 
 function adjusterHTML(b) {

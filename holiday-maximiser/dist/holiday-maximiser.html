@@ -199,6 +199,19 @@ main { max-width: 960px; margin: 0 auto; padding: 0 1.25rem 3rem; }
   display: inline-block; background: #f5fffb; border: 1.5px solid var(--mint);
   border-radius: 999px; padding: 0.15rem 0.55rem; margin: 0.15rem; font-weight: 700;
 }
+.custom-dates {
+  margin-top: 1rem; padding: 0.9rem 1rem;
+  border: 1.5px dashed var(--lav); border-radius: 16px; background: #fdfcff;
+}
+.custom-dates__row { display: flex; flex-wrap: wrap; align-items: end; gap: 0.7rem; margin-top: 0.5rem; }
+.custom-dates label { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.8rem; font-weight: 700; color: var(--muted); }
+.custom-dates input[type="date"] {
+  border: 1.5px solid var(--line); border-radius: 10px; padding: 0.45rem 0.6rem;
+  font: inherit; font-weight: 700; color: var(--ink); background: #fff;
+}
+.custom-dates input[type="date"]:focus-visible { outline: 2px solid var(--pink-deep); outline-offset: 1px; }
+.custom-dates__hint { font-size: 0.8rem; color: var(--pink-deep); margin-top: 0.5rem; min-height: 1em; }
+
 .dest { margin-top: 0.9rem; padding-top: 0.8rem; border-top: 1px dashed var(--line); }
 .dest__q { font-weight: 800; margin-bottom: 0.5rem; }
 .dest__q--sub { color: var(--muted); }
@@ -874,7 +887,19 @@ function renderOpportunities() {
       + '<div class="opp-grid">' + freebies.map(card).join('') + '</div>';
   }
   if (noHoliday) {
-    html += `<p class="muted">Add one, then pick where to go — I'll recommend the best countries to visit in ${monthName}.</p>`;
+    const mm = String(state.month + 1).padStart(2, '0');
+    const defStart = `${YEAR}-${mm}-01`;
+    html += `
+      <div class="custom-dates">
+        <div class="dest__q">📅 Or pick your own dates</div>
+        <div class="custom-dates__row">
+          <label>From <input type="date" id="cd-start" min="${YEAR}-01-01" max="${YEAR}-12-31" value="${defStart}" /></label>
+          <label>To <input type="date" id="cd-end" min="${YEAR}-01-01" max="${YEAR}-12-31" value="${defStart}" /></label>
+          <button class="btn" id="cd-add">➕ Add these dates</button>
+        </div>
+        <div class="custom-dates__hint" id="cd-hint"></div>
+      </div>
+      <p class="muted">Add a break, then pick where to go — I'll recommend the best countries to visit in ${monthName}.</p>`;
   }
   host.innerHTML = html;
 
@@ -887,6 +912,19 @@ function renderOpportunities() {
       render('plan');
     };
   });
+
+  const addBtn = host.querySelector('#cd-add');
+  if (addBtn) {
+    addBtn.onclick = () => {
+      const start = host.querySelector('#cd-start').value;
+      const end = host.querySelector('#cd-end').value;
+      const hint = host.querySelector('#cd-hint');
+      if (!start || !end) { hint.textContent = 'Please pick both a start and end date.'; return; }
+      if (dateOf(start) > dateOf(end)) { hint.textContent = 'The end date needs to be on or after the start date.'; return; }
+      addBreak({ start, end });
+      render('plan');
+    };
+  }
 }
 
 function adjusterHTML(b) {

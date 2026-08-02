@@ -192,6 +192,19 @@ main { max-width: 960px; margin: 0 auto; padding: 0 1.25rem 3rem; }
   display: inline-block; background: #f5fffb; border: 1.5px solid var(--mint);
   border-radius: 999px; padding: 0.15rem 0.55rem; margin: 0.15rem; font-weight: 700;
 }
+.custom-dates {
+  margin-top: 1rem; padding: 0.9rem 1rem;
+  border: 1.5px dashed var(--lav); border-radius: 16px; background: #fdfcff;
+}
+.custom-dates__row { display: flex; flex-wrap: wrap; align-items: end; gap: 0.7rem; margin-top: 0.5rem; }
+.custom-dates label { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.8rem; font-weight: 700; color: var(--muted); }
+.custom-dates input[type="date"] {
+  border: 1.5px solid var(--line); border-radius: 10px; padding: 0.45rem 0.6rem;
+  font: inherit; font-weight: 700; color: var(--ink); background: #fff;
+}
+.custom-dates input[type="date"]:focus-visible { outline: 2px solid var(--pink-deep); outline-offset: 1px; }
+.custom-dates__hint { font-size: 0.8rem; color: var(--pink-deep); margin-top: 0.5rem; min-height: 1em; }
+
 .dest { margin-top: 0.9rem; padding-top: 0.8rem; border-top: 1px dashed var(--line); }
 .dest__q { font-weight: 800; margin-bottom: 0.5rem; }
 .dest__q--sub { color: var(--muted); }
