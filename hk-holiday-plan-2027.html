@@ -15,6 +15,7 @@
     --jade-soft: #d3ebe3;
     --coral: #D65F2C;
     --coral-soft: #f6e0d3;
+    --danger: #C1392B;
     --wknd: #9AA8A5;
     --wknd-soft: #dde3e0;
     --shadow: 0 1px 0 rgba(12,42,46,.04), 0 12px 30px -20px rgba(12,42,46,.35);
@@ -36,6 +37,7 @@
       --jade-soft: #123c37;
       --coral: #F0895A;
       --coral-soft: #3a2419;
+      --danger: #F5795E;
       --wknd: #6E8380;
       --wknd-soft: #17383b;
       --shadow: 0 1px 0 rgba(0,0,0,.2), 0 16px 40px -24px rgba(0,0,0,.7);
@@ -44,13 +46,13 @@
   :root[data-theme="light"] {
     --paper: #ECEFEC; --paper-2: #E2E7E2; --card: #F6F8F5; --ink: #0C2A2E;
     --ink-soft: #33484A; --muted: #6A7B79; --line: #D2D9D3; --jade: #128870;
-    --on-jade: #ffffff; --jade-soft: #d3ebe3; --coral: #D65F2C; --coral-soft: #f6e0d3; --wknd: #9AA8A5;
+    --on-jade: #ffffff; --jade-soft: #d3ebe3; --coral: #D65F2C; --coral-soft: #f6e0d3; --danger: #C1392B; --wknd: #9AA8A5;
     --wknd-soft: #dde3e0; --shadow: 0 1px 0 rgba(12,42,46,.04), 0 12px 30px -20px rgba(12,42,46,.35);
   }
   :root[data-theme="dark"] {
     --paper: #081F22; --paper-2: #0C282C; --card: #0F2E32; --ink: #EAF1EE;
     --ink-soft: #B7C7C4; --muted: #7F9491; --line: #1C3B3F; --jade: #35BE9F;
-    --on-jade: #06231f; --jade-soft: #123c37; --coral: #F0895A; --coral-soft: #3a2419; --wknd: #6E8380;
+    --on-jade: #06231f; --jade-soft: #123c37; --coral: #F0895A; --coral-soft: #3a2419; --danger: #F5795E; --wknd: #6E8380;
     --wknd-soft: #17383b; --shadow: 0 1px 0 rgba(0,0,0,.2), 0 16px 40px -24px rgba(0,0,0,.7);
   }
 
@@ -184,8 +186,16 @@
 
   /* ---- Travel picks (selectable) ---- */
   .travel { margin-top: 18px; border-top: 1px dashed var(--line); padding-top: 14px; }
-  .travel-h { font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
-  .tcount { letter-spacing: .04em; text-transform: none; color: var(--jade); margin-left: 8px; }
+  .travel-h { font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+  .pace { font-family: var(--mono); font-size: 11.5px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: baseline; padding: 8px 11px; border-radius: 9px; background: var(--paper); border: 1px solid var(--line); }
+  .pace b { font-weight: 600; }
+  .pace .pnote { color: var(--muted); }
+  .pace.good { border-color: color-mix(in srgb, var(--jade) 34%, transparent); }
+  .pace.good b { color: var(--jade); }
+  .pace.warn { border-color: color-mix(in srgb, var(--coral) 40%, transparent); background: var(--coral-soft); }
+  .pace.warn b { color: var(--coral); }
+  .pace.bad { border-color: color-mix(in srgb, var(--danger) 55%, transparent); background: var(--coral-soft); }
+  .pace.bad b { color: var(--danger); }
   .treg-h { font-family: var(--mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--jade); margin: 15px 0 3px; }
   .pick { display: grid; grid-template-columns: 20px 1fr auto; gap: 11px; align-items: center; padding: 9px 0; border-top: 1px solid var(--line); cursor: pointer; }
   .treg .pick:first-of-type { border-top: none; }
@@ -356,6 +366,8 @@
         {reg:"Asia", dest:"Hanoi, Vietnam", why:"Dry and pleasant before summer", fly:"2h 00m", rec:false},
         {reg:"Europe", dest:"Seville, Spain", why:"Warm, uncrowded, Semana Santa", fly:"~14h", rec:true},
         {reg:"Europe", dest:"Sicily & Rome, Italy", why:"Mild spring shoulder", fly:"~13h", rec:false},
+        {reg:"Europe", dest:"Tbilisi, Georgia", why:"Green Caucasus spring, wildflowers", fly:"~14h", rec:false},
+        {reg:"Europe", dest:"Baku, Azerbaijan", why:"Mild spring on the Caspian", fly:"~13h", rec:false},
         {reg:"Americas", dest:"Mendoza, Argentina", why:"Autumn wine harvest", fly:"~30h", rec:true},
         {reg:"Americas", dest:"Patagonia, Chile", why:"Golden autumn colours", fly:"~25h", rec:false}
       ]
@@ -371,6 +383,9 @@
         {reg:"Asia", dest:"Tokyo, Japan", why:"Early summer before the rains", fly:"4h 30m", rec:false},
         {reg:"Europe", dest:"Barcelona, Spain", why:"Warm Med before July crowds", fly:"~14h", rec:true},
         {reg:"Europe", dest:"Nice & Provence, France", why:"Early summer, lavender begins", fly:"~13h", rec:false},
+        {reg:"Europe", dest:"Tbilisi & Kakheti, Georgia", why:"Warm early summer, wine country", fly:"~14h", rec:false},
+        {reg:"Europe", dest:"Prague, Czech Republic", why:"Long, lovely early-summer days", fly:"~13h", rec:false},
+        {reg:"Europe", dest:"Kraków, Poland", why:"Mild summer, uncrowded old towns", fly:"~13h", rec:false},
         {reg:"Americas", dest:"Cusco & Machu Picchu, Peru", why:"Dry season opens, clear Andes skies", fly:"~28h", rec:true},
         {reg:"Americas", dest:"Quito & Galápagos, Ecuador", why:"Dry, prime wildlife season", fly:"~30h", rec:false}
       ]
@@ -386,6 +401,8 @@
         {reg:"Asia", dest:"Chiang Mai, Thailand", why:"Rains easing, green hills", fly:"3h 10m", rec:false},
         {reg:"Europe", dest:"Tuscany & Florence, Italy", why:"Golden autumn, harvest season", fly:"~13h", rec:true},
         {reg:"Europe", dest:"Lisbon, Portugal", why:"Warm, mild, fewer crowds", fly:"~15h", rec:false},
+        {reg:"Europe", dest:"Tbilisi & Kakheti, Georgia", why:"Autumn grape harvest", fly:"~14h", rec:false},
+        {reg:"Europe", dest:"Baku, Azerbaijan", why:"Crisp Caspian autumn", fly:"~13h", rec:false},
         {reg:"Americas", dest:"Patagonia, Argentina & Chile", why:"Southern spring reopening", fly:"~25h", rec:true},
         {reg:"Americas", dest:"Atacama Desert, Chile", why:"Clear desert spring", fly:"~26h", rec:false}
       ]
@@ -401,6 +418,8 @@
         {reg:"Asia", dest:"Palawan, Philippines", why:"Peak dry-season islands", fly:"2h 30m", rec:false},
         {reg:"Europe", dest:"Vienna, Austria", why:"Christmas markets, fresh snow", fly:"~12h", rec:true},
         {reg:"Europe", dest:"Swiss & French Alps", why:"Peak ski season", fly:"~13h", rec:false},
+        {reg:"Europe", dest:"Prague, Czech Republic", why:"Old Town Christmas markets", fly:"~13h", rec:false},
+        {reg:"Europe", dest:"Kraków, Poland", why:"Christmas markets, snowy squares", fly:"~13h", rec:false},
         {reg:"Americas", dest:"Buenos Aires, Argentina", why:"Southern summer city buzz", fly:"~30h", rec:true},
         {reg:"Americas", dest:"Rio de Janeiro, Brazil", why:"New Year on Copacabana", fly:"~30h", rec:false}
       ]
@@ -447,8 +466,8 @@
 
   const REGIONS = ["Asia", "Europe", "Americas"];
 
-  function travelBlock(picks, idx){
-    let html = `<div class="travel"><div class="travel-h">In season · shortlist destinations<span class="tcount" data-count="${idx}"></span></div>`;
+  function travelBlock(picks, idx, off){
+    let html = `<div class="travel"><div class="travel-h">In season · shortlist destinations</div><div class="pace" data-pace="${idx}" data-off="${off}"></div>`;
     REGIONS.forEach(r => {
       const list = picks.filter(p => p.reg === r);
       if(!list.length) return;
@@ -471,7 +490,7 @@
       </div>
       ${strip(b.days)}
       <p class="note">${b.note}</p>
-      ${travelBlock(b.travel, idx)}
+      ${travelBlock(b.travel, idx, b.off)}
     </article>`).join('');
 
   const wEl = document.getElementById('wins');
@@ -543,20 +562,35 @@
   function visibleRegions(){
     return new Set([...document.querySelectorAll('.rf.on')].map(b => b.dataset.reg));
   }
-  function updateTravelCounts(){
+  // How relaxed is the trip? Days off ÷ shortlisted stops. Tuned so a 9-day trip
+  // reads: 2 stops relaxed, 3 tight, 4 rushed.
+  function pacing(days, n){
+    if(n === 0) return {label:"Shortlist a stop to start", cls:""};
+    if(n === 1) return {label:"Plenty of time", cls:"good", note:"one base, no rush"};
+    const per = days / n, pf = Number.isInteger(per) ? per : per.toFixed(1);
+    let label, cls;
+    if(per >= 4){ label = "Relaxed"; cls = "good"; }
+    else if(per >= 3.4){ label = "Comfortable"; cls = "good"; }
+    else if(per >= 2.7){ label = "Tight"; cls = "warn"; }
+    else { label = "Rushed — drop one"; cls = "bad"; }
+    return {label, cls, note:`~${pf} days per stop`};
+  }
+  function updatePace(){
     const vis = visibleRegions();
-    document.querySelectorAll('.tcount').forEach(el => {
+    document.querySelectorAll('.pace').forEach(el => {
       let n = 0;
-      document.querySelectorAll(`.tpick[data-card="${el.dataset.count}"]`).forEach(cb => {
+      document.querySelectorAll(`.tpick[data-card="${el.dataset.pace}"]`).forEach(cb => {
         if(cb.checked && vis.has(cb.closest('.treg').dataset.reg)) n++;
       });
-      el.textContent = n ? ` · ${n} shortlisted` : ' · none shortlisted';
+      const days = +el.dataset.off, p = pacing(days, n);
+      el.className = 'pace ' + p.cls;
+      el.innerHTML = `${days} days · ${n} ${n === 1 ? 'stop' : 'stops'} · <b>${p.label}</b>` + (p.note ? ` <span class="pnote">${p.note}</span>` : '');
     });
   }
   function applyRegionFilter(){
     const vis = visibleRegions();
     document.querySelectorAll('.treg').forEach(el => { el.style.display = vis.has(el.dataset.reg) ? '' : 'none'; });
-    updateTravelCounts();
+    updatePace();
   }
   document.querySelectorAll('.rf').forEach(btn => {
     btn.setAttribute('aria-pressed', 'true');
@@ -571,7 +605,7 @@
     const t = e.target;
     if(t.classList.contains('tpick')){
       t.closest('.pick').classList.toggle('out', !t.checked);
-      updateTravelCounts();
+      updatePace();
       return;
     }
     if(t.dataset.kind === 'break'){
