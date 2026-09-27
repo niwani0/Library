@@ -1,0 +1,63 @@
+{
+  "siteUrl": "https://jamescroucher.com",
+  "name": "James Croucher",
+  "email": "",
+  "phone": "",
+  "instagram": "",
+  "formEndpoint": "",
+  "bio": [],
+  "sections": [
+    {
+      "slug": "portraits",
+      "title": "Portraits",
+      "description": "Portraits by James Croucher, including prime ministers and chief executives.",
+      "galleries": [
+        { "slug": "selected-portraits", "title": "Selected Portraits", "description": "A selection of portraits by James Croucher.", "photos": [] },
+        { "slug": "prime-ministers", "title": "Prime Ministers", "description": "Portraits of prime ministers photographed by James Croucher.", "photos": [] },
+        { "slug": "ceos", "title": "CEOs", "description": "Portraits of chief executives photographed by James Croucher.", "photos": [] }
+      ]
+    },
+    {
+      "slug": "documentary",
+      "title": "Documentary",
+      "description": "Documentary photography by James Croucher, including the Thailand tsunami and Singapore's homeless.",
+      "galleries": [
+        { "slug": "thailand-tsunami", "title": "Thailand Tsunami", "description": "James Croucher's photographs of the tsunami in Thailand.", "photos": [] },
+        { "slug": "singapores-homeless", "title": "Singapore's Homeless", "description": "James Croucher's documentary series on homelessness in Singapore.", "photos": [] }
+      ]
+    },
+    {
+      "slug": "commissions",
+      "title": "Commissions",
+      "description": "Commissioned photography by James Croucher: fashion, sport, the arts, weddings and magazine covers.",
+      "galleries": [
+        { "slug": "fashion", "title": "Fashion", "description": "Fashion photography by James Croucher.", "photos": [] },
+        { "slug": "sport", "title": "Sport", "description": "Sports photography by James Croucher.", "photos": [] },
+        { "slug": "arts", "title": "Arts", "description": "Photographs of the arts and artists by James Croucher.", "photos": [] },
+        { "slug": "singapore-wedding", "title": "Singapore Wedding", "description": "A wedding in Singapore photographed by James Croucher.", "photos": [] },
+        { "slug": "covers", "title": "Covers", "description": "Magazine covers featuring photographs by James Croucher.", "photos": [] }
+      ]
+    },
+    {
+      "slug": "travel",
+      "title": "Travel",
+      "description": "Travel and landscape photographs by James Croucher from Australia, Vietnam, China and elsewhere.",
+      "galleries": [
+        { "slug": "australia", "title": "Australia", "description": "Photographs of Australia by James Croucher.", "photos": [] },
+        { "slug": "vietnam", "title": "Vietnam", "description": "Photographs of Vietnam by James Croucher.", "photos": [] },
+        { "slug": "china", "title": "China", "description": "Photographs of China by James Croucher.", "photos": [] },
+        { "slug": "landscape", "title": "Landscape", "description": "Landscape photographs by James Croucher.", "photos": [] },
+        { "slug": "other-travels", "title": "Other Travels", "description": "Travel photographs by James Croucher from further afield.", "photos": [] }
+      ]
+    },
+    {
+      "slug": "personal",
+      "title": "Personal",
+      "description": "Personal projects by James Croucher, including scale aircraft and automobile builds.",
+      "galleries": [
+        { "slug": "scale-aircraft", "title": "Scale Aircraft", "description": "Scale aircraft models built and photographed by James Croucher.", "photos": [] },
+        { "slug": "scale-automobiles", "title": "Scale Automobiles", "description": "Scale automobile models built and photographed by James Croucher.", "photos": [] }
+      ]
+    }
+  ]
+}
