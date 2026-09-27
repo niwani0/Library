@@ -12,7 +12,13 @@
       "title": "Portraits",
       "description": "Portraits by James Croucher, including prime ministers and chief executives.",
       "galleries": [
-        { "slug": "selected-portraits", "title": "Selected Portraits", "description": "A selection of portraits by James Croucher.", "photos": [] },
+        { "slug": "selected-portraits", "title": "Selected Portraits", "description": "A selection of portraits by James Croucher.", "photos": [
+          { "src": "images/selected-portraits/01.jpg", "alt": "An older man with a long white beard and a wide-brimmed hat stands before a weathered ochre stone wall, a smiling woman resting her hand on his shoulder.", "width": 1000, "height": 522 },
+          { "src": "images/selected-portraits/02.jpg", "alt": "A woman in a brown cardigan sits in low evening sunlight beside tall windows overlooking a city, smiling as she looks toward the light.", "width": 1000, "height": 667 },
+          { "src": "images/selected-portraits/03.jpg", "alt": "A man in a pilot's uniform with four gold stripes on each sleeve buttons his jacket in the leather-lined cabin of a private jet.", "width": 1000, "height": 623 },
+          { "src": "images/selected-portraits/04.jpg", "alt": "A bald man in a burgundy suit leans against a green wall beside a barred, boarded-up window, smiling off to one side.", "width": 1000, "height": 631 },
+          { "src": "images/selected-portraits/05.jpg", "alt": "A grey-bearded man in glasses, a denim shirt and a peace-sign T-shirt stands with his hands in his pockets against a mottled brown backdrop.", "width": 1000, "height": 854 }
+        ] },
         { "slug": "prime-ministers", "title": "Prime Ministers", "description": "Portraits of prime ministers photographed by James Croucher.", "photos": [] },
         { "slug": "ceos", "title": "CEOs", "description": "Portraits of chief executives photographed by James Croucher.", "photos": [] }
       ]
